@@ -139,7 +139,7 @@ class Duyurular{
 	public function duyuruMetaBox() {
 		global $post_id;
 		$kimlerGorsun=get_post_meta($post_id,"kimlerGorsun",1);
-		$gosteriModu=get_post_meta($post_id,"gosteriModu",1);
+		$gosterimModu=get_post_meta($post_id,"gosterimModu",1);
 		?> 
 		<form>
 		Kimler görsün:
@@ -150,7 +150,7 @@ class Duyurular{
 		Gösterim Modu:
 		<select name="gosterimModu">
 			<option <?php  if($gosterimModu=='pencere') {echo 'selected=""';} ?> value="pencere">Pencere</option>
-			<option <?php  if($gosteriModu=='bar') {echo 'selected=""';} ?> value="bar">Uyarı Şeridi</option>
+			<option <?php  if($gosterimModu=='bar') {echo 'selected=""';} ?> value="bar">Uyarı Şeridi</option>
 		</select>
 		</form>
 		<?php
