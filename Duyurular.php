@@ -11,7 +11,7 @@
 /**
 * Duyurular class ı 
 * @author Samet ATABAŞ
-*
+* bu dosyayı  başka bir dizinde düzenledim ve github ayarlı  dizine kopyaladım 
 */
 class Duyurular{
 	/**
@@ -36,8 +36,8 @@ class Duyurular{
 	}
 	
 	/**
-	* Post Type oluşturan fonksiyon
-	*
+	* 
+	* ve bir kaç  satır a yazı  yazdım  ve yerlerini  değiştirdim (üst satır:Post Type oluşturan fonksiyon)
 	* @return bollean
 	*/
 	public function postTypeOlustur() {
@@ -142,16 +142,35 @@ class Duyurular{
 		$gosteriModu=get_post_meta($post_id,"gosteriModu",1);
 		?> 
 		<form>
-		Kimler görsün:
+		<b>Kimler görsün:</b><br/>
 		<select name="kimlerGorsun">
 			<option  <?php  if($kimlerGorsun=='herkes') {echo 'selected=""';} ?>  value="herkes">Herkes</option>
 			<option <?php  if($kimlerGorsun=='uyeler') {echo 'selected=""';} ?> value="uyeler">Sadece Üyeler</option>
-		</select>
-		Gösterim Modu:
+		</select><br/>
+		<b>Gösterim Modu:</b><br/>
 		<select name="gosterimModu">
 			<option <?php  if($gosterimModu=='pencere') {echo 'selected=""';} ?> value="pencere">Pencere</option>
 			<option <?php  if($gosteriModu=='bar') {echo 'selected=""';} ?> value="bar">Uyarı Şeridi</option>
+		</select><br/>
+		<b>Son Gösterim Tarihi:</b><br/>
+		<select name="mm" id="mm">
+			<option value="01">01-Oca</option>
+			<option value="02">02-Şub</option>
+			<option value="03">03-Mar</option>
+			<option value="04">04-Nis</option>
+			<option value="05">05-May</option>
+			<option value="06">06-Haz</option>
+			<option value="07">07-Tem</option>
+			<option value="08">08-Ağu</option>
+			<option value="09">09-Eyl</option>
+			<option value="10">10-Eki</option>
+			<option value="11">11-Kas</option>
+			<option selected="selected" value="12">12-Ara</option>
 		</select>
+		<input type="text" maxlength="2" size="2" value="31" name="jj" id="jj">, 
+		<input type="text" maxlength="4" size="4" value="2012" name="aa" id="aa"> @ 
+		<input type="text" maxlength="2" size="2" value="17" name="hh" id="hh"> : 
+		<input type="text" maxlength="2" size="2" value="49" name="mn" id="mn">
 		</form>
 		<?php
 	}
