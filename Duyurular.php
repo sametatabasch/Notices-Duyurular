@@ -11,7 +11,7 @@
 /**
 * Duyurular class ı 
 * @author Samet ATABAŞ
-* bu dosyayı  başka bir dizinde düzenledim ve github ayarlı  dizine kopyaladım 
+* 
 */
 class Duyurular{
 	/**
@@ -33,11 +33,12 @@ class Duyurular{
 		// duyuru düzenlerdiği zaman meta box taki  verileri işlemek için kullanılır
 		add_action( 'edit_post', array(&$this, 'duyuruDuzenle'));
 		add_action('init',array(&$this,'duyuruGoster'));
+		add_action('wp_enqueue_scripts',array(&$this,'duyuruScriptEkle'));
 	}
 	
 	/**
+	* Post Type oluşturan fonksiyon
 	* 
-	* ve bir kaç  satır a yazı  yazdım  ve yerlerini  değiştirdim (üst satır:Post Type oluşturan fonksiyon)
 	* @return bollean
 	*/
 	public function postTypeOlustur() {
@@ -66,6 +67,15 @@ class Duyurular{
 			)
 		);
 	}
+	/**
+	 * script leri ekle 
+	 *
+	 */
+	 public function duyuruScriptEkle() {
+	 	wp_enqueue_script('jquery');
+	 	wp_enqueue_script('jquery.fancybox-1.3.4',plugins_url('/fancybox/jquery.fancybox-1.3.4.js', __FILE__));
+	 	wp_enqueue_script('jquery.fancybox-1.3.4.pack',plugins_url('/fancybox/jquery.fancybox-1.3.4.pack.js', __FILE__)); 	
+	 }
 	/**
 	* Duyuru bilgilerini veritabanından alan fonksiyon
 	* tüm duyuruları enson yazılan ilk olacak şekilde dizi içinde saklar
@@ -103,7 +113,15 @@ class Duyurular{
 	public function duyuruGoster(){
 		$duyuru=self::duyuruMeta();		
 		if(get_post_meta($duyuru[0]['ID'],"kimlerGorsun",1)=="herkes") {
-			//echo  'herkes görsün';
+			add_action("wp_head", 'duyuruYayinla' );
+			function duyuruYayinla()
+			{echo "
+			<script type=\"text/javascript\">
+				$(document).ready(function() {
+					$.fancybox( '<h1>Lorem lipsum</h1>' );
+				});
+			</script>
+			";}
 		}
 		
 	}
