@@ -104,16 +104,14 @@ class Duyurular{
 		$duyuru=self::duyuruMeta();		
 		if(get_post_meta($duyuru[0]['ID'],"kimlerGorsun",1)=="herkes") {
 			add_action('wp_head', 'duyuruYayinla');
-			function duyuruYayinla($mtn)
+			function duyuruYayinla($mtn=self::duyuruMetni)
 			{echo "
 			<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js\" type=\"text/javascript\"></script>
-			<script src=\"".plugins_url('/fancybox/jquery.mousewheel-3.0.4.pack.js', __FILE__)."\" type=\"text/javascript\"></script>
-			<script src=\"".plugins_url('/fancybox/jquery.fancybox-1.3.4.pack.js', __FILE__)."\" type=\"text/javascript\"></script>
 			<script src=\"".plugins_url('/fancybox/jquery.fancybox-1.3.4.js', __FILE__)."\" type=\"text/javascript\"></script>
 			<link media=\"screen\" href=\"".plugins_url('/fancybox/jquery.fancybox-1.3.4.css', __FILE__)."\" type=\"text/css\" rel=\"stylesheet\">
 			<script type=\"text/javascript\">
 				$(document).ready(function() {
-					$.fancybox( '<h1>".$mtn."</h1>' );
+					$.fancybox( '<h1>demememd".$mtn."</h1>' );
 				});
 			</script>
 			";}
