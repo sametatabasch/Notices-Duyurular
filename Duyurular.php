@@ -82,7 +82,7 @@ class Duyurular{
 	* @return string
 	*/
 	public static function duyuruMetni() {
-		$metin=self::duyuruMeta();
+		self::duyuruMeta() = $metin;
 		echo $metin[0]['post_content'];
 	}
 	/**
@@ -123,7 +123,7 @@ class Duyurular{
 	* 
 	* @return void
 	*/
-	public function ayarSayfası() {
+	public function ayarSayfasi() {
 		add_options_page('Duyurular ', 'Duyurular ', 'manage_options', 'duyurular', array(&$this,'ayarSayfasiIcerik'));
 	}
 	/**
