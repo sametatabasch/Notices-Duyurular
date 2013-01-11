@@ -25,7 +25,7 @@ class Duyurular{
 		//duyurular için Duyuru  post type ını ekle
 		add_action( 'init', array(&$this , 'postTypeOlustur'));
 		// ayar sayfasını ekle
-		add_action('admin_menu', array(&$this, 'ayarSayfası'));
+		add_action('admin_menu', array(&$this, 'ayarSayfasi'));
 		// yazı  editorü sayfasına widget ekleme
 		add_action( 'add_meta_boxes', array(&$this, 'duyuruMetaBoxEkle'));
 		// duyuru kaydedildiği zaman meta box taki  verileri işlemek için kullanılır
@@ -134,7 +134,7 @@ class Duyurular{
 	* 
 	* @return void
 	*/
-	public function ayarSayfası() {
+	public function ayarSayfasi() {
 		add_options_page('Duyurular ', 'Duyurular ', 'manage_options', 'duyurular', array(&$this,'ayarSayfasiIcerik'));
 	}
 	/**
