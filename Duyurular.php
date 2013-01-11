@@ -73,17 +73,22 @@ class Duyurular{
 	*/
 	public static function duyuruMeta() {
 		global $wpdb;
-		return  $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE post_type='duyuru' AND post_status='publish' ORDER BY post_date_gmt DESC", 'ARRAY_A');
+		return  $wpdb->get_results("SELECT * FROM $wpdb->posts  WHERE post_type='duyuru' AND post_status='publish' ORDER BY ID DESC", 'ARRAY_A');
 		
 	}
 	/**
 	* Duyuruyu metnini gösterecek fonksiyon
 	*
+	* @param bool $echo true ise çıktı yapar false ise değer döndürür
 	* @return string
 	*/
-	public static function duyuruMetni() {
+	public static function duyuruMetni($echo=true) {
 		$metin=self::duyuruMeta();
-		echo $metin[0]['post_content'];
+		if($echo) {
+			echo $metin[0]['post_content'];
+		}else {
+			return $metin[0]['post_content'];
+		}
 	}
 	/**
 	* Duyuruyu tarihi gösterecek fonksiyon
@@ -101,22 +106,28 @@ class Duyurular{
 	 *
 	 */
 	public function duyuruGoster(){
-		$duyuru=self::duyuruMeta();		
+		$duyuru=self::duyuruMeta();
 		if(get_post_meta($duyuru[0]['ID'],"kimlerGorsun",1)=="herkes") {
-			add_action('wp_head', 'duyuruYayinla');
-			function duyuruYayinla($mtn=self::duyuruMetni)
-			{echo "
+			add_action('wp_head',array(&$this,'duyuruFancbox'));	
+		}
+	}
+	/**
+	 * Duyuruyu için fancyboy ı  yükler ve duyuruyu ekranda gösterir
+	 *
+	 *
+	 *
+	 */
+	function duyuruFancbox(){ 
+		$mtn=self::duyuruMetni(false).'<br><input type="checkbox" name="okundu">Bir daha gösterme';
+		echo "
 			<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js\" type=\"text/javascript\"></script>
 			<script src=\"".plugins_url('/fancybox/jquery.fancybox-1.3.4.js', __FILE__)."\" type=\"text/javascript\"></script>
 			<link media=\"screen\" href=\"".plugins_url('/fancybox/jquery.fancybox-1.3.4.css', __FILE__)."\" type=\"text/css\" rel=\"stylesheet\">
 			<script type=\"text/javascript\">
 				$(document).ready(function() {
-					$.fancybox( '<h1>demememd".$mtn."</h1>' );
+					$.fancybox( '".$mtn."' );
 				});
-			</script>
-			";}
-		}
-		
+			</script>";
 	}
 	/**
 	* Ayarsayfası oluştur
