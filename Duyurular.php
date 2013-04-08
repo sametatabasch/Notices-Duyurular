@@ -9,11 +9,11 @@
 */
 
 /**
-* Duyurular class ı 
+* GBD_Duyurular class ı 
 * @author Samet ATABAŞ
 * 
 */
-class Duyurular{
+class GBD_Duyurular{
 	/**
 	* eklenti dizinini tutar
 	* @var path string
@@ -23,16 +23,16 @@ class Duyurular{
 		//eklenti dizinini tanımla
 		$this->path = plugin_dir_url(__FILE__);
 		//duyurular için Duyuru  post type ını ekle
-		add_action( 'init', array(&$this , 'postTypeOlustur'));
+		add_action( 'init', array(&$this , 'GBD_postTypeOlustur'));
 		// ayar sayfasını ekle
-		add_action('admin_menu', array(&$this, 'ayarSayfasi'));
+		add_action('admin_menu', array(&$this, 'GBD_ayarSayfasi'));
 		// yazı  editorü sayfasına widget ekleme
-		add_action( 'add_meta_boxes', array(&$this, 'duyuruMetaBoxEkle'));
+		add_action( 'add_meta_boxes', array(&$this, 'GBD_duyuruMetaBoxEkle'));
 		// duyuru kaydedildiği zaman meta box taki  verileri işlemek için kullanılır
-		add_action( 'save_post', array(&$this, 'duyuruOlustur'));
+		add_action( 'save_post', array(&$this, 'GBD_duyuruOlustur'));
 		// duyuru düzenlerdiği zaman meta box taki  verileri işlemek için kullanılır
-		add_action( 'edit_post', array(&$this, 'duyuruDuzenle'));
-		add_action('init',array(&$this,'duyuruGoster'));
+		add_action( 'edit_post', array(&$this, 'GBD_duyuruDuzenle'));
+		add_action('init',array(&$this,'GBD_duyuruGoster'));
 	}
 	
 	/**
@@ -40,7 +40,7 @@ class Duyurular{
 	* 
 	* @return bollean
 	*/
-	public function postTypeOlustur() {
+	public function GBD_postTypeOlustur() {
 		register_post_type( 'Duyuru',
 			array(
 				'labels' => array(/*labels kullanılan başlıkları belirlemeye yarıyor*/
@@ -71,7 +71,7 @@ class Duyurular{
 	* tüm duyuruları enson yazılan ilk olacak şekilde dizi içinde saklar
 	* Qreturn array
 	*/
-	public static function duyuruMeta() {
+	public static function GBD_duyuruMeta() {
 		global $wpdb;
 		return  $wpdb->get_results("SELECT * FROM $wpdb->posts  WHERE post_type='duyuru' AND post_status='publish' ORDER BY ID DESC", 'ARRAY_A');
 		
@@ -82,7 +82,7 @@ class Duyurular{
 	* @param bool $echo true ise çıktı yapar false ise değer döndürür
 	* @return string
 	*/
-	public static function duyuruMetni($echo=true) {
+	public static function GBD_duyuruMetni($echo=true) {
 		$metin=self::duyuruMeta();
 		if($echo) {
 			echo $metin[0]['post_content'];
@@ -95,7 +95,7 @@ class Duyurular{
 	*
 	* @return string
 	*/
-	public static function duyuruTarihi() {
+	public static function GBD_duyuruTarihi() {
 		$tarih=self::duyuruMeta();
 		$tarih=str_replace('-', '', $tarih[0]["post_date_gmt"]);
 		echo substr($tarih,6,2).'.'.substr($tarih,4,2).'.'.substr($tarih,0,4);
@@ -105,7 +105,7 @@ class Duyurular{
 	 * duyurunun gösterim tarihine kimlerin göreceğine ve nasıl görüneceğine göre duyuruyu gösteren fonksiyon
 	 *
 	 */
-	public function duyuruGoster(){
+	public function GBD_duyuruGoster(){
 		$duyuru=self::duyuruMeta();
 		if(get_post_meta($duyuru[0]['ID'],"kimlerGorsun",1)=="herkes") {
 			add_action('wp_head',array(&$this,'duyuruFancbox'));	
@@ -117,7 +117,7 @@ class Duyurular{
 	 *
 	 *
 	 */
-	function duyuruFancbox(){ 
+	function GBD_duyuruFancbox(){ 
 		$mtn=self::duyuruMetni(false).'<br><input type="checkbox" name="okundu">Bir daha gösterme';
 		echo "
 			<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js\" type=\"text/javascript\"></script>
@@ -134,7 +134,7 @@ class Duyurular{
 	* 
 	* @return void
 	*/
-	public function ayarSayfasi() {
+	public function GBD_ayarSayfasi() {
 		add_options_page('Duyurular ', 'Duyurular ', 'manage_options', 'duyurular', array(&$this,'ayarSayfasiIcerik'));
 	}
 	/**
@@ -143,14 +143,14 @@ class Duyurular{
 	*
 	*
 	*/
-	public function ayarSayfasiIcerik() {
-		echo 'Ayar sayfası';
+	public function GBD_ayarSayfasiIcerik() {
+		echo 'Ayar sayfası';//m_uysl  ın metrica eklentisindeki  gibi  settigs sayfası ekleyip include eklemek iyi olur
 	}
 	/**
 	* Duyuru meta box ekler
 	*
 	*/
-	public function duyuruMetaBoxEkle() {
+	public function GBD_duyuruMetaBoxEkle() {
 		add_meta_box( 'duyuruMetaBox', 'Duyuru ayarları', array(&$this,'duyuruMetaBox'), 'Duyuru', 'side', 'default', $callback_args );
 	}
 	/**
@@ -158,7 +158,7 @@ class Duyurular{
 	* Duyuru oluşturma ve düzenleme sayfasına ayarlamalar için widget içeriği
 	*
 	*/
-	public function duyuruMetaBox() {
+	public function GBD_duyuruMetaBox() {
 		global $post_id;
 		$kimlerGorsun=get_post_meta($post_id,"kimlerGorsun",1);
 		$gosteriModu=get_post_meta($post_id,"gosteriModu",1);
@@ -201,7 +201,7 @@ class Duyurular{
 	* Post ile verileri alacak
 	*
 	*/
-	public function duyuruOlustur() {
+	public function GBD_duyuruOlustur() {
 		global $post_id;
 		$kimlerGorsun=$_POST["kimlerGorsun"];
 		$gosteriModu=$_POST["gosterimModu"];
@@ -212,13 +212,19 @@ class Duyurular{
 	 * duyuru  güncellendiği zaman yapılacak  olan düzenlemeler bu  fonksiyonile yapılıyor
 	 *
 	 */
-	public function duyuruDuzenle() {
+	public function GBD_duyuruDuzenle() {
 		global $post_id;
 		$kimlerGorsun=$_POST["kimlerGorsun"];
 		$gosteriModu=$_POST["gosterimModu"];
 		update_post_meta($post_id, "kimlerGorsun", $kimlerGorsun);
 		update_post_meta($post_id, "gosteriModu", $gosteriModu);
 	}
+	/**
+	 * 
+	 * Yayınlanan duyuruyu  kullanıcı  yada ziyaretci  okundu olarak işaretlediğinde çalışır 
+	 * add_action('template_redirect', 'wp_favorite_posts'); bu actionu  kullanacam ziyaretci için cookie üye için meta kullanıcam 
+	 *
+	 */
 }
-$duyuru= new Duyurular();
+$duyuru= new GBD_Duyurular();
 ?>
