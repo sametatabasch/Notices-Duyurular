@@ -23,6 +23,9 @@ class GB_Duyurular
         add_action('add_meta_boxes', array(&$this, 'GB_D_metaBoxEkle'));
         add_action('save_post', array(&$this, 'GB_D_duyuruKaydet'));
         add_action('edit_post', array(&$this, 'GB_D_duyuruDuzenle'));
+        add_action('wp_footer', array(&$this, 'GB_D_duyuruGoster'));
+        add_action('wp_enqueue_scripts', array(&$this, 'GB_D_addScriptAndStyle'));
+
     }
 
     /**
@@ -62,7 +65,7 @@ class GB_Duyurular
      *
      */
     public function GB_D_metaBoxEkle()
-    {
+    { //todo duyuru son gösrerim tarihi  duyurunun yazıldığı tarihten bir ay sonra olarak belirlensin(öntanımlı)
         function duyuruMetaBox()
         {
             global $post_id, $wp_locale;
@@ -157,7 +160,7 @@ class GB_Duyurular
         @$dakika = $_POST['dakika'];
         @$sonGosterimTarihi = $yil . '-' . $ay . '-' . $gun . ' ' . $saat . ':' . $dakika . ':00';
         add_post_meta($post_id, "kimlerGorsun", $kimlerGorsun, true);
-        add_post_meta($post_id, "gosteriModu", $gosteriModu, true);
+        add_post_meta($post_id, "gosterimModu", $gosteriModu, true);
         add_post_meta($post_id, "sonGosterimTarihi", $sonGosterimTarihi, true);
     }
 
@@ -178,22 +181,85 @@ class GB_Duyurular
         $dakika = $_POST['dakika'];
         $sonGosterimTarihi = $yil . '-' . $ay . '-' . $gun . ' ' . $saat . ':' . $dakika . ':00';
         update_post_meta($post_id, "kimlerGorsun", $kimlerGorsun);
-        update_post_meta($post_id, "gosteriModu", $gosteriModu);
+        update_post_meta($post_id, "gosterimModu", $gosteriModu);
         update_post_meta($post_id, "sonGosterimTarihi", $sonGosterimTarihi, true);
     }
 
     /**
+     * Duyuru bilgilerini  array olarak  getirir
+     * array(7) {
+     *  ["ID"]=>
+     *  ["post_date_gmt"]=>
+     *  ["post_content"]=>
+     *  ["post_title"]=>
+     *  ["kimlerGorsun"]=>
+     *  ["gosterimModu"]=>
+     *  ["sonGosterimTarihi"]=>
+     *}
+     *
      * @return array
      */
     public function GB_D_getDuyuru()
     {
         global $wpdb;
-        $duyurular = $wpdb->get_results("SELECT $wpdb->posts.ID,$wpdb->posts.post_date_gmt,$wpdb->posts.post_content,$wpdb->posts.post_title,$wpdb->postmeta.meta_value FROM $wpdb->posts INNER JOIN $wpdb->postmeta ON $wpdb->posts.ID = $wpdb->postmeta.post_id AND $wpdb->posts.post_type='duyuru' AND $wpdb->posts.post_status='publish' AND $wpdb->postmeta.meta_key='sonGosterimTarihi' ORDER BY $wpdb->posts.ID DESC", ARRAY_A);
-        for ($i = 0; $i < count($duyurular); $i++) {
-            $duyurular[$i]['sonGosterimTarihi'] = $duyurular[$i]['meta_value'];
-            unset($duyurular[$i]['meta_value']);
+        $duyurular = $wpdb->get_results("SELECT ID,post_date_gmt,post_content,post_title FROM $wpdb->posts WHERE post_type='duyuru' AND post_status='publish' ORDER BY ID DESC", ARRAY_A);
+        $out = array();
+        foreach ($duyurular as $duyuru) {
+            $duyuru['kimlerGorsun'] = get_post_meta($duyuru['ID'], 'kimlerGorsun', true);
+            $duyuru['gosterimModu'] = get_post_meta($duyuru['ID'], 'gosterimModu', true);
+            $duyuru['sonGosterimTarihi'] = get_post_meta($duyuru['ID'], 'sonGosterimTarihi', true);
+            $out[] = $duyuru;
         }
-        return $duyurular;
+        return $out;
+    }
+
+    public function GB_D_duyuruGoster()
+    {
+        foreach ($this->GB_D_getDuyuru() as $duyuru):
+            switch ($duyuru['gosterimModu']) {
+                case 'pencere':
+                    if ($duyuru['kimlerGorsun'] == 'herkes') {
+                        echo '<script type="text/javascript">
+                        jQuery(document).ready(function ($) {
+                            $("#duyuruLink").trigger("click");
+                        });</script>';
+                        echo '
+                        <div id="duyuru" class="alert">
+                                <h4>' . $duyuru['post_title'] . '</h4>
+                            <div class="">
+                                ' . $duyuru['post_content'] . '
+                            </div>
+                        </div>
+                        <a href="#duyuru" id="duyuruLink" class="fancybox" > sdff</a>';
+
+                    } else {
+                        if (is_user_logged_in()) {
+                            echo 'pencere Sadece Üyeler';
+                        }
+                    }
+
+                    break;
+                case 'bar':
+                    if ($duyuru['kimlerGorsun'] == 'herkes') {
+                        echo 'Bar Herkes';
+                    } else {
+                        if (is_user_logged_in()) {
+                            echo 'Bar Sadece Üyeler';
+                        }
+                    }
+                    break;
+            }
+        endforeach;
+
+    }
+
+    public function  GB_D_addScriptAndStyle()
+    {
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('fancybox', plugins_url('/fancybox/source/jquery.fancybox.js?v=2.1.5', __FILE__), array('jquery'));
+        wp_enqueue_style('fancybox_style', plugins_url('/fancybox/source/jquery.fancybox.css?v=2.1.5', __FILE__));
+        wp_enqueue_style('duyuru', plugins_url('style.css', __FILE__));
+        wp_enqueue_script('duyuru_style', plugins_url('default.js', __FILE__), array('jquery'));
     }
 }
 
