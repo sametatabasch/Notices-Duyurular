@@ -25,7 +25,6 @@ class GB_Duyurular
         add_action('edit_post', array(&$this, 'GB_D_duyuruDuzenle'));
         add_action('wp_footer', array(&$this, 'GB_D_duyuruGoster'));
         add_action('wp_enqueue_scripts', array(&$this, 'GB_D_addScriptAndStyle'));
-
     }
 
     /**
@@ -201,6 +200,7 @@ class GB_Duyurular
      */
     public function GB_D_getDuyuru()
     {
+        //todo get_posts fonksiyonu  kullanısın.örn=simple-notice/include/display-functions.php(7-8)
         global $wpdb;
         $duyurular = $wpdb->get_results("SELECT ID,post_date_gmt,post_content,post_title FROM $wpdb->posts WHERE post_type='duyuru' AND post_status='publish' ORDER BY ID DESC", ARRAY_A);
         $out = array();
@@ -215,6 +215,9 @@ class GB_Duyurular
 
     public function GB_D_duyuruGoster()
     {
+        //todo  son gösterim  tarihi  denetlemesi  yapılacak
+        //todo cookei  ve kullanıcı  bakmışmı  denetlemesi  yapılacak
+        //todo okundu işlemi  yapılacak.
         foreach ($this->GB_D_getDuyuru() as $duyuru):
             switch ($duyuru['gosterimModu']) {
                 case 'pencere':
@@ -224,22 +227,34 @@ class GB_Duyurular
                             $("#duyuruLink").trigger("click");
                         });</script>';
                         echo '
-                        <div id="duyuru" class="alert">
+                        <div id="duyuru" class="alert" style="display:none;">
                                 <h4>' . $duyuru['post_title'] . '</h4>
                             <div class="">
                                 ' . $duyuru['post_content'] . '
                             </div>
                         </div>
-                        <a href="#duyuru" id="duyuruLink" class="fancybox" > sdff</a>';
+                        <a href="#duyuru" id="duyuruLink" class="fancybox" style="display:none;"> sdff</a>';
 
                     } else {
                         if (is_user_logged_in()) {
-                            echo 'pencere Sadece Üyeler';
+                            echo '<script type="text/javascript">
+                        jQuery(document).ready(function ($) {
+                            $("#duyuruLink").trigger("click");
+                        });</script>';
+                            echo '
+                        <div id="duyuru" class="alert" style="display:none;">
+                                <h4>' . $duyuru['post_title'] . '</h4>
+                            <div class="">
+                                ' . $duyuru['post_content'] . '
+                            </div>
+                        </div>
+                        <a href="#duyuru" id="duyuruLink" class="fancybox" style="display:none;"> sdff</a>';
                         }
                     }
 
                     break;
                 case 'bar':
+                    //todo  bar dösterimi  position fixed olarak ayarlanıp  yapılacak .
                     if ($duyuru['kimlerGorsun'] == 'herkes') {
                         echo 'Bar Herkes';
                     } else {
