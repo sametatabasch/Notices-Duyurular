@@ -64,7 +64,7 @@ class GB_Duyurular
      *
      */
     public function GB_D_metaBoxEkle()
-    { //todo duyuru son gösrerim tarihi  duyurunun yazıldığı tarihten bir ay sonra olarak belirlensin(öntanımlı)
+    { //todo duyuru son gösrerim tarihi  duyurunun yazıldığı tarihten bir ay sonra olarak belirlensin(öntanımlı) veya duyuru  yayınlanırken  son okuma tarihinin  şimdiki  zaman olmaması kontrol  edilsin .
         function duyuruMetaBox()
         {
             global $post_id, $wp_locale;
@@ -93,7 +93,7 @@ class GB_Duyurular
             if ($kimlerGorsun == 'uyeler') {
                 $out .= 'selected=""';
             }
-            $out .= ' value=dd"uyeler">Sadece Üyeler
+            $out .= ' value="uyeler">Sadece Üyeler
             </option>
             </select>
             </div>
@@ -200,7 +200,7 @@ class GB_Duyurular
      */
     public function GB_D_getDuyuru()
     {
-        //todo get_posts fonksiyonu  kullanısın.örn=simple-notice/include/display-functions.php(7-8)
+
         global $wpdb;
         $duyurular = $wpdb->get_results("SELECT ID,post_date_gmt,post_content,post_title FROM $wpdb->posts WHERE post_type='duyuru' AND post_status='publish' ORDER BY ID DESC", ARRAY_A);
         $out = array();
@@ -216,7 +216,7 @@ class GB_Duyurular
     public function GB_D_duyuruGoster()
     {
         //todo  son gösterim  tarihi  denetlemesi  yapılacak
-        //todo cookei  ve kullanıcı  bakmışmı  denetlemesi  yapılacak
+        //todo cookie  ve kullanıcı  bakmışmı  denetlemesi  yapılacak
         //todo okundu işlemi  yapılacak.
         foreach ($this->GB_D_getDuyuru() as $duyuru):
             switch ($duyuru['gosterimModu']) {
@@ -227,13 +227,11 @@ class GB_Duyurular
                             $("#duyuruLink").trigger("click");
                         });</script>';
                         echo '
-                        <div id="duyuru" class="alert" style="display:none;">
-                                <h4>' . $duyuru['post_title'] . '</h4>
-                            <div class="">
-                                ' . $duyuru['post_content'] . '
-                            </div>
+                        <div id="fancy-' . $duyuru['ID'] . '" class="alert" style="display:none;">
+                                <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
+                                ' . do_shortcode(wpautop($duyuru['post_content'])) . '
                         </div>
-                        <a href="#duyuru" id="duyuruLink" class="fancybox" style="display:none;"> sdff</a>';
+                        <a href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink" class="fancybox" style="display:none;"> sdff</a>';
 
                     } else {
                         if (is_user_logged_in()) {
@@ -242,24 +240,34 @@ class GB_Duyurular
                             $("#duyuruLink").trigger("click");
                         });</script>';
                             echo '
-                        <div id="duyuru" class="alert" style="display:none;">
-                                <h4>' . $duyuru['post_title'] . '</h4>
+                        <div id="fancy-' . $duyuru['ID'] . '" class="alert" style="display:none;">
+                                <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
                             <div class="">
-                                ' . $duyuru['post_content'] . '
+                                ' . do_shortcode(wpautop($duyuru['post_content'])) . '
                             </div>
                         </div>
-                        <a href="#duyuru" id="duyuruLink" class="fancybox" style="display:none;"> sdff</a>';
+                        <a href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink" class="fancybox" style="display:none;"> sdff</a>';
                         }
                     }
 
                     break;
                 case 'bar':
-                    //todo  bar dösterimi  position fixed olarak ayarlanıp  yapılacak .
+                    //todo 2. ve sonraki  barların top  değeri ondan önceki barın  yüksekliği eklenerek sıralanacak Jquery ile
                     if ($duyuru['kimlerGorsun'] == 'herkes') {
-                        echo 'Bar Herkes';
+                        echo '
+                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert">
+                                <button type="button" class="close" >&times;</button>
+                                <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
+                                ' . do_shortcode(wpautop($duyuru['post_content'])) . '
+                            </div>';
                     } else {
                         if (is_user_logged_in()) {
-                            echo 'Bar Sadece Üyeler';
+                            echo '
+                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert">
+                                <button type="button" class="close">&times;</button>
+                                <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
+                                ' . do_shortcode(wpautop($duyuru['post_content'])) . '
+                            </div>';
                         }
                     }
                     break;
