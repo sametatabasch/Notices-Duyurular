@@ -171,17 +171,17 @@ class GB_Duyurular
     public function GB_D_duyuruDuzenle()
     {
         global $post_id;
-        $kimlerGorsun = $_POST["kimlerGorsun"];
-        $gosteriModu = $_POST["gosterimModu"];
-        $gun = $_POST['gun'];
-        $ay = $_POST['ay'];
-        $yil = $_POST['yil'];
-        $saat = $_POST['saat'];
-        $dakika = $_POST['dakika'];
-        $sonGosterimTarihi = $yil . '-' . $ay . '-' . $gun . ' ' . $saat . ':' . $dakika . ':00';
+        @$kimlerGorsun = $_POST["kimlerGorsun"];
+        @$gosteriModu = $_POST["gosterimModu"];
+        @$gun = $_POST['gun'];
+        @$ay = $_POST['ay'];
+        @$yil = $_POST['yil'];
+        @$saat = $_POST['saat'];
+        @$dakika = $_POST['dakika'];
+        @$sonGosterimTarihi = $yil . '-' . $ay . '-' . $gun . ' ' . $saat . ':' . $dakika . ':00';
         update_post_meta($post_id, "kimlerGorsun", $kimlerGorsun);
         update_post_meta($post_id, "gosterimModu", $gosteriModu);
-        update_post_meta($post_id, "sonGosterimTarihi", $sonGosterimTarihi, true);
+        update_post_meta($post_id, "sonGosterimTarihi", $sonGosterimTarihi);
     }
 
     /**
@@ -215,10 +215,14 @@ class GB_Duyurular
 
     public function GB_D_duyuruGoster()
     {
-        //todo  son gösterim  tarihi  denetlemesi  yapılacak
         //todo cookie  ve kullanıcı  bakmışmı  denetlemesi  yapılacak
         //todo okundu işlemi  yapılacak.
         foreach ($this->GB_D_getDuyuru() as $duyuru):
+            if ($duyuru['sonGosterimTarihi'] < gmdate('Y-m-d H:i:s')) { // Son gösterim tarihi geçen duyuru çöpe taşınır
+                $duyuru['post_status'] = 'trash';
+                wp_update_post($duyuru);
+                continue;
+            }
             switch ($duyuru['gosterimModu']) {
                 case 'pencere':
                     if ($duyuru['kimlerGorsun'] == 'herkes') {
