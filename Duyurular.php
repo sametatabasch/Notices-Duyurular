@@ -15,6 +15,8 @@ class GB_Duyurular
 
     public $pathUrl;
 
+    public $duyuruContent = '<div class="barContainer">';
+
     public function __construct()
     {
         $this->path = plugin_dir_path(__FILE__);
@@ -25,6 +27,7 @@ class GB_Duyurular
         add_action('edit_post', array(&$this, 'GB_D_duyuruDuzenle'));
         add_action('wp_footer', array(&$this, 'GB_D_duyuruGoster'));
         add_action('wp_enqueue_scripts', array(&$this, 'GB_D_addScriptAndStyle'));
+        //add_action('init', array(&$this, 'GB_D_getDuyuru'));
     }
 
     /**
@@ -200,7 +203,6 @@ class GB_Duyurular
      */
     public function GB_D_getDuyuru()
     {
-
         global $wpdb;
         $duyurular = $wpdb->get_results("SELECT ID,post_date_gmt,post_content,post_title FROM $wpdb->posts WHERE post_type='duyuru' AND post_status='publish' ORDER BY ID DESC", ARRAY_A);
         $out = array();
@@ -210,6 +212,7 @@ class GB_Duyurular
             $duyuru['sonGosterimTarihi'] = get_post_meta($duyuru['ID'], 'sonGosterimTarihi', true);
             $out[] = $duyuru;
         }
+        //echo '<pre>';print_r($out);echo '</pre>';
         return $out;
     }
 
@@ -226,11 +229,11 @@ class GB_Duyurular
             switch ($duyuru['gosterimModu']) {
                 case 'pencere':
                     if ($duyuru['kimlerGorsun'] == 'herkes') {
-                        echo '<script type="text/javascript">
+                        $this->duyuruContent .= '<script type="text/javascript">
                         jQuery(document).ready(function ($) {
                             $("#duyuruLink").trigger("click");
                         });</script>';
-                        echo '
+                        $this->duyuruContent .= '
                         <div id="fancy-' . $duyuru['ID'] . '" class="alert" style="display:none;">
                                 <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
                                 ' . do_shortcode(wpautop($duyuru['post_content'])) . '
@@ -239,11 +242,11 @@ class GB_Duyurular
 
                     } else {
                         if (is_user_logged_in()) {
-                            echo '<script type="text/javascript">
+                            $this->duyuruContent .= '<script type="text/javascript">
                         jQuery(document).ready(function ($) {
                             $("#duyuruLink").trigger("click");
                         });</script>';
-                            echo '
+                            $this->duyuruContent .= '
                         <div id="fancy-' . $duyuru['ID'] . '" class="alert" style="display:none;">
                                 <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
                             <div class="">
@@ -256,9 +259,8 @@ class GB_Duyurular
 
                     break;
                 case 'bar':
-                    //todo 2. ve sonraki  barların top  değeri ondan önceki barın  yüksekliği eklenerek sıralanacak Jquery ile
                     if ($duyuru['kimlerGorsun'] == 'herkes') {
-                        echo '
+                        $this->duyuruContent .= '
                             <div id="bar-' . $duyuru['ID'] . '" class="bar alert">
                                 <button type="button" class="close" >&times;</button>
                                 <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
@@ -266,7 +268,7 @@ class GB_Duyurular
                             </div>';
                     } else {
                         if (is_user_logged_in()) {
-                            echo '
+                            $this->duyuruContent .= '
                             <div id="bar-' . $duyuru['ID'] . '" class="bar alert">
                                 <button type="button" class="close">&times;</button>
                                 <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
@@ -277,8 +279,19 @@ class GB_Duyurular
                     break;
             }
         endforeach;
-
+        $this->GB_D_duyuruContent();
     }
+
+    public function GB_D_duyuruContent($echo = true)
+    {
+        $this->duyuruContent .= '</div>';
+        if ($echo) {
+            echo $this->duyuruContent;
+        } else {
+            return $this->duyuruContent;
+        }
+    }
+
 
     public function  GB_D_addScriptAndStyle()
     {
@@ -287,6 +300,16 @@ class GB_Duyurular
         wp_enqueue_style('fancybox_style', plugins_url('/fancybox/source/jquery.fancybox.css?v=2.1.5', __FILE__));
         wp_enqueue_style('duyuru', plugins_url('style.css', __FILE__));
         wp_enqueue_script('duyuru_style', plugins_url('default.js', __FILE__), array('jquery'));
+    }
+
+    /**
+     *
+     * add_action('template_redirect','GB_D_okunduIsaretle');
+     */
+    public function GB_D_okunduIsaretle()
+    {
+        //todo kullanıcı  giriş yapmışsa user meta ya  kayıt  yapılacak
+        //todo girş yapmış kullanıcı  değilse cookie oluşturulacak
     }
 }
 

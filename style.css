@@ -107,11 +107,16 @@ button.close {
     margin: 0 0 0 10px;
 }
 
-.admin-bar .bar {
+.admin-bar .barContainer {
     top: 28px;
 }
 
 .bar {
+    position: static;
+    width: 100%;
+    margin-bottom: 2px;
+}
+.barContsiner{
     position: fixed;
     top: 0;
     left: 0;
