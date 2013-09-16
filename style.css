@@ -6,6 +6,7 @@
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
+    height: 100%;
 }
 
 .alert,
@@ -116,10 +117,19 @@ button.close {
     width: 100%;
     margin-bottom: 2px;
 }
-.barContsiner{
+.barContainer{
     position: fixed;
     top: 0;
     left: 0;
     z-index: 9999;
     width: 100%;
+}
+.alert .okundu{
+    font-size: 10px;
+    padding: 0 5px 0 0;
+    text-align: right;
+    text-decoration: none;
+}
+.alert .okundu a{
+    color: #c09853;
 }

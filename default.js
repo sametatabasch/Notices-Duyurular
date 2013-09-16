@@ -12,7 +12,5 @@ jQuery(document).ready(function ($) {
     /* çarpıya  basınca  uyarıyı  ekrandan kaldırma işlemi */
     $('.close').click(function(){
         $(this).parent().remove();
-
     });
-//todo GB_D_okunduIsaretle()  işlemi  yapılacak ajax ile  olabilir.Bunu  yapan bir fonksiyon oluşturulacak  ve fancybox afterclose ile de  bu fonksiyon  çalıştırılacak
 });

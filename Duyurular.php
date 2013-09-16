@@ -27,6 +27,7 @@ class GB_Duyurular
         add_action('edit_post', array(&$this, 'GB_D_duyuruDuzenle'));
         add_action('wp_footer', array(&$this, 'GB_D_duyuruGoster'));
         add_action('wp_enqueue_scripts', array(&$this, 'GB_D_addScriptAndStyle'));
+        add_action('template_redirect', array(&$this, 'GB_D_okunduIsaretle'));
         //add_action('init', array(&$this, 'GB_D_getDuyuru'));
     }
 
@@ -220,12 +221,14 @@ class GB_Duyurular
     {
         //todo cookie  ve kullanıcı  bakmışmı  denetlemesi  yapılacak
         //todo okundu işlemi  yapılacak.
+        //todo diğer css seçenekleri  eklenecek alert-danger gibi
         foreach ($this->GB_D_getDuyuru() as $duyuru):
             if ($duyuru['sonGosterimTarihi'] < gmdate('Y-m-d H:i:s')) { // Son gösterim tarihi geçen duyuru çöpe taşınır
                 $duyuru['post_status'] = 'trash';
                 wp_update_post($duyuru);
                 continue;
             }
+            if ($this->GB_D_duyuruOkundumu($duyuru['ID'])) continue;
             switch ($duyuru['gosterimModu']) {
                 case 'pencere':
                     if ($duyuru['kimlerGorsun'] == 'herkes') {
@@ -237,8 +240,9 @@ class GB_Duyurular
                         <div id="fancy-' . $duyuru['ID'] . '" class="alert" style="display:none;">
                                 <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
                                 ' . do_shortcode(wpautop($duyuru['post_content'])) . '
+                                <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
                         </div>
-                        <a href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink" class="fancybox" style="display:none;"> sdff</a>';
+                        <a href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink" class="fancybox" style="display:none;"> </a>';
 
                     } else {
                         if (is_user_logged_in()) {
@@ -249,9 +253,8 @@ class GB_Duyurular
                             $this->duyuruContent .= '
                         <div id="fancy-' . $duyuru['ID'] . '" class="alert" style="display:none;">
                                 <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
-                            <div class="">
                                 ' . do_shortcode(wpautop($duyuru['post_content'])) . '
-                            </div>
+                                <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
                         </div>
                         <a href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink" class="fancybox" style="display:none;"> sdff</a>';
                         }
@@ -265,6 +268,7 @@ class GB_Duyurular
                                 <button type="button" class="close" >&times;</button>
                                 <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
                                 ' . do_shortcode(wpautop($duyuru['post_content'])) . '
+                                <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
                             </div>';
                     } else {
                         if (is_user_logged_in()) {
@@ -273,6 +277,7 @@ class GB_Duyurular
                                 <button type="button" class="close">&times;</button>
                                 <h4>' . ucfirst(get_the_title($duyuru["ID"])) . '</h4>
                                 ' . do_shortcode(wpautop($duyuru['post_content'])) . '
+                                <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
                             </div>';
                         }
                     }
@@ -303,13 +308,52 @@ class GB_Duyurular
     }
 
     /**
+     * Duyurudaki  okundu linki tıklandığında ilgili duyuruyu okundu olarak kaydeder
      *
      * add_action('template_redirect','GB_D_okunduIsaretle');
      */
     public function GB_D_okunduIsaretle()
     {
-        //todo kullanıcı  giriş yapmışsa user meta ya  kayıt  yapılacak
-        //todo girş yapmış kullanıcı  değilse cookie oluşturulacak
+        if (isset($_REQUEST['GB_D_duyuruId'])) {
+            $duyuruId = $_REQUEST['GB_D_duyuruId'];
+        } else {
+            return;
+        }
+        if (is_user_logged_in()) {
+            global $current_user;
+            get_currentuserinfo();
+            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_okunanDuyurular',true);
+            $okunanDuyurular[] = $duyuruId;
+            update_user_meta($current_user->ID, 'GB_D_okunanDuyurular', $okunanDuyurular);
+
+        } else {
+            //todo #13
+            if (isset($_COOKIE['GB_D_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_okunanDuyurular'];
+            $okunanDuyurular[$duyuruId] = 'true';
+            //todo duyuru  son  gösterim tarihi expire olarak  ayarlanmalı #12
+            $expire = time() + 60 * 60 * 24 * 30;
+            setcookie("GB_D_okunanDuyurular[$duyuruId]", 'true', $expire);
+
+        }
+    }
+
+    /**
+     * ID numarası  belirtilen duyurunun okundu olarak işaretlenmiş olup olmadığını kontrol eder
+     *
+     * @param $id Kontrol edilecek duyurunun ID numarası
+     * @return bool
+     */
+    public function GB_D_duyuruOkundumu($id)
+    {
+        if (is_user_logged_in()) {
+            global $current_user;
+            get_currentuserinfo();
+            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_okunanDuyurular', true);
+            return in_array($id, $okunanDuyurular);
+        } else {
+            if (isset($_COOKIE['GB_D_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_okunanDuyurular'];
+            return array_key_exists($id, $okunanDuyurular);
+        }
     }
 }
 
