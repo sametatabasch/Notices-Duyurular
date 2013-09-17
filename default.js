@@ -7,10 +7,10 @@
  */
 
 jQuery(document).ready(function ($) {
-    $('.fancybox').fancybox({margin: 0, padding: 0, autoCenter: true, autoResize: true, closeBtn: true, minHeight: 0});
+    $('.fancybox').fancybox({padding: 0, maxWidth: 960});
 
     /* çarpıya  basınca  uyarıyı  ekrandan kaldırma işlemi */
-    $('.close').click(function(){
+    $('.close').click(function () {
         $(this).parent().remove();
     });
 });

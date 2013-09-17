@@ -1,5 +1,6 @@
 <?php
 //todo eklenti urlsi olarak gençbilişimde yazdığım yazının linki olacak
+//todo Multi  site için uyumlu  hale gelecek #14
 /*
     Plugin Name: Duyurular
     Plugin URI: http://www.gençbilişim.net
@@ -219,8 +220,6 @@ class GB_Duyurular
 
     public function GB_D_duyuruGoster()
     {
-        //todo cookie  ve kullanıcı  bakmışmı  denetlemesi  yapılacak
-        //todo okundu işlemi  yapılacak.
         //todo diğer css seçenekleri  eklenecek alert-danger gibi
         foreach ($this->GB_D_getDuyuru() as $duyuru):
             if ($duyuru['sonGosterimTarihi'] < gmdate('Y-m-d H:i:s')) { // Son gösterim tarihi geçen duyuru çöpe taşınır
@@ -314,6 +313,7 @@ class GB_Duyurular
      */
     public function GB_D_okunduIsaretle()
     {
+        global $blog_id;
         if (isset($_REQUEST['GB_D_duyuruId'])) {
             $duyuruId = $_REQUEST['GB_D_duyuruId'];
         } else {
@@ -322,17 +322,17 @@ class GB_Duyurular
         if (is_user_logged_in()) {
             global $current_user;
             get_currentuserinfo();
-            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_okunanDuyurular',true);
+            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_'.$blog_id.'_okunanDuyurular',true);
             $okunanDuyurular[] = $duyuruId;
-            update_user_meta($current_user->ID, 'GB_D_okunanDuyurular', $okunanDuyurular);
+            update_user_meta($current_user->ID, 'GB_D_'.$blog_id.'_okunanDuyurular', $okunanDuyurular);
 
         } else {
             //todo #13
-            if (isset($_COOKIE['GB_D_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_okunanDuyurular'];
+            if (isset($_COOKIE['GB_D_'.$blog_id.'_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_'.$blog_id.'_okunanDuyurular'];
             $okunanDuyurular[$duyuruId] = 'true';
             //todo duyuru  son  gösterim tarihi expire olarak  ayarlanmalı #12
             $expire = time() + 60 * 60 * 24 * 30;
-            setcookie("GB_D_okunanDuyurular[$duyuruId]", 'true', $expire);
+            setcookie("GB_D_".$blog_id."_okunanDuyurular[$duyuruId]", 'true', $expire);
 
         }
     }
@@ -345,13 +345,14 @@ class GB_Duyurular
      */
     public function GB_D_duyuruOkundumu($id)
     {
+        global $blog_id;
         if (is_user_logged_in()) {
             global $current_user;
             get_currentuserinfo();
-            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_okunanDuyurular', true);
+            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_'.$blog_id.'_okunanDuyurular', true);
             return in_array($id, $okunanDuyurular);
         } else {
-            if (isset($_COOKIE['GB_D_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_okunanDuyurular'];
+            if (isset($_COOKIE['GB_D_'.$blog_id.'_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_'.$blog_id.'_okunanDuyurular'];
             return array_key_exists($id, $okunanDuyurular);
         }
     }
