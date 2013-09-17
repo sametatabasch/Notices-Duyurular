@@ -1,6 +1,7 @@
 <?php
 //todo eklenti urlsi olarak gençbilişimde yazdığım yazının linki olacak
 //todo Multi  site için uyumlu  hale gelecek #14
+//todo  duyuru  silindiği zaman  okundu  bilgileride  silinsin.
 /*
     Plugin Name: Duyurular
     Plugin URI: http://www.gençbilişim.net
@@ -34,6 +35,7 @@ class GB_Duyurular
 
     /**
      * init action a Duyurular için yeni  post type ın  özelliklerini belirler.
+     * add_action('init', array(&$this, 'GB_D_postTypeEkle'));
      */
     public function GB_D_postTypeEkle()
     {
@@ -66,24 +68,18 @@ class GB_Duyurular
     /**
      * Duyuru meta box ekler
      * Duyuru oluşturma ve düzenleme sayfasına ayarlamalar için widget içeriği
-     *
+     * add_action('add_meta_boxes', array(&$this, 'GB_D_metaBoxEkle'));
      */
     public function GB_D_metaBoxEkle()
     { //todo duyuru son gösrerim tarihi  duyurunun yazıldığı tarihten bir ay sonra olarak belirlensin(öntanımlı) veya duyuru  yayınlanırken  son okuma tarihinin  şimdiki  zaman olmaması kontrol  edilsin .
+        //todo #5
         function duyuruMetaBox()
         {
             global $post_id, $wp_locale;
             $kimlerGorsun = get_post_meta($post_id, "kimlerGorsun", 1);
             $gosteriModu = get_post_meta($post_id, "gosteriModu", 1);
             $sonGosterimTarihi = get_post_meta($post_id, 'sonGosterimTarihi', 1);
-            empty($sonGosterimTarihi) ? $gdate = gmdate('Y-m-d H:i:s') : $gdate = $sonGosterimTarihi;
-            $date = array(
-                'year' => substr(get_date_from_gmt($gdate), 0, 4),
-                'ay' => substr(get_date_from_gmt($gdate), 5, 2),
-                'mday' => substr(get_date_from_gmt($gdate), 8, 2),
-                'hours' => substr(get_date_from_gmt($gdate), 11, 2),
-                'minutes' => substr(get_date_from_gmt($gdate), 14, 2)
-            );
+            empty($sonGosterimTarihi) ? $date = GB_Duyurular::GB_D_getDate() : $date = GB_Duyurular::GB_D_getDate($sonGosterimTarihi);
             $out = '
             <form>
                 <div class="misc-pub-section">
@@ -124,7 +120,7 @@ class GB_Duyurular
                 <span id="timestamp">
                     <b>Son Gösterim Tarihi</b>
                 </span><br/>
-                <input type="text" maxlength="2" size="2" value="' . $date["mday"] . '" name="gun" id="jj">.
+                <input type="text" maxlength="2" size="2" value="' . $date["gun"] . '" name="gun" id="jj">.
                 <select name="ay" id="mm">';
             $x = array('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',); //get_date_from_gtm fonkisiyonun da 1 yerine 01 olması gerekiyor
 
@@ -135,9 +131,9 @@ class GB_Duyurular
             }
             $out .= '
                 </select>.
-                <input type="text" maxlength="4" size="4" value="' . $date["year"] . '" name="yil" id="aa"> @
-                <input type="text" maxlength="2" size="2" value="' . $date["hours"] . '" name="saat" id="hh"> :
-                <input type="text" maxlength="2" size="2" value="' . $date["minutes"] . '" name="dakika" id="mn">
+                <input type="text" maxlength="4" size="4" value="' . $date["yil"] . '" name="yil" id="aa"> @
+                <input type="text" maxlength="2" size="2" value="' . $date["saat"] . '" name="saat" id="hh"> :
+                <input type="text" maxlength="2" size="2" value="' . $date["dakika"] . '" name="dakika" id="mn">
             </div>
             </form>';
             echo $out;
@@ -150,7 +146,7 @@ class GB_Duyurular
      * Duyuru  Meta box  içeriğindeki verileri alıp  işleyerek  duyuruyo oluştururken ek işlenmleri yapacak
      * Post ile verileri alacak
      *
-     * add_action('save_post', array(&$this, 'GB_D_duyuruKaydet'));
+     *  add_action('save_post', array(&$this, 'GB_D_duyuruKaydet'));
      */
     public function GB_D_duyuruKaydet()
     {
@@ -218,11 +214,15 @@ class GB_Duyurular
         return $out;
     }
 
+    /**
+     * Uygun duyuruları sayfaya basar
+     *  add_action('wp_footer', array(&$this, 'GB_D_duyuruGoster'));
+     */
     public function GB_D_duyuruGoster()
     {
         //todo diğer css seçenekleri  eklenecek alert-danger gibi
         foreach ($this->GB_D_getDuyuru() as $duyuru):
-            if ($duyuru['sonGosterimTarihi'] < gmdate('Y-m-d H:i:s')) { // Son gösterim tarihi geçen duyuru çöpe taşınır
+            if ($duyuru['sonGosterimTarihi'] < date_i18n('Y-m-d H:i:s')) { // Son gösterim tarihi geçen duyuru çöpe taşınır
                 $duyuru['post_status'] = 'trash';
                 wp_update_post($duyuru);
                 continue;
@@ -286,6 +286,11 @@ class GB_Duyurular
         $this->GB_D_duyuruContent();
     }
 
+    /**
+     *
+     * @param bool $echo
+     * @return string
+     */
     public function GB_D_duyuruContent($echo = true)
     {
         $this->duyuruContent .= '</div>';
@@ -296,7 +301,10 @@ class GB_Duyurular
         }
     }
 
-
+    /**
+     * style ve script dosyalarını  yükler
+     * add_action('wp_enqueue_scripts', array(&$this, 'GB_D_addScriptAndStyle'));
+     */
     public function  GB_D_addScriptAndStyle()
     {
         wp_enqueue_script('jquery');
@@ -322,17 +330,18 @@ class GB_Duyurular
         if (is_user_logged_in()) {
             global $current_user;
             get_currentuserinfo();
-            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_'.$blog_id.'_okunanDuyurular',true);
+            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_' . $blog_id . '_okunanDuyurular', true);
             $okunanDuyurular[] = $duyuruId;
-            update_user_meta($current_user->ID, 'GB_D_'.$blog_id.'_okunanDuyurular', $okunanDuyurular);
+            update_user_meta($current_user->ID, 'GB_D_' . $blog_id . '_okunanDuyurular', $okunanDuyurular);
 
         } else {
             //todo #13
-            if (isset($_COOKIE['GB_D_'.$blog_id.'_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_'.$blog_id.'_okunanDuyurular'];
+            if (isset($_COOKIE['GB_D_' . $blog_id . '_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_' . $blog_id . '_okunanDuyurular'];
             $okunanDuyurular[$duyuruId] = 'true';
-            //todo duyuru  son  gösterim tarihi expire olarak  ayarlanmalı #12
-            $expire = time() + 60 * 60 * 24 * 30;
-            setcookie("GB_D_".$blog_id."_okunanDuyurular[$duyuruId]", 'true', $expire);
+            $sonGosterimTarihi=get_post_meta($duyuruId,'sonGosterimTarihi',true);
+            $expire = $this->GB_D_getDate($sonGosterimTarihi,true);
+            //todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor
+            setcookie("GB_D_" . $blog_id . "_okunanDuyurular[$duyuruId]", 'true', $expire);
 
         }
     }
@@ -349,11 +358,40 @@ class GB_Duyurular
         if (is_user_logged_in()) {
             global $current_user;
             get_currentuserinfo();
-            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_'.$blog_id.'_okunanDuyurular', true);
+            $okunanDuyurular = get_user_meta($current_user->ID, 'GB_D_' . $blog_id . '_okunanDuyurular', true);
             return in_array($id, $okunanDuyurular);
         } else {
-            if (isset($_COOKIE['GB_D_'.$blog_id.'_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_'.$blog_id.'_okunanDuyurular'];
-            return array_key_exists($id, $okunanDuyurular);
+            if (isset($_COOKIE['GB_D_' . $blog_id . '_okunanDuyurular'])) {
+                $okunanDuyurular = $_COOKIE['GB_D_' . $blog_id . '_okunanDuyurular'];
+                return array_key_exists($id, $okunanDuyurular);
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * ('Y-m-d H:i:s') Formatındaki tarihi dizi değişkeni olarak döndürür
+     * Eğer mktime true ise mktime işleminin sonucunu  döndürür
+     * @param null $date
+     * @param bool $mktime
+     * @return array|int
+     */
+    public static function GB_D_getDate($date = null, $mktime = false)
+    {
+        if (is_null($date)) $date = date_i18n('Y-m-d H:i:s');
+        $datearr = array(
+            'yil' => substr($date, 0, 4),//get_date_from_gtm ye  dikkat.
+            'ay' => substr($date, 5, 2),
+            'gun' => substr($date, 8, 2),
+            'saat' => substr($date, 11, 2),
+            'dakika' => substr($date, 14, 2),
+            'saniye' => substr($date, 17, 2)
+        );
+        if ($mktime) {
+            return mktime($datearr['saat'], $datearr['dakika'], $datearr['saniye'], $datearr['ay'], $datearr['gun'], $datearr['yil']);
+        } else {
+            return $datearr;
         }
     }
 }
