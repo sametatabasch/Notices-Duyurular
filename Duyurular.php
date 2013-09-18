@@ -28,6 +28,7 @@ class GB_Duyurular
         add_action('add_meta_boxes', array(&$this, 'GB_D_metaBoxEkle'));
         add_action('save_post', array(&$this, 'GB_D_duyuruKaydet'));
         add_action('edit_post', array(&$this, 'GB_D_duyuruDuzenle'));
+        add_action('wp_trash_post', array(&$this, 'GB_D_duyuruCopeTasi'));
         add_action('wp_footer', array(&$this, 'GB_D_duyuruGoster'));
         add_action('wp_enqueue_scripts', array(&$this, 'GB_D_addScriptAndStyle'));
         add_action('admin_enqueue_scripts', array(&$this, 'GB_D_addStyleToAdminPage'));
@@ -219,6 +220,17 @@ class GB_Duyurular
     }
 
     /**
+     *
+     * add_action('wp_trash_post', array(&$this, 'GB_D_duyuruCopeTasi'));
+     */
+    public function GB_D_duyuruCopeTasi()
+    {
+        global $post_id;
+        $this->GB_D_okunduIsaretiniKaldir($post_id);
+
+    }
+
+    /**
      * Duyuru bilgilerini  array olarak  getirir
      * array(7) {
      *  ["ID"]=>
@@ -379,13 +391,20 @@ class GB_Duyurular
 
         } else {
             //todo * #13
-            if (isset($_COOKIE['GB_D_' . $blog_id . '_okunanDuyurular'])) $okunanDuyurular = $_COOKIE['GB_D_' . $blog_id . '_okunanDuyurular'];
-            $okunanDuyurular[$duyuruId] = 'true';
             $GB_D_sonGosterimTarihi = get_post_meta($duyuruId, 'GB_D_sonGosterimTarihi', true);
             $expire = $this->GB_D_getDate($GB_D_sonGosterimTarihi, true);
             //todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
             setcookie("GB_D_" . $blog_id . "_okunanDuyurular[$duyuruId]", 'true', $expire);
+        }
+    }
 
+    public function GB_D_okunduIsaretiniKaldir($duyuruId)
+    {
+        global $blog_id;
+        //todo  usermeta tablosunda ki  bütün kullanıcıların kayıtlarından okundu  işaretini kaldırmak gerekiyor.
+        if (isset($_COOKIE["GB_D_" . $blog_id . "_okunanDuyurular[$duyuruId]"])) {
+            $expire = time() - 36000;
+            setcookie("GB_D_" . $blog_id . "_okunanDuyurular[$duyuruId]", '', $expire);
         }
     }
 
