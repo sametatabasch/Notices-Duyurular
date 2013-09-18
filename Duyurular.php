@@ -390,12 +390,12 @@ class GB_Duyurular
             update_user_meta($current_user->ID, 'GB_D_' . $blog_id . '_okunanDuyurular', $okunanDuyurular);
 
         } else {
-            //todo * #13
             $GB_D_sonGosterimTarihi = get_post_meta($duyuruId, 'GB_D_sonGosterimTarihi', true);
             $expire = $this->GB_D_getDate($GB_D_sonGosterimTarihi, true);
             //todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
             setcookie("GB_D_" . $blog_id . "_okunanDuyurular[$duyuruId]", 'true', $expire);
         }
+        if(isset($_SERVER['HTTP_REFERER'])) wp_redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function GB_D_okunduIsaretiniKaldir($duyuruId)
