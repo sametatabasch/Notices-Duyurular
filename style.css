@@ -104,7 +104,7 @@ button.close {
 }
 
 .alert p {
-    margin: 0 0 0 10px;
+    margin: 0 10px 0 10px;
 }
 
 .admin-bar .barContainer {
@@ -150,4 +150,10 @@ button.close {
 
 .alert:hover .okundu {
     display: block;
+}
+/*Admin Panel*/
+.misc-pub-section .alert{margin-bottom: 3px;}
+.misc-pub-section .alert input{
+    margin-right: 5px;
+    vertical-align: text-bottom;
 }
