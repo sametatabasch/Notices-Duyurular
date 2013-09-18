@@ -74,8 +74,7 @@ class GB_Duyurular
      * add_action('add_meta_boxes', array(&$this, 'GB_D_metaBoxEkle'));
      */
     public function GB_D_metaBoxEkle()
-    { //todo * duyuru son gösrerim tarihi  duyurunun yazıldığı tarihten bir ay sonra olarak belirlensin(öntanımlı) veya duyuru  yGB_D_ayınlanırken  son okuma tarihinin  şimdiki  zaman olmaması kontrol  edilsin .
-        //todo #5
+    { //todo #5
         function duyuruMetaBox()
         {
             global $post_id, $wp_locale;
@@ -83,7 +82,12 @@ class GB_Duyurular
             $GB_D_gosterimModu = get_post_meta($post_id, "GB_D_gosterimModu", 1);
             $GB_D_sonGosterimTarihi = get_post_meta($post_id, 'GB_D_sonGosterimTarihi', 1);
             $GB_D_tasarim = get_post_meta($post_id, 'GB_D_tasarim', true);
-            empty($GB_D_sonGosterimTarihi) ? $date = GB_Duyurular::GB_D_getDate() : $date = GB_Duyurular::GB_D_getDate($GB_D_sonGosterimTarihi);
+            if (empty($GB_D_sonGosterimTarihi)) {
+                $date = GB_Duyurular::GB_D_getDate();
+                $date['GB_D_ay']++;
+            } else {
+                $date = GB_Duyurular::GB_D_getDate($GB_D_sonGosterimTarihi);
+            }
             $out = '
             <form>
                 <div class="misc-pub-section">
@@ -395,7 +399,7 @@ class GB_Duyurular
             //todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
             setcookie("GB_D_" . $blog_id . "_okunanDuyurular[$duyuruId]", 'true', $expire);
         }
-        if(isset($_SERVER['HTTP_REFERER'])) wp_redirect($_SERVER['HTTP_REFERER']);
+        if (isset($_SERVER['HTTP_REFERER'])) wp_redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function GB_D_okunduIsaretiniKaldir($duyuruId)
