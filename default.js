@@ -8,7 +8,7 @@
 
 jQuery(document).ready(function ($) {
 	$('.fancybox').fancybox({padding: 0, maxWidth: 960});
-
+	$('a.fancybox').last().trigger('click');
 	/* çarpıya  basınca  uyarıyı  ekrandan kaldırma işlemi */
 	$('.close').click(function () {
 		$(this).parent().remove();

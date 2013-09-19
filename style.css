@@ -107,7 +107,7 @@ button.close {
 	margin: 0 10px 0 10px;
 }
 
-.admin-bar .barContainer {
+.admin-bar .duyuruContainer {
 	top: 28px;
 }
 
@@ -127,7 +127,7 @@ button.close {
 	padding-top: 5px;
 }
 
-.barContainer {
+.duyuruContainer {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -142,6 +142,7 @@ button.close {
 	text-decoration: none;
 	display: none;
 	font-weight: bold;
+	margin-top:5px;
 }
 
 /*todo farklı tasarımlara göre renk belirle danger info ...*/
@@ -162,3 +163,27 @@ button.close {
 	margin-right: 5px;
 	vertical-align: text-bottom;
 }
+
+/*ileri geri  oklarını dışarı  taşımak için */
+.fancybox-nav {
+	width: 60px;
+}
+
+.fancybox-nav span {
+	visibility: visible;
+	opacity: 0.5;
+}
+
+.fancybox-nav:hover span {
+	opacity: 1;
+}
+
+.fancybox-next {
+	right: -60px;
+}
+
+.fancybox-prev {
+	left: -60px;
+}
+
+/*ileri geri  oklarını dışarı  taşımak için son *

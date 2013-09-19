@@ -3,7 +3,6 @@
 //todo Multi  site için uyumlu  hale gelecek #14
 //todo Admin panelde  gözükmesi sağlanacak check box ile denetlenebilir.
 //todo * duyuru  silindiği zaman  okundu  bilgileride  silinsin.
-//todo * fancybox çakışmasına  bir  çözüm bulmak gerekiyor.
 /*
     Plugin Name: Duyurular
     Plugin URI: http://www.gençbilişim.net
@@ -18,7 +17,7 @@ class GB_Duyurular {
 
 	public $pathUrl;
 
-	public $duyuruContent = '<div class="barContainer">';
+	public $duyuruContent = '<div class="duyuruContainer">';
 
 	public function __construct() {
 		$this->path    = plugin_dir_path( __FILE__ );
@@ -272,35 +271,25 @@ class GB_Duyurular {
 			switch ( $duyuru['GB_D_gosterimModu'] ) {
 				case 'pencere':
 					if ( $duyuru['GB_D_kimlerGorsun'] == 'herkes' ) {
-						$this->duyuruContent .= '<script type="text/javascript">
-                        jQuery(document).ready(function ($) {
-                            $("#duyuruLink").trigger("click");
-                        });</script>';
 						$this->duyuruContent .= '
-                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_tasarim'] . '" style="displGB_D_ay:none;">
+                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_tasarim'] . '" style="display:none;">
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
                                 <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
                         </div>
-                        <a href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink" class="fancybox" style="displGB_D_ay:none;"> </a>';
-
+                        <a rel="gallery" href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink['.$duyuru['ID'].']" class="fancybox" style="display:none;"></a>';
 					}
 					else {
 						if ( is_user_logged_in() ) {
-							$this->duyuruContent .= '<script type="text/javascript">
-                        jQuery(document).ready(function ($) {
-                            $("#duyuruLink").trigger("click");
-                        });</script>';
 							$this->duyuruContent .= '
-                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_tasarim'] . '" style="displGB_D_ay:none;">
+                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_tasarim'] . '" style="display:none;">
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
                                 <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
                         </div>
-                        <a href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink" class="fancybox" style="displGB_D_ay:none;"> sdff</a>';
+                        <a rel="gallery" href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink['.$duyuru['ID'].']" class="fancybox" style="display:none;"></a>';
 						}
 					}
-
 					break;
 				case 'bar':
 					if ( $duyuru['GB_D_kimlerGorsun'] == 'herkes' ) {
