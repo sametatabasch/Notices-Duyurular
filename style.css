@@ -142,12 +142,24 @@ button.close {
 	text-decoration: none;
 	display: none;
 	font-weight: bold;
-	margin-top:5px;
+	margin-top: 5px;
 }
 
-/*todo farklı tasarımlara göre renk belirle danger info ...*/
 .alert .okundu a {
 	color: #c09853;
+}
+
+.alert-info .okundu a {
+	color: #3a87ad;
+}
+
+.alert-danger .okundu a,
+.alert-error .okundu a {
+	color: #b94a48;
+}
+
+.alert-success .okundu a {
+	color: #468847;
 }
 
 .alert:hover .okundu {
