@@ -2,7 +2,6 @@
 //todo eklenti urlsi olarak gençbilişimde yazdığım yazının linki olacak
 //todo Multi  site için uyumlu  hale gelecek #14
 //todo Admin panelde  gözükmesi sağlanacak check box ile denetlenebilir.
-//todo * duyuru  silindiği zaman  okundu  bilgileride  silinsin.
 /*
     Plugin Name: Duyurular
     Plugin URI: http://www.gençbilişim.net
@@ -277,7 +276,7 @@ class GB_Duyurular {
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
                                 <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
                         </div>
-                        <a rel="gallery" href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink['.$duyuru['ID'].']" class="fancybox" style="display:none;"></a>';
+                        <a rel="gallery" href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink[' . $duyuru['ID'] . ']" class="fancybox" style="display:none;"></a>';
 					}
 					else {
 						if ( is_user_logged_in() ) {
@@ -287,7 +286,7 @@ class GB_Duyurular {
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
                                 <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
                         </div>
-                        <a rel="gallery" href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink['.$duyuru['ID'].']" class="fancybox" style="display:none;"></a>';
+                        <a rel="gallery" href="#fancy-' . $duyuru['ID'] . '" id="duyuruLink[' . $duyuru['ID'] . ']" class="fancybox" style="display:none;"></a>';
 						}
 					}
 					break;
@@ -319,6 +318,7 @@ class GB_Duyurular {
 	}
 
 	/**
+	 * Duyuruların içine yazıldığı <div class="duyuruContainer"> tağını döner/yazdırır.
 	 *
 	 * @param bool $echo
 	 *
@@ -370,26 +370,34 @@ class GB_Duyurular {
 		if ( is_user_logged_in() ) {
 			global $current_user;
 			get_currentuserinfo();
-			$okunanDuyurular   = get_user_meta( $current_user->ID, 'GB_D_' . $blog_id . '_okunanDuyurular', true );
+			$okunanDuyurular   = get_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", true );
 			$okunanDuyurular[] = $duyuruId;
-			update_user_meta( $current_user->ID, 'GB_D_' . $blog_id . '_okunanDuyurular', $okunanDuyurular );
+			update_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", $okunanDuyurular );
 
 		}
 		else {
 			$GB_D_sonGosterimTarihi = get_post_meta( $duyuruId, 'GB_D_sonGosterimTarihi', true );
 			$expire                 = $this->GB_D_getDate( $GB_D_sonGosterimTarihi, true );
 			//todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
-			setcookie( "GB_D_" . $blog_id . "_okunanDuyurular[$duyuruId]", 'true', $expire );
+			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$duyuruId]", 'true', $expire );
 		}
 		if ( isset( $_SERVER['HTTP_REFERER'] ) ) wp_redirect( $_SERVER['HTTP_REFERER'] );
 	}
 
 	public function GB_D_okunduIsaretiniKaldir( $duyuruId ) {
-		global $blog_id;
-		//todo * usermeta tablosunda ki  bütün kullanıcıların kayıtlarından okundu  işaretini kaldırmak gerekiyor.
-		if ( isset( $_COOKIE["GB_D_" . $blog_id . "_okunanDuyurular[$duyuruId]"] ) ) {
+		global $blog_id, $wpdb;
+		$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->usermeta where meta_key='GB_D_{$blog_id}_okunanDuyurular'" );
+		foreach ( $user_ids as $user_id ) {
+			$okunanDuyurular = get_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", true );
+			if ( array_search( $duyuruId, $okunanDuyurular )!==false ) {
+				unset( $okunanDuyurular[array_search( $duyuruId, $okunanDuyurular )] );//todo index sıralaması  bozuluyor 0,1,3 gibi. çok önemli  değil  ama düzenlenirse iyi olur
+				update_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", $okunanDuyurular );
+			}
+			else{echo 'yok'; continue;}
+		}
+		if ( isset( $_COOKIE["GB_D_{$blog_id}_okunanDuyurular[$duyuruId]"] ) ) {
 			$expire = time() - 36000;
-			setcookie( "GB_D_" . $blog_id . "_okunanDuyurular[$duyuruId]", '', $expire );
+			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$duyuruId]", '', $expire );
 		}
 	}
 
