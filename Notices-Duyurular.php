@@ -2,8 +2,9 @@
 //todo eklenti urlsi olarak gençbilişimde yazdığım yazının linki olacak
 //todo Multi  site için uyumlu  hale gelecek #14
 //todo Admin panelde  gözükmesi sağlanacak check box ile denetlenebilir.
+//todo Çöpe taşınıca metaların boşalması #11
 /*
-    Plugin Name: Duyurular
+    Plugin Name: Notices-Duyurular
     Plugin URI: http://www.gençbilişim.net
     Description: Gençbilişim Duyurular
     Author: Samet ATABAŞ
@@ -12,24 +13,26 @@
 */
 
 class GB_Duyurular {
-	public $path;
 
 	public $pathUrl;
 
 	public $duyuruContent = '<div class="duyuruContainer">';
 
+	public $textDomainString = 'Duyurular';
+
 	public function __construct() {
 		$this->path    = plugin_dir_path( __FILE__ );
 		$this->pathUrl = plugin_dir_url( __FILE__ );
-		add_action( 'init', array( &$this, 'GB_D_postTypeEkle' ) );
-		add_action( 'add_meta_boxes', array( &$this, 'GB_D_metaBoxEkle' ) );
-		add_action( 'save_post', array( &$this, 'GB_D_duyuruKaydet' ) );
-		add_action( 'edit_post', array( &$this, 'GB_D_duyuruDuzenle' ) );
-		add_action( 'wp_trash_post', array( &$this, 'GB_D_duyuruCopeTasi' ) );
-		add_action( 'wp_footer', array( &$this, 'GB_D_duyuruGoster' ) );
+		load_plugin_textDomain( $this->textDomainString, false, basename( dirname( __FILE__ ) ) . '/lang' );
+		add_action( 'init', array( &$this, 'GB_D_addPostType' ) );
+		add_action( 'add_meta_boxes', array( &$this, 'GB_D_addMetaBox' ) );
+		add_action( 'save_post', array( &$this, 'GB_D_saveDuyuru' ) );
+		add_action( 'edit_post', array( &$this, 'GB_D_editDuyuru' ) );
+		add_action( 'wp_trash_post', array( &$this, 'GB_D_moveTrashDuyuru' ) );
+		add_action( 'wp_footer', array( &$this, 'GB_D_showDuyuru' ) );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'GB_D_addScriptAndStyle' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'GB_D_addStyleToAdminPage' ) );
-		add_action( 'template_redirect', array( &$this, 'GB_D_okunduIsaretle' ) );
+		add_action( 'template_redirect', array( &$this, 'GB_D_markAsRead' ) );
 		//add_action('init', array(&$this, 'GB_D_getDuyuru'));
 	}
 
@@ -37,29 +40,29 @@ class GB_Duyurular {
 	 * init action a Duyurular için yeni  post type ın  özelliklerini belirler.
 	 * add_action('init', array(&$this, 'GB_D_postTypeEkle'));
 	 */
-	public function GB_D_postTypeEkle() {
+	public function GB_D_addPostType() {
 		register_post_type( 'Duyuru',
 			array(
 				'labels'       => array( /*labels kullanılan başlıkları belirlemeye yarıyor*/
-					'name'               => 'Duyuru',
-					'singular_name'      => 'Duyuru',
-					/*'add_new' => _x('Add New', 'book'), çoklu  dil  için örnek*/
-					'add_new'            => 'Yeni Duyuru',
-					'add_new_item'       => 'Yeni Duyuru Ekle',
-					'edit_item'          => 'Duyuruyu Düzenle',
-					'new_item'           => 'Yeni Duyuru',
-					'all_items'          => 'Tüm Duyurular',
-					'view_item'          => 'Duyuruyu Göster',
-					'search_items'       => 'Duyuru Ara',
-					'not_found'          => 'Duyuru Bulunamadı',
-					'not_found_in_trash' => 'Silinen Duyuru Yok',
+					'name'               => __( 'Notice', $this->textDomainString ),
+					'singular_name'      => __( 'Notice', $this->textDomainString ),
+					'add_new'            => __( 'New Notice', $this->textDomainString ),
+					'add_new_item'       => __( 'Add New Notice', $this->textDomainString ),
+					'edit_item'          => __( 'Edit Notice', $this->textDomainString ),
+					'new_item'           => __( 'New Notice', $this->textDomainString ),
+					'all_items'          => __( 'All Notice', $this->textDomainString ),
+					'view_item'          => __( 'View Notice', $this->textDomainString ),
+					'search_items'       => __( 'Search Notice', $this->textDomainString ),
+					'not_found'          => __( 'Notice Not Found', $this->textDomainString ),
+					'not_found_in_trash' => __( 'Notice Not Found In Trash', $this->textDomainString ),
 					'parent_item_colon'  => '',
-					'menu_name'          => 'Duyurular'
+					'menu_name'          => __( 'Notices', $this->textDomainString )
 				),
 				'public'       => false,
 				'has_archive'  => true,
 				'show_ui'      => true,
 				'show_in_menu' => true,
+				'menu_icon'    => $this->pathUrl . 'duyuru.ico'
 			)
 		);
 	}
@@ -69,106 +72,109 @@ class GB_Duyurular {
 	 * Duyuru oluşturma ve düzenleme sayfasına ayarlamalar için widget içeriği
 	 * add_action('add_meta_boxes', array(&$this, 'GB_D_metaBoxEkle'));
 	 */
-	public function GB_D_metaBoxEkle() { //todo #5
-		function duyuruMetaBox() {
-			global $post_id, $wp_locale;
-			$GB_D_kimlerGorsun      = get_post_meta( $post_id, "GB_D_kimlerGorsun", 1 );
-			$GB_D_gosterimModu      = get_post_meta( $post_id, "GB_D_gosterimModu", 1 );
-			$GB_D_sonGosterimTarihi = get_post_meta( $post_id, 'GB_D_sonGosterimTarihi', 1 );
-			$GB_D_tasarim           = get_post_meta( $post_id, 'GB_D_tasarim', true );
-			if ( empty( $GB_D_sonGosterimTarihi ) ) {
-				$date = GB_Duyurular::GB_D_getDate();
-				$date['GB_D_ay'] ++;
-			}
-			else {
-				$date = GB_Duyurular::GB_D_getDate( $GB_D_sonGosterimTarihi );
-			}
-			$out = '
+	public function GB_D_addMetaBox() { //todo #5
+		add_meta_box( 'GB_duyuruMetaBox', __( 'Notice Settings', $this->textDomainString ), array( &$this, 'duyuruMetaBox' ), 'Duyuru', 'side', 'default' );
+	}
+
+	/**
+	 * Metabox içeriğini  oluşturan fonksiyon
+	 */
+	public function duyuruMetaBox() {
+		global $post_id, $wp_locale;
+		$GB_D_whoCanSee      = get_post_meta( $post_id, "GB_D_whoCanSee", true );
+		$GB_D_displayMode      = get_post_meta( $post_id, "GB_D_displayMode", true );
+		$GB_D_lastDisplayDate = get_post_meta( $post_id, 'GB_D_lastDisplayDate', true );
+		$GB_D_type           = get_post_meta( $post_id, 'GB_D_type', true );
+		if ( empty( $GB_D_lastDisplayDate ) ) {
+			$date = $this->GB_D_getDate();
+			$date['GB_D_ay'] ++;
+		}
+		else {
+			$date = $this->GB_D_getDate( $GB_D_lastDisplayDate );
+		}
+		$out = '
             <form>
                 <div class="misc-pub-section">
-                    <span><b>Kimler görsün:</b></span>
-                    <select name="GB_D_kimlerGorsun">
+                    <span><b>' . __( 'Who can see:', $this->textDomainString ) . '</b></span>
+                    <select name="GB_D_whoCanSee">
                         <option ';
-			if ( $GB_D_kimlerGorsun == 'herkes' ) {
-				$out .= 'selected=""';
-			}
-			$out .= ' value="herkes">Herkes</option>
+		if ( $GB_D_whoCanSee == 'herkes' ) {
+			$out .= 'selected=""';
+		}
+		$out .= ' value="herkes">' . __( 'Everybody', $this->textDomainString ) . '</option>
                         <option ';
-			if ( $GB_D_kimlerGorsun == 'uyeler' ) {
-				$out .= 'selected=""';
-			}
-			$out .= ' value="uyeler">Sadece Üyeler
+		if ( $GB_D_whoCanSee == 'uyeler' ) {
+			$out .= 'selected=""';
+		}
+		$out .= ' value="uyeler">' . __( 'Only User', $this->textDomainString ) . '
             </option>
             </select>
             </div>
             <div class="misc-pub-section">
-                <span><b>Gösterim Modu:</b></span>
-                <select name="GB_D_gosterimModu">
+                <span><b>' . __( 'Display Mode:', $this->textDomainString ) . '</b></span>
+                <select name="GB_D_displayMode">
                     <option ';
-			if ( $GB_D_gosterimModu == 'pencere' ) {
-				$out .= 'selected=""';
-			}
-			$out .= ' value="pencere">Pencere
+		if ( $GB_D_displayMode == 'pencere' ) {
+			$out .= 'selected=""';
+		}
+		$out .= ' value="pencere">' . __( 'Window', $this->textDomainString ) . '
                     </option>
                     <option ';
-			if ( $GB_D_gosterimModu == 'bar' ) {
-				$out .= 'selected=""';
-			}
-			$out .= ' value="bar">Uyarı Şeridi
+		if ( $GB_D_displayMode == 'bar' ) {
+			$out .= 'selected=""';
+		}
+		$out .= ' value="bar">' . __( 'Bar', $this->textDomainString ) . '
                     </option>
                 </select>
             </div>
             <div class="clear"></div>
             <div class="misc-pub-section curtime">
                 <span id="timestamp">
-                    <b>Son Gösterim Tarihi</b>
+                    <b>' . __( 'Last display date', $this->textDomainString ) . '</b>
                 </span><br/>
                 <input type="text" maxlength="2" size="2" value="' . $date["GB_D_gun"] . '" name="GB_D_gun" id="jj">.
                 <select name="GB_D_ay" id="mm">';
-			$x = array( '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', ); //get_date_from_gtm fonkisiyonun da 1 yerine 01 olması gerekiyor
+		$x = array( '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', ); //get_date_from_gtm fonkisiyonun da 1 yerine 01 olması gerekiyor
 
-			for ( $i = 0; $i < 12; $i ++ ) {
-				$out .= '<option ';
-				if ( $x[$i] == $date['GB_D_ay'] ) $out .= 'selected="selected"';
-				$out .= ' value="' . $x[$i] . '">' . $x[$i] . '-' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $x[$i] ) ) . '</option>';
-			}
-			$out .= '
+		for ( $i = 0; $i < 12; $i ++ ) {
+			$out .= '<option ';
+			if ( $x[$i] == $date['GB_D_ay'] ) $out .= 'selected="selected"';
+			$out .= ' value="' . $x[$i] . '">' . $x[$i] . '-' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $x[$i] ) ) . '</option>';
+		}
+		$out .= '
                 </select>.
                 <input type="text" maxlength="4" size="4" value="' . $date["GB_D_yil"] . '" name="GB_D_yil" id="aa">@<input type="text" maxlength="2" size="2" value="' . $date["GB_D_saat"] . '" name="GB_D_saat" id="hh">:<input type="text" maxlength="2" size="2" value="' . $date["GB_D_dakika"] . '" name="GB_D_dakika" id="mn">
             </div>';
-			$out .= '
+		$out .= '
             <div class="misc-pub-section misc-pub-section-last"xmlns="http://www.w3.org/1999/html">
                 <span>
-                <b>Tasarım:</b>
+                <b>' . __( 'Type:', $this->textDomainString ) . '</b>
                 </span>
                 <div class="alert"><input type="radio" ';
-			if ( $GB_D_tasarim == "" ) {
-				$out .= 'checked';
-			}
-			$out .= ' name="GB_D_tasarim" value="">Öntanımlı</div>
+		if ( $GB_D_type == "" ) {
+			$out .= 'checked';
+		}
+		$out .= ' name="GB_D_type" value="">' . __( 'Default', $this->textDomainString ) . '</div>
                 <div class="alert alert-error"><input type="radio" ';
-			if ( $GB_D_tasarim == "alert-error" ) {
-				$out .= 'checked';
-			}
-			$out .= ' name="GB_D_tasarim" value="alert-error">Hata</div>
+		if ( $GB_D_type == "alert-error" ) {
+			$out .= 'checked';
+		}
+		$out .= ' name="GB_D_type" value="alert-error">' . __( 'Error', $this->textDomainString ) . '</div>
                 <div class="alert alert-info"><input type="radio" ';
-			if ( $GB_D_tasarim == "alert-info" ) {
-				$out .= 'checked';
-			}
-			$out .= ' name="GB_D_tasarim" value="alert-info">Bilgi</div>
+		if ( $GB_D_type == "alert-info" ) {
+			$out .= 'checked';
+		}
+		$out .= ' name="GB_D_type" value="alert-info">' . __( 'Info', $this->textDomainString ) . '</div>
                 <div class="alert alert-success"><input type="radio" ';
-			if ( $GB_D_tasarim == "alert-success" ) {
-				$out .= 'checked';
-			}
-			$out .= ' name="GB_D_tasarim" value="alert-success">Başarı</div>
+		if ( $GB_D_type == "alert-success" ) {
+			$out .= 'checked';
+		}
+		$out .= ' name="GB_D_type" value="alert-success">' . __( 'Success', $this->textDomainString ) . '</div>
 
                 <div class="clear"></div>
             </div>
             </form>';
-			echo $out;
-		}
-
-		add_meta_box( 'GB_duyuruMetaBox', 'Duyuru ayarları', 'duyuruMetaBox', 'Duyuru', 'side', 'default' );
+		echo $out;
 	}
 
 	/**
@@ -177,21 +183,21 @@ class GB_Duyurular {
 	 *
 	 *  add_action('save_post', array(&$this, 'GB_D_duyuruKaydet'));
 	 */
-	public function GB_D_duyuruKaydet() {
+	public function GB_D_saveDuyuru() {
 		global $post_id;
-		@$GB_D_kimlerGorsun = $_POST["GB_D_kimlerGorsun"];
-		@$GB_D_gosterimModu = $_POST["GB_D_gosterimModu"];
-		@$GB_D_tasarim = $_POST['GB_D_tasarim'];
+		@$GB_D_whoCanSee = $_POST["GB_D_whoCanSee"];
+		@$GB_D_displayMode = $_POST["GB_D_displayMode"];
+		@$GB_D_type = $_POST['GB_D_type'];
 		@$GB_D_gun = $_POST['GB_D_gun'];
 		@$GB_D_ay = $_POST['GB_D_ay'];
 		@$GB_D_yil = $_POST['GB_D_yil'];
 		@$GB_D_saat = $_POST['GB_D_saat'];
 		@$GB_D_dakika = $_POST['GB_D_dakika'];
-		@$GB_D_sonGosterimTarihi = $GB_D_yil . '-' . $GB_D_ay . '-' . $GB_D_gun . ' ' . $GB_D_saat . ':' . $GB_D_dakika . ':00';
-		add_post_meta( $post_id, "GB_D_kimlerGorsun", $GB_D_kimlerGorsun, true );
-		add_post_meta( $post_id, "GB_D_gosterimModu", $GB_D_gosterimModu, true );
-		add_post_meta( $post_id, 'GB_D_tasarim', $GB_D_tasarim, true );
-		add_post_meta( $post_id, "GB_D_sonGosterimTarihi", $GB_D_sonGosterimTarihi, true );
+		@$GB_D_lastDisplayDate = $GB_D_yil . '-' . $GB_D_ay . '-' . $GB_D_gun . ' ' . $GB_D_saat . ':' . $GB_D_dakika . ':00';
+		add_post_meta( $post_id, "GB_D_whoCanSee", $GB_D_whoCanSee, true );
+		add_post_meta( $post_id, "GB_D_displayMode", $GB_D_displayMode, true );
+		add_post_meta( $post_id, 'GB_D_type', $GB_D_type, true );
+		add_post_meta( $post_id, "GB_D_lastDisplayDate", $GB_D_lastDisplayDate, true );
 	}
 
 	/**
@@ -199,30 +205,31 @@ class GB_Duyurular {
 	 *
 	 * add_action('edit_post', array(&$this, 'GB_D_duyuruDuzenle'));
 	 */
-	public function GB_D_duyuruDuzenle() {
+	public function GB_D_editDuyuru() {
 		global $post_id;
-		@$GB_D_kimlerGorsun = $_POST["GB_D_kimlerGorsun"];
-		@$GB_D_gosterimModu = $_POST["GB_D_gosterimModu"];
-		@$GB_D_tasarim = $_POST['GB_D_tasarim'];
+		@$GB_D_whoCanSee = $_POST["GB_D_whoCanSee"];
+		@$GB_D_displayMode = $_POST["GB_D_displayMode"];
+		@$GB_D_type = $_POST['GB_D_type'];
 		@$GB_D_gun = $_POST['GB_D_gun'];
 		@$GB_D_ay = $_POST['GB_D_ay'];
 		@$GB_D_yil = $_POST['GB_D_yil'];
 		@$GB_D_saat = $_POST['GB_D_saat'];
 		@$GB_D_dakika = $_POST['GB_D_dakika'];
-		@$GB_D_sonGosterimTarihi = $GB_D_yil . '-' . $GB_D_ay . '-' . $GB_D_gun . ' ' . $GB_D_saat . ':' . $GB_D_dakika . ':00';
-		update_post_meta( $post_id, "GB_D_kimlerGorsun", $GB_D_kimlerGorsun );
-		update_post_meta( $post_id, "GB_D_gosterimModu", $GB_D_gosterimModu );
-		update_post_meta( $post_id, 'GB_D_tasarim', $GB_D_tasarim );
-		update_post_meta( $post_id, "GB_D_sonGosterimTarihi", $GB_D_sonGosterimTarihi );
+		@$GB_D_lastDisplayDate = $GB_D_yil . '-' . $GB_D_ay . '-' . $GB_D_gun . ' ' . $GB_D_saat . ':' . $GB_D_dakika . ':00';
+		update_post_meta( $post_id, "GB_D_whoCanSee", $GB_D_whoCanSee );
+		update_post_meta( $post_id, "GB_D_displayMode", $GB_D_displayMode );
+		update_post_meta( $post_id, 'GB_D_type', $GB_D_type );
+		update_post_meta( $post_id, "GB_D_lastDisplayDate", $GB_D_lastDisplayDate );
 	}
 
 	/**
 	 *
 	 * add_action('wp_trash_post', array(&$this, 'GB_D_duyuruCopeTasi'));
 	 */
-	public function GB_D_duyuruCopeTasi() {
-		global $post_id;
-		$this->GB_D_okunduIsaretiniKaldir( $post_id );
+	public function GB_D_moveTrashDuyuru() {
+		global $post_id, $post_type;
+		if ( $post_type != 'duyuru' ) return;
+		$this->GB_D_unmarkAsRead( $post_id );
 	}
 
 	/**
@@ -232,10 +239,10 @@ class GB_Duyurular {
 	 *  ["post_date_gmt"]=>
 	 *  ["post_content"]=>
 	 *  ["post_title"]=>
-	 *  ["GB_D_kimlerGorsun"]=>
-	 *  ["GB_D_gosterimModu"]=>
-	 *  ["GB_D_sonGosterimTarihi"]=>
-	 *  ["GB_D_tasarim"]=>
+	 *  ["GB_D_whoCanSee"]=>
+	 *  ["GB_D_displayMode"]=>
+	 *  ["GB_D_lastDisplayDate"]=>
+	 *  ["GB_D_type"]=>
 	 *}
 	 *
 	 * @return array
@@ -245,10 +252,10 @@ class GB_Duyurular {
 		$duyurular = $wpdb->get_results( "SELECT ID,post_date_gmt,post_content,post_title FROM $wpdb->posts WHERE post_type='duyuru' AND post_status='publish' ORDER BY ID DESC", ARRAY_A );
 		$out       = array();
 		foreach ( $duyurular as $duyuru ) {
-			$duyuru['GB_D_kimlerGorsun']      = get_post_meta( $duyuru['ID'], 'GB_D_kimlerGorsun', true );
-			$duyuru['GB_D_gosterimModu']      = get_post_meta( $duyuru['ID'], 'GB_D_gosterimModu', true );
-			$duyuru['GB_D_sonGosterimTarihi'] = get_post_meta( $duyuru['ID'], 'GB_D_sonGosterimTarihi', true );
-			$duyuru['GB_D_tasarim']           = get_post_meta( $duyuru['ID'], 'GB_D_tasarim', true );
+			$duyuru['GB_D_whoCanSee']      = get_post_meta( $duyuru['ID'], 'GB_D_whoCanSee', true );
+			$duyuru['GB_D_displayMode']      = get_post_meta( $duyuru['ID'], 'GB_D_displayMode', true );
+			$duyuru['GB_D_lastDisplayDate'] = get_post_meta( $duyuru['ID'], 'GB_D_lastDisplayDate', true );
+			$duyuru['GB_D_type']           = get_post_meta( $duyuru['ID'], 'GB_D_type', true );
 			$out[]                            = $duyuru;
 		}
 		//echo '<pre>';print_r($out);echo '</pre>';
@@ -259,19 +266,19 @@ class GB_Duyurular {
 	 * Uygun duyuruları sayfaya basar
 	 *  add_action('wp_footer', array(&$this, 'GB_D_duyuruGoster'));
 	 */
-	public function GB_D_duyuruGoster() {
+	public function GB_D_showDuyuru() {
 		foreach ( $this->GB_D_getDuyuru() as $duyuru ):
-			if ( $duyuru['GB_D_sonGosterimTarihi'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
+			if ( $duyuru['GB_D_lastDisplayDate'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
 				$duyuru['post_status'] = 'trash';
 				wp_update_post( $duyuru );
 				continue;
 			}
-			if ( $this->GB_D_duyuruOkundumu( $duyuru['ID'] ) ) continue;
-			switch ( $duyuru['GB_D_gosterimModu'] ) {
+			if ( $this->GB_D_isRead( $duyuru['ID'] ) ) continue;
+			switch ( $duyuru['GB_D_displayMode'] ) {
 				case 'pencere':
-					if ( $duyuru['GB_D_kimlerGorsun'] == 'herkes' ) {
+					if ( $duyuru['GB_D_whoCanSee'] == 'herkes' ) {
 						$this->duyuruContent .= '
-                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_tasarim'] . '" style="display:none;">
+                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_type'] . '" style="display:none;">
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
                                 <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
@@ -281,7 +288,7 @@ class GB_Duyurular {
 					else {
 						if ( is_user_logged_in() ) {
 							$this->duyuruContent .= '
-                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_tasarim'] . '" style="display:none;">
+                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_type'] . '" style="display:none;">
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
                                 <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
@@ -291,9 +298,9 @@ class GB_Duyurular {
 					}
 					break;
 				case 'bar':
-					if ( $duyuru['GB_D_kimlerGorsun'] == 'herkes' ) {
+					if ( $duyuru['GB_D_whoCanSee'] == 'herkes' ) {
 						$this->duyuruContent .= '
-                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert ' . $duyuru['GB_D_tasarim'] . '">
+                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert ' . $duyuru['GB_D_type'] . '">
                                 <button type="button" class="close" >&times;</button>
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
@@ -303,7 +310,7 @@ class GB_Duyurular {
 					else {
 						if ( is_user_logged_in() ) {
 							$this->duyuruContent .= '
-                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert ' . $duyuru['GB_D_tasarim'] . '">
+                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert ' . $duyuru['GB_D_type'] . '">
                                 <button type="button" class="close">&times;</button>
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
@@ -357,9 +364,9 @@ class GB_Duyurular {
 	/**
 	 * Duyurudaki  okundu linki tıklandığında ilgili duyuruyu okundu olarak kaydeder
 	 *
-	 * add_action('template_redirect','GB_D_okunduIsaretle');
+	 * add_action('template_redirect','GB_D_markAsRead');
 	 */
-	public function GB_D_okunduIsaretle() {
+	public function GB_D_markAsRead() {
 		global $blog_id;
 		if ( isset( $_REQUEST['GB_D_duyuruId'] ) ) {
 			$duyuruId = $_REQUEST['GB_D_duyuruId'];
@@ -376,25 +383,26 @@ class GB_Duyurular {
 
 		}
 		else {
-			$GB_D_sonGosterimTarihi = get_post_meta( $duyuruId, 'GB_D_sonGosterimTarihi', true );
-			$expire                 = $this->GB_D_getDate( $GB_D_sonGosterimTarihi, true );
+			$GB_D_lastDisplayDate = get_post_meta( $duyuruId, 'GB_D_lastDisplayDate', true );
+			$expire                 = $this->GB_D_getDate( $GB_D_lastDisplayDate, true );
 			//todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
 			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$duyuruId]", 'true', $expire );
 		}
 		if ( isset( $_SERVER['HTTP_REFERER'] ) ) wp_redirect( $_SERVER['HTTP_REFERER'] );
 	}
 
-	public function GB_D_okunduIsaretiniKaldir( $duyuruId ) {
+	public function GB_D_unmarkAsRead( $duyuruId ) {
 		global $blog_id, $wpdb;
 		$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->usermeta where meta_key='GB_D_{$blog_id}_okunanDuyurular'" );
 		foreach ( $user_ids as $user_id ) {
 			$okunanDuyurular = get_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", true );
-			if ( array_search( $duyuruId, $okunanDuyurular )!==false ) {
-				unset( $okunanDuyurular[array_search( $duyuruId, $okunanDuyurular )] );//todo index sıralaması  bozuluyor 0,1,3 gibi. çok önemli  değil  ama düzenlenirse iyi olur
+			if ( array_search( $duyuruId, $okunanDuyurular ) !== false ) {
+				unset( $okunanDuyurular[array_search( $duyuruId, $okunanDuyurular )] ); //todo index sıralaması  bozuluyor 0,1,3 gibi. çok önemli  değil  ama düzenlenirse iyi olur
 				update_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", $okunanDuyurular );
 			}
-			else{echo 'yok'; continue;}
+			else continue;
 		}
+		//todo * cookie silme işlemi çalışmıyor.#12
 		if ( isset( $_COOKIE["GB_D_{$blog_id}_okunanDuyurular[$duyuruId]"] ) ) {
 			$expire = time() - 36000;
 			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$duyuruId]", '', $expire );
@@ -408,7 +416,7 @@ class GB_Duyurular {
 	 *
 	 * @return bool
 	 */
-	public function GB_D_duyuruOkundumu( $id ) {
+	public function GB_D_isRead( $id ) {
 		global $blog_id;
 		if ( is_user_logged_in() ) {
 			global $current_user;
@@ -436,7 +444,7 @@ class GB_Duyurular {
 	 *
 	 * @return array|int
 	 */
-	public static function GB_D_getDate( $date = null, $mktime = false ) {
+	public function GB_D_getDate( $date = null, $mktime = false ) {
 		if ( is_null( $date ) ) $date = date_i18n( 'Y-m-d H:i:s' );
 		$datearr = array(
 			'GB_D_yil'    => substr( $date, 0, 4 ),

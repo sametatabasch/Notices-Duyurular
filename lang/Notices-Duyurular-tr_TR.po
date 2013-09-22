@@ -1,0 +1,112 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Notices-Duyurular 1.x\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-09-22 20:12+0200\n"
+"PO-Revision-Date: 2013-09-22 20:12+0200\n"
+"Last-Translator: Samet ATABAŞ <sametatabasch@gmail.com>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;_x;__\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Country: TURKEY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../Notices-Duyurular.php:48
+#: ../Notices-Duyurular.php:49
+msgid "Notice"
+msgstr "Duyuru"
+
+#: ../Notices-Duyurular.php:51
+#: ../Notices-Duyurular.php:54
+msgid "New Notice"
+msgstr "Yeni Duyuru"
+
+#: ../Notices-Duyurular.php:52
+msgid "Add New Notice"
+msgstr "Yeni Duyuru Ekle"
+
+#: ../Notices-Duyurular.php:53
+msgid "Edit Notice"
+msgstr "Duyuruyu Düzenle"
+
+#: ../Notices-Duyurular.php:55
+msgid "All Notice"
+msgstr "Tüm Duyurular"
+
+#: ../Notices-Duyurular.php:56
+msgid "View Notice"
+msgstr "Duyuruyu Göster"
+
+#: ../Notices-Duyurular.php:57
+msgid "Search Notice"
+msgstr "Duyuru Ara"
+
+#: ../Notices-Duyurular.php:58
+msgid "Notice Not Found"
+msgstr "Duyuru bulunamadı"
+
+#: ../Notices-Duyurular.php:59
+msgid "Notice Not Found In Trash"
+msgstr "Çöpte Duyuru bulunamadı"
+
+#: ../Notices-Duyurular.php:61
+msgid "Notices"
+msgstr "Duyurular"
+
+#: ../Notices-Duyurular.php:94
+msgid "Who can see:"
+msgstr "Kimler Görebilir:"
+
+#: ../Notices-Duyurular.php:100
+msgid "Everybody"
+msgstr "Herkes"
+
+#: ../Notices-Duyurular.php:105
+msgid "Only User"
+msgstr "Sadece Üyeler"
+
+#: ../Notices-Duyurular.php:110
+msgid "Display Mode:"
+msgstr "Gösterim Modu:"
+
+#: ../Notices-Duyurular.php:116
+msgid "Window"
+msgstr "Pencere"
+
+#: ../Notices-Duyurular.php:122
+msgid "Bar"
+msgstr "Şerit"
+
+#: ../Notices-Duyurular.php:129
+msgid "Last display date"
+msgstr "Son Gösterim Tarihi"
+
+#: ../Notices-Duyurular.php:147
+msgid "Type:"
+msgstr "Tipi:"
+
+#: ../Notices-Duyurular.php:153
+msgid "Default"
+msgstr "Öntanımlı"
+
+#: ../Notices-Duyurular.php:158
+msgid "Error"
+msgstr "Hata"
+
+#: ../Notices-Duyurular.php:163
+msgid "Info"
+msgstr "Bilgi"
+
+#: ../Notices-Duyurular.php:168
+msgid "Success"
+msgstr "Başarı"
+
+#: ../Notices-Duyurular.php:176
+msgid "Notice Settings"
+msgstr "Duyuru Ayarları"
+
