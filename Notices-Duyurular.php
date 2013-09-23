@@ -18,7 +18,12 @@ class GB_Duyurular {
 
 	public $duyuruContent = '<div class="duyuruContainer">';
 
-	public $textDomainString = 'Duyurular';
+	public $textDomainString = 'Notices-Duyurular';
+	/**
+	 * Duyuruya ait meta bilgilerini tutar
+	 * @var array
+	 */
+	private $meta = array();
 
 	public function __construct() {
 		$this->path    = plugin_dir_path( __FILE__ );
@@ -43,7 +48,7 @@ class GB_Duyurular {
 	public function GB_D_addPostType() {
 		register_post_type( 'Duyuru',
 			array(
-				'labels'       => array( /*labels kullanılan başlıkları belirlemeye yarıyor*/
+				'labels'       => array(
 					'name'               => __( 'Notice', $this->textDomainString ),
 					'singular_name'      => __( 'Notice', $this->textDomainString ),
 					'add_new'            => __( 'New Notice', $this->textDomainString ),
@@ -81,29 +86,26 @@ class GB_Duyurular {
 	 */
 	public function duyuruMetaBox() {
 		global $post_id, $wp_locale;
-		$GB_D_whoCanSee      = get_post_meta( $post_id, "GB_D_whoCanSee", true );
-		$GB_D_displayMode      = get_post_meta( $post_id, "GB_D_displayMode", true );
-		$GB_D_lastDisplayDate = get_post_meta( $post_id, 'GB_D_lastDisplayDate', true );
-		$GB_D_type           = get_post_meta( $post_id, 'GB_D_type', true );
-		if ( empty( $GB_D_lastDisplayDate ) ) {
+		$this->GB_D_getMeta( $post_id );
+		if ( empty( $this->meta['lastDisplayDate'] ) ) {
 			$date = $this->GB_D_getDate();
 			$date['GB_D_ay'] ++;
 		}
 		else {
-			$date = $this->GB_D_getDate( $GB_D_lastDisplayDate );
+			$date = $this->GB_D_getDate( $this->meta['lastDisplayDate'] );
 		}
 		$out = '
             <form>
                 <div class="misc-pub-section">
                     <span><b>' . __( 'Who can see:', $this->textDomainString ) . '</b></span>
-                    <select name="GB_D_whoCanSee">
+                    <select name="GB_D_meta[whoCanSee]">
                         <option ';
-		if ( $GB_D_whoCanSee == 'herkes' ) {
+		if ( $this->meta['whoCanSee'] == 'herkes' ) {
 			$out .= 'selected=""';
 		}
 		$out .= ' value="herkes">' . __( 'Everybody', $this->textDomainString ) . '</option>
                         <option ';
-		if ( $GB_D_whoCanSee == 'uyeler' ) {
+		if ( $this->meta['whoCanSee'] == 'uyeler' ) {
 			$out .= 'selected=""';
 		}
 		$out .= ' value="uyeler">' . __( 'Only User', $this->textDomainString ) . '
@@ -112,15 +114,15 @@ class GB_Duyurular {
             </div>
             <div class="misc-pub-section">
                 <span><b>' . __( 'Display Mode:', $this->textDomainString ) . '</b></span>
-                <select name="GB_D_displayMode">
+                <select name="GB_D_meta[displayMode]">
                     <option ';
-		if ( $GB_D_displayMode == 'pencere' ) {
+		if ( $this->meta['displayMode'] == 'pencere' ) {
 			$out .= 'selected=""';
 		}
 		$out .= ' value="pencere">' . __( 'Window', $this->textDomainString ) . '
                     </option>
                     <option ';
-		if ( $GB_D_displayMode == 'bar' ) {
+		if ( $this->meta['displayMode'] == 'bar' ) {
 			$out .= 'selected=""';
 		}
 		$out .= ' value="bar">' . __( 'Bar', $this->textDomainString ) . '
@@ -151,25 +153,25 @@ class GB_Duyurular {
                 <b>' . __( 'Type:', $this->textDomainString ) . '</b>
                 </span>
                 <div class="alert"><input type="radio" ';
-		if ( $GB_D_type == "" ) {
+		if ( $this->meta['type'] == "" ) {
 			$out .= 'checked';
 		}
-		$out .= ' name="GB_D_type" value="">' . __( 'Default', $this->textDomainString ) . '</div>
+		$out .= ' name="GB_D_meta[type]" value="">' . __( 'Default', $this->textDomainString ) . '</div>
                 <div class="alert alert-error"><input type="radio" ';
-		if ( $GB_D_type == "alert-error" ) {
+		if ( $this->meta['type'] == "alert-error" ) {
 			$out .= 'checked';
 		}
-		$out .= ' name="GB_D_type" value="alert-error">' . __( 'Error', $this->textDomainString ) . '</div>
+		$out .= ' name="GB_D_meta[type]" value="alert-error">' . __( 'Error', $this->textDomainString ) . '</div>
                 <div class="alert alert-info"><input type="radio" ';
-		if ( $GB_D_type == "alert-info" ) {
+		if ( $this->meta['type'] == "alert-info" ) {
 			$out .= 'checked';
 		}
-		$out .= ' name="GB_D_type" value="alert-info">' . __( 'Info', $this->textDomainString ) . '</div>
+		$out .= ' name="GB_D_meta[type]" value="alert-info">' . __( 'Info', $this->textDomainString ) . '</div>
                 <div class="alert alert-success"><input type="radio" ';
-		if ( $GB_D_type == "alert-success" ) {
+		if ( $this->meta['type'] == "alert-success" ) {
 			$out .= 'checked';
 		}
-		$out .= ' name="GB_D_type" value="alert-success">' . __( 'Success', $this->textDomainString ) . '</div>
+		$out .= ' name="GB_D_meta[type]" value="alert-success">' . __( 'Success', $this->textDomainString ) . '</div>
 
                 <div class="clear"></div>
             </div>
@@ -185,19 +187,14 @@ class GB_Duyurular {
 	 */
 	public function GB_D_saveDuyuru() {
 		global $post_id;
-		@$GB_D_whoCanSee = $_POST["GB_D_whoCanSee"];
-		@$GB_D_displayMode = $_POST["GB_D_displayMode"];
-		@$GB_D_type = $_POST['GB_D_type'];
+		@$this->meta = $_POST['GB_D_meta'];
 		@$GB_D_gun = $_POST['GB_D_gun'];
 		@$GB_D_ay = $_POST['GB_D_ay'];
 		@$GB_D_yil = $_POST['GB_D_yil'];
 		@$GB_D_saat = $_POST['GB_D_saat'];
 		@$GB_D_dakika = $_POST['GB_D_dakika'];
-		@$GB_D_lastDisplayDate = $GB_D_yil . '-' . $GB_D_ay . '-' . $GB_D_gun . ' ' . $GB_D_saat . ':' . $GB_D_dakika . ':00';
-		add_post_meta( $post_id, "GB_D_whoCanSee", $GB_D_whoCanSee, true );
-		add_post_meta( $post_id, "GB_D_displayMode", $GB_D_displayMode, true );
-		add_post_meta( $post_id, 'GB_D_type', $GB_D_type, true );
-		add_post_meta( $post_id, "GB_D_lastDisplayDate", $GB_D_lastDisplayDate, true );
+		@$this->meta['lastDisplayDate'] = $GB_D_yil . '-' . $GB_D_ay . '-' . $GB_D_gun . ' ' . $GB_D_saat . ':' . $GB_D_dakika . ':00';
+		add_post_meta( $post_id, "GB_D_meta", $this->meta, true );
 	}
 
 	/**
@@ -207,19 +204,14 @@ class GB_Duyurular {
 	 */
 	public function GB_D_editDuyuru() {
 		global $post_id;
-		@$GB_D_whoCanSee = $_POST["GB_D_whoCanSee"];
-		@$GB_D_displayMode = $_POST["GB_D_displayMode"];
-		@$GB_D_type = $_POST['GB_D_type'];
+		@$this->meta = $_POST['GB_D_meta'];
 		@$GB_D_gun = $_POST['GB_D_gun'];
 		@$GB_D_ay = $_POST['GB_D_ay'];
 		@$GB_D_yil = $_POST['GB_D_yil'];
 		@$GB_D_saat = $_POST['GB_D_saat'];
 		@$GB_D_dakika = $_POST['GB_D_dakika'];
-		@$GB_D_lastDisplayDate = $GB_D_yil . '-' . $GB_D_ay . '-' . $GB_D_gun . ' ' . $GB_D_saat . ':' . $GB_D_dakika . ':00';
-		update_post_meta( $post_id, "GB_D_whoCanSee", $GB_D_whoCanSee );
-		update_post_meta( $post_id, "GB_D_displayMode", $GB_D_displayMode );
-		update_post_meta( $post_id, 'GB_D_type', $GB_D_type );
-		update_post_meta( $post_id, "GB_D_lastDisplayDate", $GB_D_lastDisplayDate );
+		@$this->meta['lastDisplayDate'] = $GB_D_yil . '-' . $GB_D_ay . '-' . $GB_D_gun . ' ' . $GB_D_saat . ':' . $GB_D_dakika . ':00';
+		update_post_meta( $post_id, "GB_D_meta", $this->meta );
 	}
 
 	/**
@@ -233,16 +225,25 @@ class GB_Duyurular {
 	}
 
 	/**
+	 * İd numarası  verilen duyurunun meta değerleri $this->meta değişkenine aktarılır.
+	 *
+	 * @param $id meta bilgileri alınan duyurunun id numarası
+	 */
+	public function GB_D_getMeta( $id ) {
+		$this->meta = get_post_meta( $id, 'GB_D_meta', true );
+	}
+
+	/**
 	 * Duyuru bilgilerini  array olarak  getirir
-	 * array(7) {
+	 * array(8) {
 	 *  ["ID"]=>
 	 *  ["post_date_gmt"]=>
 	 *  ["post_content"]=>
 	 *  ["post_title"]=>
-	 *  ["GB_D_whoCanSee"]=>
-	 *  ["GB_D_displayMode"]=>
-	 *  ["GB_D_lastDisplayDate"]=>
-	 *  ["GB_D_type"]=>
+	 *  ["whoCanSee"]=>
+	 *  ["displayMode"]=>
+	 *  ["lastDisplayDate"]=>
+	 *  ["type"]=>
 	 *}
 	 *
 	 * @return array
@@ -252,13 +253,11 @@ class GB_Duyurular {
 		$duyurular = $wpdb->get_results( "SELECT ID,post_date_gmt,post_content,post_title FROM $wpdb->posts WHERE post_type='duyuru' AND post_status='publish' ORDER BY ID DESC", ARRAY_A );
 		$out       = array();
 		foreach ( $duyurular as $duyuru ) {
-			$duyuru['GB_D_whoCanSee']      = get_post_meta( $duyuru['ID'], 'GB_D_whoCanSee', true );
-			$duyuru['GB_D_displayMode']      = get_post_meta( $duyuru['ID'], 'GB_D_displayMode', true );
-			$duyuru['GB_D_lastDisplayDate'] = get_post_meta( $duyuru['ID'], 'GB_D_lastDisplayDate', true );
-			$duyuru['GB_D_type']           = get_post_meta( $duyuru['ID'], 'GB_D_type', true );
-			$out[]                            = $duyuru;
+			$this->GB_D_getMeta( $duyuru['ID'] );
+			$duyuru = array_merge( $duyuru, $this->meta );
+			$out[]  = $duyuru;
 		}
-		//echo '<pre>';print_r($out);echo '</pre>';
+		//echo '<pre>';print_r( $out );echo '</pre>';
 		return $out;
 	}
 
@@ -268,17 +267,17 @@ class GB_Duyurular {
 	 */
 	public function GB_D_showDuyuru() {
 		foreach ( $this->GB_D_getDuyuru() as $duyuru ):
-			if ( $duyuru['GB_D_lastDisplayDate'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
+			if ( $duyuru['lastDisplayDate'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
 				$duyuru['post_status'] = 'trash';
 				wp_update_post( $duyuru );
 				continue;
 			}
 			if ( $this->GB_D_isRead( $duyuru['ID'] ) ) continue;
-			switch ( $duyuru['GB_D_displayMode'] ) {
+			switch ( $duyuru['displayMode'] ) {
 				case 'pencere':
-					if ( $duyuru['GB_D_whoCanSee'] == 'herkes' ) {
+					if ( $duyuru['whoCanSee'] == 'herkes' ) {
 						$this->duyuruContent .= '
-                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_type'] . '" style="display:none;">
+                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['type'] . '" style="display:none;">
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
                                 <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
@@ -288,7 +287,7 @@ class GB_Duyurular {
 					else {
 						if ( is_user_logged_in() ) {
 							$this->duyuruContent .= '
-                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['GB_D_type'] . '" style="display:none;">
+                        <div id="fancy-' . $duyuru['ID'] . '" class="alert ' . $duyuru['type'] . '" style="display:none;">
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
                                 <p class="okundu"><a href="?GB_D_duyuruId=' . $duyuru["ID"] . '">Okundu</a></p>
@@ -298,9 +297,9 @@ class GB_Duyurular {
 					}
 					break;
 				case 'bar':
-					if ( $duyuru['GB_D_whoCanSee'] == 'herkes' ) {
+					if ( $duyuru['whoCanSee'] == 'herkes' ) {
 						$this->duyuruContent .= '
-                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert ' . $duyuru['GB_D_type'] . '">
+                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert ' . $duyuru['type'] . '">
                                 <button type="button" class="close" >&times;</button>
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
@@ -310,7 +309,7 @@ class GB_Duyurular {
 					else {
 						if ( is_user_logged_in() ) {
 							$this->duyuruContent .= '
-                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert ' . $duyuru['GB_D_type'] . '">
+                            <div id="bar-' . $duyuru['ID'] . '" class="bar alert ' . $duyuru['type'] . '">
                                 <button type="button" class="close">&times;</button>
                                 <h4>' . ucfirst( get_the_title( $duyuru["ID"] ) ) . '</h4>
                                 ' . do_shortcode( wpautop( $duyuru['post_content'] ) ) . '
@@ -383,8 +382,8 @@ class GB_Duyurular {
 
 		}
 		else {
-			$GB_D_lastDisplayDate = get_post_meta( $duyuruId, 'GB_D_lastDisplayDate', true );
-			$expire                 = $this->GB_D_getDate( $GB_D_lastDisplayDate, true );
+			$this->GB_D_getMeta( $duyuruId );
+			$expire = $this->GB_D_getDate( $this->meta['lastDisplayDate'], true );
 			//todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
 			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$duyuruId]", 'true', $expire );
 		}
@@ -397,7 +396,7 @@ class GB_Duyurular {
 		foreach ( $user_ids as $user_id ) {
 			$okunanDuyurular = get_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", true );
 			if ( array_search( $duyuruId, $okunanDuyurular ) !== false ) {
-				unset( $okunanDuyurular[array_search( $duyuruId, $okunanDuyurular )] ); //todo index sıralaması  bozuluyor 0,1,3 gibi. çok önemli  değil  ama düzenlenirse iyi olur
+				unset( $okunanDuyurular[array_search( $duyuruId, $okunanDuyurular )] ); //todo index sıralaması  bozuluyor 0,1,3 gibi. çok önemli  değil  ama düzenlenirse iyi olur array_merge denenmeli
 				update_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", $okunanDuyurular );
 			}
 			else continue;
