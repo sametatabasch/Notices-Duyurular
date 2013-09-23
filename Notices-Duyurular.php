@@ -396,7 +396,8 @@ class GB_Duyurular {
 		foreach ( $user_ids as $user_id ) {
 			$okunanDuyurular = get_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", true );
 			if ( array_search( $duyuruId, $okunanDuyurular ) !== false ) {
-				unset( $okunanDuyurular[array_search( $duyuruId, $okunanDuyurular )] ); //todo index sıralaması  bozuluyor 0,1,3 gibi. çok önemli  değil  ama düzenlenirse iyi olur array_merge denenmeli
+				unset( $okunanDuyurular[array_search( $duyuruId, $okunanDuyurular )] );
+				$okunanDuyurular= array_merge($okunanDuyurular);//indexler  yeniden düzenleniyor
 				update_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", $okunanDuyurular );
 			}
 			else continue;
