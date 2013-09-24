@@ -29,11 +29,12 @@ class GB_Duyurular {
 		$this->path    = plugin_dir_path( __FILE__ );
 		$this->pathUrl = plugin_dir_url( __FILE__ );
 		load_plugin_textDomain( $this->textDomainString, false, basename( dirname( __FILE__ ) ) . '/lang' );
-		add_action( 'init', array( &$this, 'GB_D_addPostType' ) );
 		add_action( 'add_meta_boxes', array( &$this, 'GB_D_addMetaBox' ) );
+		add_action( 'init', array( &$this, 'GB_D_addPostType' ) );
 		add_action( 'save_post', array( &$this, 'GB_D_saveNotice' ) );
 		add_action( 'edit_post', array( &$this, 'GB_D_editNotice' ) );
 		add_action( 'wp_trash_post', array( &$this, 'GB_D_moveTrashNotice' ) );
+		add_action( 'trash_to_publish', array( &$this, 'GB_D_trashToPublish' ) );
 		add_action( 'wp_footer', array( &$this, 'GB_D_showNotice' ) );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'GB_D_addScriptAndStyle' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'GB_D_addStyleToAdminPage' ) );
@@ -85,7 +86,7 @@ class GB_Duyurular {
 	 * Metabox içeriğini  oluşturan fonksiyon
 	 */
 	public function noticeMetaBox() {
-		global $post_id,$wp_locale;
+		global $post_id, $wp_locale;
 		$this->GB_D_getMeta( $post_id );
 		if ( empty( $this->meta['lastDisplayDate'] ) ) {
 			$date = $this->GB_D_getDate();
@@ -94,9 +95,9 @@ class GB_Duyurular {
 		else {
 			$date = $this->GB_D_getDate( $this->meta['lastDisplayDate'] );
 		}
-		$x   = array( '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', ); //get_date_from_gtm fonkisiyonun da 1 yerine 01 olması gerekiyor
+		$x = array( '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', ); //get_date_from_gtm fonkisiyonun da 1 yerine 01 olması gerekiyor
 		echo '
-    <form>
+		<form>
       <div class="misc-pub-section">
       	<span><b>' . __( 'Who can see:', $this->textDomainString ) . '</b></span>
         <select name="GB_D_meta[whoCanSee]">
@@ -117,13 +118,13 @@ class GB_Duyurular {
         <br/>
         <input type="text" maxlength="2" size="2" value="' . $date["day"] . '" name="GB_D_date[day]" id="jj">.
         <select name="GB_D_date[month]" id="mm">';
-					for ( $i = 0; $i < 12; $i ++ ) {
-						echo '
+		for ( $i = 0; $i < 12; $i ++ ) {
+			echo '
 							<option ' . selected( $x[$i], $date['month'], false ) . ' value="' . $x[$i] . '">'
-								. $x[$i] . '-' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $x[$i] ) ) . '
+					. $x[$i] . '-' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $x[$i] ) ) . '
 							</option>';
-					}
-	echo '</select>.
+		}
+		echo '</select>.
         <input type="text" maxlength="4" size="4" value="' . $date["year"] . '" name="GB_D_date[year]" id="aa">@<input type="text" maxlength="2" size="2" value="' . $date["hour"] . '" name="GB_D_date[hour]" id="hh">:<input type="text" maxlength="2" size="2" value="' . $date["minute"] . '" name="GB_D_date[minute]" id="mn">
       </div>
       <div class="misc-pub-section misc-pub-section-last">
@@ -152,10 +153,12 @@ class GB_Duyurular {
 	 *  add_action('save_post', array(&$this, 'GB_D_duyuruKaydet'));
 	 */
 	public function GB_D_saveNotice() {
-		global $post_id;
-		@$this->meta = $_POST['GB_D_meta'];
-		@$GB_D_date=$_POST['GB_D_date'];
-		@$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
+		$post_id   = get_the_ID();
+		$post_type = get_post_type( $post_id );
+		if ( $post_type != 'notice' ) return;
+		$this->meta                    = $_POST['GB_D_meta'];
+		$GB_D_date                     = $_POST['GB_D_date'];
+		$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
 		add_post_meta( $post_id, "GB_D_meta", $this->meta, true );
 	}
 
@@ -165,10 +168,12 @@ class GB_Duyurular {
 	 * add_action('edit_post', array(&$this, 'GB_D_duyuruDuzenle'));
 	 */
 	public function GB_D_editNotice() {
-		global $post_id;
-		@$this->meta = $_POST['GB_D_meta'];
-		@$GB_D_date=$_POST['GB_D_date'];
-		@$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
+		$post_id   = get_the_ID();
+		$post_type = get_post_type( $post_id );
+		if ( $post_type != 'notice' ) return;
+		$this->meta = $_POST['GB_D_meta'];
+		$GB_D_date = $_POST['GB_D_date'];
+		$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
 		update_post_meta( $post_id, "GB_D_meta", $this->meta );
 	}
 
@@ -177,7 +182,8 @@ class GB_Duyurular {
 	 * add_action('wp_trash_post', array(&$this, 'GB_D_duyuruCopeTasi'));
 	 */
 	public function GB_D_moveTrashNotice() {
-		global $post_id, $post_type;
+		$post_id   = get_the_ID();
+		$post_type = get_post_type( $post_id );
 		if ( $post_type != 'notice' ) return;
 		$this->GB_D_unmarkAsRead( $post_id );
 	}
@@ -254,7 +260,7 @@ class GB_Duyurular {
 					}
 					break;
 				case 'bar':
-					if ( $notice['whoCanSee'] == 'herkes' ) {
+					if ( $notice['whoCanSee'] == 'everyone' ) {
 						$this->noticeContent .= '
                             <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
                                 <button type="button" class="close" >&times;</button>
@@ -323,7 +329,7 @@ class GB_Duyurular {
 	 * add_action('template_redirect','GB_D_markAsRead');
 	 */
 	public function GB_D_markAsRead() {
-		global $blog_id;
+		$blog_id = get_current_blog_id();
 		if ( isset( $_REQUEST['GB_D_noticeId'] ) ) {
 			$noticeId = $_REQUEST['GB_D_noticeId'];
 		}
@@ -348,7 +354,8 @@ class GB_Duyurular {
 	}
 
 	public function GB_D_unmarkAsRead( $noticeId ) {
-		global $blog_id, $wpdb;
+		global $wpdb;
+		$blog_id=get_current_blog_id();
 		$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->usermeta where meta_key='GB_D_{$blog_id}_okunanDuyurular'" );
 		foreach ( $user_ids as $user_id ) {
 			$okunanDuyurular = get_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", true );
@@ -417,6 +424,23 @@ class GB_Duyurular {
 		else {
 			return $datearr;
 		}
+	}
+
+	/**
+	 * Çöpten çıkarılan duyurunun meta bilgisini öntanımlı ayarlara döndürüyor.
+	 */
+	public function GB_D_trashToPublish() {
+		$post_id = get_the_ID();
+		$date    = $this->GB_D_getDate();
+		$date['month'] ++;
+		$lastDisplayDate = $date['year'] . '-' . $date['month'] . '-' . $date['day'] . ' ' . $date['hour'] . ':' . $date['minute'] . ':00';
+		$this->meta      = array(
+			'whoCanSee'       => 'everyone',
+			'displayMode'     => 'window',
+			'lastDisplayDate' => $lastDisplayDate,
+			'type'            => ''
+		);
+		update_post_meta( $post_id, 'GB_D_meta', $this->meta );
 	}
 }
 
