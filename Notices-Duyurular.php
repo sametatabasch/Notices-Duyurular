@@ -89,7 +89,7 @@ class GB_Duyurular {
 		$this->GB_D_getMeta( $post_id );
 		if ( empty( $this->meta['lastDisplayDate'] ) ) {
 			$date = $this->GB_D_getDate();
-			$date['GB_D_month'] ++;
+			$date['month'] ++;
 		}
 		else {
 			$date = $this->GB_D_getDate( $this->meta['lastDisplayDate'] );
@@ -115,16 +115,16 @@ class GB_Duyurular {
       <div class="misc-pub-section curtime">
       	<span id="timestamp"><b>' . __( 'Last display date', $this->textDomainString ) . '</b></span>
         <br/>
-        <input type="text" maxlength="2" size="2" value="' . $date["GB_D_day"] . '" name="GB_D_day" id="jj">.
-        <select name="GB_D_month" id="mm">';
+        <input type="text" maxlength="2" size="2" value="' . $date["day"] . '" name="GB_D_date[day]" id="jj">.
+        <select name="GB_D_date[month]" id="mm">';
 					for ( $i = 0; $i < 12; $i ++ ) {
 						echo '
-							<option ' . selected( $x[$i], $date['GB_D_month'], false ) . ' value="' . $x[$i] . '">'
+							<option ' . selected( $x[$i], $date['month'], false ) . ' value="' . $x[$i] . '">'
 								. $x[$i] . '-' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $x[$i] ) ) . '
 							</option>';
 					}
 	echo '</select>.
-        <input type="text" maxlength="4" size="4" value="' . $date["GB_D_year"] . '" name="GB_D_year" id="aa">@<input type="text" maxlength="2" size="2" value="' . $date["GB_D_hour"] . '" name="GB_D_hour" id="hh">:<input type="text" maxlength="2" size="2" value="' . $date["GB_D_minute"] . '" name="GB_D_minute" id="mn">
+        <input type="text" maxlength="4" size="4" value="' . $date["year"] . '" name="GB_D_date[year]" id="aa">@<input type="text" maxlength="2" size="2" value="' . $date["hour"] . '" name="GB_D_date[hour]" id="hh">:<input type="text" maxlength="2" size="2" value="' . $date["minute"] . '" name="GB_D_date[minute]" id="mn">
       </div>
       <div class="misc-pub-section misc-pub-section-last">
       	<span><b>' . __( 'Type:', $this->textDomainString ) . '</b></span>
@@ -154,12 +154,8 @@ class GB_Duyurular {
 	public function GB_D_saveNotice() {
 		global $post_id;
 		@$this->meta = $_POST['GB_D_meta'];
-		@$GB_D_day = $_POST['GB_D_day'];
-		@$GB_D_month = $_POST['GB_D_month'];
-		@$GB_D_year = $_POST['GB_D_year'];
-		@$GB_D_hour = $_POST['GB_D_hour'];
-		@$GB_D_minute = $_POST['GB_D_minute'];
-		@$this->meta['lastDisplayDate'] = $GB_D_year . '-' . $GB_D_month . '-' . $GB_D_day . ' ' . $GB_D_hour . ':' . $GB_D_minute . ':00';
+		@$GB_D_date=$_POST['GB_D_date'];
+		@$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
 		add_post_meta( $post_id, "GB_D_meta", $this->meta, true );
 	}
 
@@ -171,12 +167,8 @@ class GB_Duyurular {
 	public function GB_D_editNotice() {
 		global $post_id;
 		@$this->meta = $_POST['GB_D_meta'];
-		@$GB_D_day = $_POST['GB_D_day'];
-		@$GB_D_month = $_POST['GB_D_month'];
-		@$GB_D_year = $_POST['GB_D_year'];
-		@$GB_D_hour = $_POST['GB_D_hour'];
-		@$GB_D_minute = $_POST['GB_D_minute'];
-		@$this->meta['lastDisplayDate'] = $GB_D_year . '-' . $GB_D_month . '-' . $GB_D_day . ' ' . $GB_D_hour . ':' . $GB_D_minute . ':00';
+		@$GB_D_date=$_POST['GB_D_date'];
+		@$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
 		update_post_meta( $post_id, "GB_D_meta", $this->meta );
 	}
 
@@ -412,15 +404,15 @@ class GB_Duyurular {
 	public function GB_D_getDate( $date = null, $mktime = false ) {
 		if ( is_null( $date ) ) $date = date_i18n( 'Y-m-d H:i:s' );
 		$datearr = array(
-			'GB_D_year'   => substr( $date, 0, 4 ),
-			'GB_D_month'  => substr( $date, 5, 2 ),
-			'GB_D_day'    => substr( $date, 8, 2 ),
-			'GB_D_hour'   => substr( $date, 11, 2 ),
-			'GB_D_minute' => substr( $date, 14, 2 ),
-			'GB_D_second' => substr( $date, 17, 2 )
+			'year'   => substr( $date, 0, 4 ),
+			'month'  => substr( $date, 5, 2 ),
+			'day'    => substr( $date, 8, 2 ),
+			'hour'   => substr( $date, 11, 2 ),
+			'minute' => substr( $date, 14, 2 ),
+			'second' => substr( $date, 17, 2 )
 		);
 		if ( $mktime ) {
-			return mktime( $datearr['GB_D_hour'], $datearr['GB_D_minute'], $datearr['GB_D_second'], $datearr['GB_D_month'], $datearr['GB_D_day'], $datearr['GB_D_year'] );
+			return mktime( $datearr['hour'], $datearr['minute'], $datearr['second'], $datearr['month'], $datearr['day'], $datearr['year'] );
 		}
 		else {
 			return $datearr;
