@@ -171,8 +171,8 @@ class GB_Duyurular {
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
 		if ( $post_type != 'notice' ) return;
-		$this->meta = $_POST['GB_D_meta'];
-		$GB_D_date = $_POST['GB_D_date'];
+		$this->meta                    = $_POST['GB_D_meta'];
+		$GB_D_date                     = $_POST['GB_D_date'];
 		$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
 		update_post_meta( $post_id, "GB_D_meta", $this->meta );
 	}
@@ -348,14 +348,14 @@ class GB_Duyurular {
 			$this->GB_D_getMeta( $noticeId );
 			$expire = $this->GB_D_getDate( $this->meta['lastDisplayDate'], true );
 			//todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
-			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire );
+			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire,'/',$_SERVER['HTTP_HOST']);
 		}
 		if ( isset( $_SERVER['HTTP_REFERER'] ) ) wp_redirect( $_SERVER['HTTP_REFERER'] );
 	}
 
 	public function GB_D_unmarkAsRead( $noticeId ) {
 		global $wpdb;
-		$blog_id=get_current_blog_id();
+		$blog_id  = get_current_blog_id();
 		$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->usermeta where meta_key='GB_D_{$blog_id}_okunanDuyurular'" );
 		foreach ( $user_ids as $user_id ) {
 			$okunanDuyurular = get_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", true );
@@ -366,10 +366,12 @@ class GB_Duyurular {
 			}
 			else continue;
 		}
-		//todo * cookie silme işlemi çalışmıyor.#12
-		if ( isset( $_COOKIE["GB_D_{$blog_id}_okunanDuyurular[$noticeId]"] ) ) {
-			$expire = time() - 36000;
-			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", '', $expire );
+		if ( isset( $_COOKIE["GB_D_{$blog_id}_okunanDuyurular"] ) ) {
+			$okunanDuyurular = $_COOKIE["GB_D_{$blog_id}_okunanDuyurular"];
+			if ( array_key_exists( $noticeId, $okunanDuyurular ) ) {
+				$expire = time() - 36000;
+				setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire,'/',$_SERVER['HTTP_HOST'] );
+			}
 		}
 	}
 
