@@ -14,10 +14,25 @@
 
 class GB_Duyurular {
 
+	/**
+	 * Eklenti  dizinini tutar
+	 * @var string
+	 */
+	public $path;
+	/**
+	 * eklenti  dizinini  url olarak  tutar
+	 * @var string
+	 */
 	public $pathUrl;
-
+	/**
+	 * wp_footer  a  eklenecek  duyuruların html kodlarını  barındırır
+	 * @var string
+	 */
 	public $noticeContent = '<div class="noticeContainer">';
-
+	/**
+	 * Çoklu dil için eklenti  text domain bilgisini tutar
+	 * @var string
+	 */
 	public $textDomainString = 'Notices-Duyurular';
 	/**
 	 * Duyuruya ait meta bilgilerini tutar
@@ -39,12 +54,11 @@ class GB_Duyurular {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'GB_D_addScriptAndStyle' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'GB_D_addStyleToAdminPage' ) );
 		add_action( 'template_redirect', array( &$this, 'GB_D_markAsRead' ) );
-		//add_action('init', array(&$this, 'GB_D_getNotice'));
 	}
 
 	/**
 	 * init action a Duyurular için yeni  post type ın  özelliklerini belirler.
-	 * add_action('init', array(&$this, 'GB_D_postTypeEkle'));
+	 * add_action('init', array(&$this, 'GB_D_addPostType'));
 	 */
 	public function GB_D_addPostType() {
 		register_post_type( 'Notice',
@@ -74,16 +88,16 @@ class GB_Duyurular {
 	}
 
 	/**
-	 * Duyuru meta box ekler
-	 * Duyuru oluşturma ve düzenleme sayfasına ayarlamalar için widget içeriği
-	 * add_action('add_meta_boxes', array(&$this, 'GB_D_metaBoxEkle'));
+	 * Duyuru ayarlarını  belirlemek için Meta Box ekler
+	 *
+	 * add_action('add_meta_boxes', array(&$this, 'GB_D_addMetaBox'));
 	 */
 	public function GB_D_addMetaBox() { //todo #5
 		add_meta_box( 'GB_noticeMetaBox', __( 'Notice Settings', $this->textDomainString ), array( &$this, 'noticeMetaBox' ), 'Notice', 'side', 'default' );
 	}
 
 	/**
-	 * Metabox içeriğini  oluşturan fonksiyon
+	 * Duuru ayarları için  metabox içeriğini  oluşturur
 	 */
 	public function noticeMetaBox() {
 		global $post_id, $wp_locale;
@@ -147,10 +161,9 @@ class GB_Duyurular {
 	}
 
 	/**
-	 * Notice  Meta box  içeriğindeki verileri alıp  işleyerek  duyuruyo oluştururken ek işlenmleri yapacak
-	 * Post ile verileri alacak
+	 * Meta box dan  gelen duyuru ayarlarını  kaydeder
 	 *
-	 *  add_action('save_post', array(&$this, 'GB_D_duyuruKaydet'));
+	 *  add_action('save_post', array(&$this, 'GB_D_saveNotice'));
 	 */
 	public function GB_D_saveNotice() {
 		$post_id   = get_the_ID();
@@ -163,9 +176,9 @@ class GB_Duyurular {
 	}
 
 	/**
-	 * duyuru  güncellendiği zaman yapılacak  olan düzenlemeler bu  fonksiyonile yapılıyor
+	 * Duyuru güncellendiğinde meta box daki  verileri ile duyuru ayarlarını günceller
 	 *
-	 * add_action('edit_post', array(&$this, 'GB_D_duyuruDuzenle'));
+	 * add_action('edit_post', array(&$this, 'GB_D_editNotice'));
 	 */
 	public function GB_D_editNotice() {
 		$post_id   = get_the_ID();
@@ -178,8 +191,8 @@ class GB_Duyurular {
 	}
 
 	/**
-	 *
-	 * add_action('wp_trash_post', array(&$this, 'GB_D_duyuruCopeTasi'));
+	 * Duyuru Çöpe yollandığında çöpe yollanan duyurunun okundu  bilgileri silinir.
+	 * add_action('wp_trash_post', array(&$this, 'GB_D_moveTrashNotice'));
 	 */
 	public function GB_D_moveTrashNotice() {
 		$post_id   = get_the_ID();
@@ -227,7 +240,7 @@ class GB_Duyurular {
 
 	/**
 	 * Uygun duyuruları sayfaya basar
-	 *  add_action('wp_footer', array(&$this, 'GB_D_duyuruGoster'));
+	 *  add_action('wp_footer', array(&$this, 'GB_D_showNotice'));
 	 */
 	public function GB_D_showNotice() {
 		foreach ( $this->GB_D_getNotice() as $notice ):
@@ -287,7 +300,7 @@ class GB_Duyurular {
 	}
 
 	/**
-	 * Duyuruların içine yazıldığı <div class="noticeContainer"> tağını döner/yazdırır.
+	 * Duyuruları saklayan <div class="noticeContainer"> tağını döner/yazdırır.
 	 *
 	 * @param bool $echo
 	 *
@@ -348,11 +361,16 @@ class GB_Duyurular {
 			$this->GB_D_getMeta( $noticeId );
 			$expire = $this->GB_D_getDate( $this->meta['lastDisplayDate'], true );
 			//todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
-			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire,'/',$_SERVER['HTTP_HOST']);
+			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire, '/', $_SERVER['HTTP_HOST'] );
 		}
 		if ( isset( $_SERVER['HTTP_REFERER'] ) ) wp_redirect( $_SERVER['HTTP_REFERER'] );
 	}
 
+	/**
+	 * Okundu  olarak  işaretlenen Duyurunun okundu  işaretini  kaldırır
+	 *
+	 * @param $noticeId
+	 */
 	public function GB_D_unmarkAsRead( $noticeId ) {
 		global $wpdb;
 		$blog_id  = get_current_blog_id();
@@ -370,7 +388,7 @@ class GB_Duyurular {
 			$okunanDuyurular = $_COOKIE["GB_D_{$blog_id}_okunanDuyurular"];
 			if ( array_key_exists( $noticeId, $okunanDuyurular ) ) {
 				$expire = time() - 36000;
-				setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire,'/',$_SERVER['HTTP_HOST'] );
+				setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire, '/', $_SERVER['HTTP_HOST'] );
 			}
 		}
 	}
