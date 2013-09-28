@@ -1,17 +1,20 @@
 <?php
-//todo eklenti urlsi olarak gençbilişimde yazdığım yazının linki olacak
+/*
+ * Plugin Name: Notices-Duyurular
+ * Plugin URI: http://gencbilisim.net/notices-duyurular-eklentisi/
+ * Description: Easy way to publish Notices in your Wordpress site
+ * Author: Samet ATABAŞ
+ * Version: 1.0
+ * Author URI: http://www.gençbilişim.net
+ * Text Domain: Notices-Duyurular
+ * Domain Path: /lang
+ * License: GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ *
+ */
 //todo Multi  site için uyumlu  hale gelecek #14
 //todo Admin panelde  gözükmesi sağlanacak check box ile denetlenebilir.
 //todo * Çöpe taşınıca metaların boşalması #11
-/*
-    Plugin Name: Notices-Duyurular
-    Plugin URI: http://www.gençbilişim.net
-    Description: Gençbilişim Duyurular
-    Author: Samet ATABAŞ
-    Version: 1.0
-    Author URI: http://www.gençbilişim.net
-*/
-
 class GB_Duyurular {
 
 	/**
@@ -54,6 +57,7 @@ class GB_Duyurular {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'GB_D_addScriptAndStyle' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'GB_D_addStyleToAdminPage' ) );
 		add_action( 'template_redirect', array( &$this, 'GB_D_markAsRead' ) );
+
 	}
 
 	/**
@@ -82,7 +86,7 @@ class GB_Duyurular {
 				'has_archive'  => true,
 				'show_ui'      => true,
 				'show_in_menu' => true,
-				'menu_icon'    => $this->pathUrl . 'duyuru.ico'
+				'menu_icon'    => $this->pathUrl . 'duyuru.png'
 			)
 		);
 	}
@@ -243,6 +247,7 @@ class GB_Duyurular {
 	 *  add_action('wp_footer', array(&$this, 'GB_D_showNotice'));
 	 */
 	public function GB_D_showNotice() {
+		if(is_admin_bar_showing()) $this->noticeContent='<div class="noticeContainer-admin">';
 		foreach ( $this->GB_D_getNotice() as $notice ):
 			if ( $notice['lastDisplayDate'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
 				wp_trash_post( $notice['ID'] );

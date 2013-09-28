@@ -5,10 +5,8 @@
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	height: 100%;
-}
-
-.alert,
-.alert h4 {
+	font-size: 15px;
+	text-align: left;
 	color: #c09853;
 }
 
@@ -16,6 +14,7 @@
 	margin: 0 0 0px 10px;
 	font-weight: bold;
 	padding: 4px 0;
+	font-size: 16px;
 }
 
 .alert .close {
@@ -31,19 +30,19 @@
 	border-color: #d6e9c6;
 }
 
-.alert-success h4 {
+.alert-success h4,
+.alert-success p {
 	color: #468847;
 }
 
-.alert-danger,
 .alert-error {
 	color: #b94a48;
 	background-color: #f2dede;
 	border-color: #eed3d7;
 }
 
-.alert-danger h4,
-.alert-error h4 {
+.alert-error h4,
+.alert-error p {
 	color: #b94a48;
 }
 
@@ -53,7 +52,8 @@
 	border-color: #bce8f1;
 }
 
-.alert-info h4 {
+.alert-info h4,
+.alert-info p {
 	color: #3a87ad;
 }
 
@@ -107,14 +107,11 @@ button.close {
 	margin: 0 10px 0 10px;
 }
 
-.admin-bar .noticeContainer {
-	top: 28px;
-}
-
 .bar {
 	position: static;
 	width: 100%;
 	margin-bottom: 2px;
+	min-height: 30px;
 }
 
 .bar h4 {
@@ -129,7 +126,15 @@ button.close {
 
 .noticeContainer {
 	position: fixed;
-	top: 0;
+	top: 0px;
+	left: 0;
+	z-index: 9999;
+	width: 100%;
+}
+
+.noticeContainer-admin {
+	position: fixed;
+	top: 28px;
 	left: 0;
 	z-index: 9999;
 	width: 100%;
