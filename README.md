@@ -1,4 +1,4 @@
-###Notices-Duyurular###
+#Notices-Duyurular#
 Contributors: sametatabasch
 Tags: notice, duyuru,post_type,cookie
 Requires at least: 3.0.1
@@ -7,7 +7,7 @@ Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-[TR] Wordpress sitenizde Duyurular yayınlamanızı sağlar.<a href#"http://gencbilisim.net/notices-duyurular-eklentisi/">Detaylar</a>
+[TR] Wordpress sitenizde Duyurular yayınlamanızı sağlar.<a href#"http://gencbilisim.net/notices-duyurular-eklentisi/">Detaylar</a><br/>
 [EN] Easy way to publish Notices in your Wordpress site
 
 ## Description ##
@@ -28,16 +28,16 @@ Bu  eklenti  wordpress blogunuzda duyurular yayınlamanızı  sağlıyor.Duyuruy
     
     Bunlara ek olarak  ziyaretci duyuruyu bir daha görmek istemediğinde gözükmesini engellemek için gösterme linkini  tıklaması yeterli.
     
-# Translations #
+## Translations ##
 
 * English (en\_US), built-in
 * Turkish (tr\_TR), native support
 
-## Installation ##
+### Installation ###
 
 Extract the zip file and just drop the contents in the wp-content/plugins/ directory of your WordPress installation and then activate the Plugin from admin's Plugins page.
 
-## Screenshots ##
+### Screenshots ###
 1. Example for Bar display mode. 
 2. Example for Window display mode.
 3. Example for add new notice page.
