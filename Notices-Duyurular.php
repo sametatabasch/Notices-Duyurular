@@ -86,6 +86,10 @@ class GB_Duyurular {
 				'menu_icon'    => $this->pathUrl . 'duyuru.png'
 			)
 		);
+		/**
+		 * Admin paneline eklenecek style dosyasını wp scriptlerine ekleriyor
+		 */
+		wp_register_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
 	}
 
 	/**
@@ -328,7 +332,7 @@ class GB_Duyurular {
 	 * add_action('admin_enqueue_scripts', array(&$this, 'GB_D_addStyleToAdminPage'));
 	 */
 	public function GB_D_addStyleToAdminPage() {
-		wp_enqueue_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
+		wp_enqueue_style( 'notice_style' );
 	}
 
 	/**
