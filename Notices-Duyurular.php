@@ -8,9 +8,6 @@
  * Author URI: http://www.gençbilişim.net
  * Text Domain: Notices-Duyurular
  * Domain Path: /lang
- * License: GPLv2 or later
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- *
  */
 //todo Multi  site için uyumlu  hale gelecek #14
 //todo Admin panelde  gözükmesi sağlanacak check box ile denetlenebilir.
@@ -247,7 +244,7 @@ class GB_Duyurular {
 	 *  add_action('wp_footer', array(&$this, 'GB_D_showNotice'));
 	 */
 	public function GB_D_showNotice() {
-		if(is_admin_bar_showing()) $this->noticeContent='<div class="noticeContainer-admin">';
+		if ( is_admin_bar_showing() ) $this->noticeContent = '<div class="noticeContainer-admin">';
 		foreach ( $this->GB_D_getNotice() as $notice ):
 			if ( $notice['lastDisplayDate'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
 				wp_trash_post( $notice['ID'] );
