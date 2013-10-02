@@ -120,13 +120,6 @@ class GB_Duyurular {
           <option ' . selected( $this->meta['whoCanSee'], 'onlyUser', false ) . ' value="onlyUser">' . __( 'Only User', $this->textDomainString ) . '</option>
         </select>
       </div>
-      <div class="misc-pub-section">
-      	<span><b>' . __( 'Display Mode:', $this->textDomainString ) . '</b></span>
-        <select name="GB_D_meta[displayMode]">
-        	<option ' . selected( $this->meta['displayMode'], 'window', false ) . ' value="window">' . __( 'Window', $this->textDomainString ) . '</option>
-          <option ' . selected( $this->meta['displayMode'], 'bar', false ) . ' value="bar">' . __( 'Bar', $this->textDomainString ) . '</option>
-        </select>
-      </div>
       <div class="clear"></div>
       <div class="misc-pub-section curtime">
       	<span id="timestamp"><b>' . __( 'Last display date', $this->textDomainString ) . '</b></span>
@@ -173,6 +166,7 @@ class GB_Duyurular {
 		$this->meta                    = $_POST['GB_D_meta'];
 		$GB_D_date                     = $_POST['GB_D_date'];
 		$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
+		$this->meta['displayMode']     = 'bar';
 		add_post_meta( $post_id, "GB_D_meta", $this->meta, true );
 	}
 
@@ -188,6 +182,7 @@ class GB_Duyurular {
 		$this->meta                    = $_POST['GB_D_meta'];
 		$GB_D_date                     = $_POST['GB_D_date'];
 		$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
+		$this->meta['displayMode']     = 'bar';
 		update_post_meta( $post_id, "GB_D_meta", $this->meta );
 	}
 
@@ -324,8 +319,6 @@ class GB_Duyurular {
 	 */
 	public function  GB_D_addScriptAndStyle() {
 		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'fancybox', plugins_url( '/fancybox/source/jquery.fancybox.js?v=2.1.5', __FILE__ ), array( 'jquery' ) );
-		wp_enqueue_style( 'fancybox_style', plugins_url( '/fancybox/source/jquery.fancybox.css?v=2.1.5', __FILE__ ) );
 		wp_enqueue_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
 		wp_enqueue_script( 'notice', plugins_url( 'default.js', __FILE__ ), array( 'jquery' ) );
 	}
