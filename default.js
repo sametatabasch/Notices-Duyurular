@@ -6,9 +6,12 @@ $ = jQuery; //$ kullanabilmek için jQuery ataması
 function showWindowType() {
 	var notices = $.makeArray($('.window'));// window class ına sahip nesneleri diziye çevirip notices değişkenine atadık
 	$('.window').remove();//window class ına sahip nesneleri sayfadan temizledik
-	$('body').append('<div id="windowBackground"></div>');//body etiketine window tipli duyuruların gözükmesi için arkaplan div i ekledik
-	$('#windowBackground').click(function () {
-		//$(this).remove();//todo bu  şekilde duyuruya tıklayıncada siliyor.
+	$('body').append('<div id="windowBackground"><div class="windowBackground"></div></div>');//body etiketine window tipli duyuruların gözükmesi için arkaplan div i ekledik
+	$('#windowBackground').fadeIn();
+	$('#windowBackground .windowBackground').click(function () {
+		$(this).parent().fadeOut('slow', function () {
+			$(this).remove()
+		});
 	});//arka plana tıklayınca silinsin
 	$('#windowBackground').append('<div id="windowBox" class=""></div>');//window class lı nesnenin ekleneceği div eklendi
 	var i = 0;
@@ -19,12 +22,19 @@ function showWindowType() {
 		$('.window-nav-previous').click(function () {
 			i--;
 			if (i < 0) i = (notices.length - 1);
-			$('#windowBox .window').replaceWith(notices[i]);
+			$('#windowBox .window').fadeOut(function () {
+				$(this).css({'display': 'block'});
+				$(this).replaceWith(notices[i])
+			});
 		});
 		$('.window-nav-next').click(function () {
 			i++;
 			if (i > (notices.length - 1)) i = 0;
-			$('#windowBox .window').replaceWith(notices[i]);
+			//$('#windowBox .window').replaceWith(notices[i]);
+			$('#windowBox .window').fadeOut(function () {
+				$(this).css({'display': 'block'});
+				$(this).replaceWith(notices[i])
+			});
 		});
 	}
 	reLocate();

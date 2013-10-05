@@ -175,7 +175,7 @@ button.close {
 }
 
 /*style fo  showWindowTypeNotices*/
-#windowBackground {
+.windowBackground {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -186,11 +186,12 @@ button.close {
 }
 
 #windowBox {
-	background-color: #fff;
+	background-color: rgba(0, 0, 0, 0.85);
 	position: fixed;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+	z-index: 999999;
 }
 
 .window-nav {
