@@ -4,15 +4,29 @@ $ = jQuery; //$ kullanabilmek için jQuery ataması
  * pencere modundaki duyuruları gösterecek fonksiyon
  */
 function showWindowType() {
-	$('body').append('<div id="windowBackground"></div>')
+	var notices = $.makeArray($('.window'));// window class ına sahip nesneleri diziye çevirip notices değişkenine atadık
+	$('.window').remove();//window class ına sahip nesneleri sayfadan temizledik
+	$('body').append('<div id="windowBackground"></div>');//body etiketine window tipli duyuruların gözükmesi için arkaplan div i ekledik
 	$('#windowBackground').click(function () {
-		$(this).remove()
+		//$(this).remove();//todo bu  şekilde duyuruya tıklayıncada siliyor.
 	});//arka plana tıklayınca silinsin
-	$('#windowBackground').append('<div id="windowBox" class=""></div>')
-
-	$('.window').each(function () {
-		$('#windowBox').append($(this));
-	});
+	$('#windowBackground').append('<div id="windowBox" class=""></div>');//window class lı nesnenin ekleneceği div eklendi
+	var i = 0;
+	$('#windowBox').append(notices[0]);//ilk duyuru windowBox id li  div içine eklendi
+	if (notices.length > 1) {
+		$('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-previous" title="Previous"><span></span></a>');
+		$('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-next" title="Next"><span></span></a>');
+		$('.window-nav-previous').click(function () {
+			i--;
+			if (i < 0) i = (notices.length - 1);
+			$('#windowBox .window').replaceWith(notices[i]);
+		});
+		$('.window-nav-next').click(function () {
+			i++;
+			if (i > (notices.length - 1)) i = 0;
+			$('#windowBox .window').replaceWith(notices[i]);
+		});
+	}
 	reLocate();
 }
 
