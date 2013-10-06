@@ -183,6 +183,11 @@ button.close {
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.85);
 	z-index: 999998;
+
+}
+
+.window {
+	overflow: auto;
 }
 
 #windowBox {
@@ -192,18 +197,12 @@ button.close {
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	z-index: 999999;
+	max-width: 850px;
+	max-height: 400px;
 }
 
 .window-nav {
 	width: 60px;
-}
-
-.window-nav-previous {
-
-}
-
-.window-nav-next {
-
 }
 
 .window-nav span {

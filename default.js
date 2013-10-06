@@ -1,39 +1,40 @@
-$ = jQuery; //$ kullanabilmek için jQuery ataması
+var jQ = jQuery.noConflict(true); //jQ kullanabilmek için jQuery ataması bu  yeterli mi  araştırmak lazım
 
 /**
  * pencere modundaki duyuruları gösterecek fonksiyon
  */
 function showWindowType() {
-	var notices = $.makeArray($('.window'));// window class ına sahip nesneleri diziye çevirip notices değişkenine atadık
-	$('.window').remove();//window class ına sahip nesneleri sayfadan temizledik
-	$('body').append('<div id="windowBackground"><div class="windowBackground"></div></div>');//body etiketine window tipli duyuruların gözükmesi için arkaplan div i ekledik
-	$('#windowBackground').fadeIn();
-	$('#windowBackground .windowBackground').click(function () {
-		$(this).parent().fadeOut('slow', function () {
-			$(this).remove()
+	var notices = jQ.makeArray(jQ('.window'));// window class ına sahip nesneleri diziye çevirip notices değişkenine atadık
+	jQ('.window').remove();//window class ına sahip nesneleri sayfadan temizledik
+	jQ('body').append('<div id="windowBackground"><div class="windowBackground"></div></div>');//body etiketine window tipli duyuruların gözükmesi için arkaplan div i ekledik
+	jQ('#windowBackground').fadeIn();
+	jQ('#windowBackground .windowBackground').click(function () {
+		jQ(this).parent().fadeOut('slow', function () {
+			jQ(this).remove()
 		});
 	});//arka plana tıklayınca silinsin
-	$('#windowBackground').append('<div id="windowBox" class=""></div>');//window class lı nesnenin ekleneceği div eklendi
+	jQ('#windowBackground').append('<div id="windowBox" class=""></div>');//window class lı nesnenin ekleneceği div eklendi
 	var i = 0;
-	$('#windowBox').append(notices[0]);//ilk duyuru windowBox id li  div içine eklendi
+	jQ('#windowBox').append(notices[0]);//ilk duyuru windowBox id li  div içine eklendi
 	if (notices.length > 1) {
-		$('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-previous" title="Previous"><span></span></a>');
-		$('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-next" title="Next"><span></span></a>');
-		$('.window-nav-previous').click(function () {
+		jQ('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-previous" title="Previous"><span></span></a>');
+		jQ('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-next" title="Next"><span></span></a>');
+		jQ('.window-nav-previous').click(function () {
 			i--;
 			if (i < 0) i = (notices.length - 1);
-			$('#windowBox .window').fadeOut(function () {
-				$(this).css({'display': 'block'});
-				$(this).replaceWith(notices[i])
+			jQ('#windowBox .window').fadeOut(function () {
+				jQ(this).css({'display': 'block'});
+				jQ(this).replaceWith(notices[i]);
+				reLocate();
 			});
 		});
-		$('.window-nav-next').click(function () {
+		jQ('.window-nav-next').click(function () {
 			i++;
 			if (i > (notices.length - 1)) i = 0;
-			//$('#windowBox .window').replaceWith(notices[i]);
-			$('#windowBox .window').fadeOut(function () {
-				$(this).css({'display': 'block'});
-				$(this).replaceWith(notices[i])
+			jQ('#windowBox .window').fadeOut(function () {
+				jQ(this).css({'display': 'block'});
+				jQ(this).replaceWith(notices[i]);
+				reLocate();
 			});
 		});
 	}
@@ -44,25 +45,27 @@ function showWindowType() {
  * sayfadaki  konumu  yeniden  düzenler
  */
 function reLocate() {
-	var windowBoxWidth = $('#windowBox').width();
-	var windowBoxHeight = $('#windowBox').height();
+	jQ('.window').css({'max-height': (window.innerHeight / 2), 'max-width': (window.innerWidth / 2)});
+	var windowBoxWidth = jQ('#windowBox').width();
+	var windowBoxHeight = jQ('#windowBox').height();
 	var windowBoxLeft = (window.innerWidth - windowBoxWidth) / 2;
 	var windowBoxTop = (window.innerHeight - windowBoxHeight) / 2;
-	$('#windowBox').css({
+	jQ('#windowBox').css({
 		'left': windowBoxLeft,
 		'top' : windowBoxTop
 	});
+
 }
 
-$(document).ready(function ($) {
+jQ(document).ready(function (jQ) {
 	/* çarpıya  basınca  uyarıyı  ekrandan kaldırma işlemi */
-	$('.close').click(function () {
-		$(this).parent().remove();
+	jQ('.close').click(function () {
+		jQ(this).parent().remove();
 	});
 	/*fancy box yerine kullanılacak fonksiyon */
-	showWindowType();
+	showWindowType(); //todo sadece gösterilecek  duyuru olduğunda çalışacak
 });
 
-$(window).resize(function () {
+jQ(window).resize(function () {
 	reLocate();
 });
