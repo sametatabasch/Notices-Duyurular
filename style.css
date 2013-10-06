@@ -188,6 +188,8 @@ button.close {
 
 .window {
 	overflow: auto;
+	min-height: 50px;
+	min-width: 200px;
 }
 
 #windowBox {
