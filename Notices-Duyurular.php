@@ -40,6 +40,11 @@ class GB_Duyurular {
 	 */
 	private $meta = array();
 
+	/**
+	 * Pencere modunda duyurunun olup olmadığını  belirtir
+	 */
+	public $isThereWindowType = false;
+
 	public function __construct() {
 		$this->path    = plugin_dir_path( __FILE__ );
 		$this->pathUrl = plugin_dir_url( __FILE__ );
@@ -117,52 +122,53 @@ class GB_Duyurular {
 		$x = array( '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', ); //get_date_from_gtm fonkisiyonun da 1 yerine 01 olması gerekiyor
 		echo '
 		<form>
-      <div class="misc-pub-section">
-      	<span><b>' . __( 'Who can see:', $this->textDomainString ) . '</b></span>
-        <select name="GB_D_meta[whoCanSee]">
-        	<option ' . selected( $this->meta['whoCanSee'], 'everyone', false ) . ' value="everyone">' . __( 'Everyone', $this->textDomainString ) . '</option>
-          <option ' . selected( $this->meta['whoCanSee'], 'onlyUser', false ) . ' value="onlyUser">' . __( 'Only User', $this->textDomainString ) . '</option>
-        </select>
-      </div>
-      <div class="misc-pub-section">
-      	<span><b>' . __( 'Display Mode:', $this->textDomainString ) . '</b></span>
-        <select name="GB_D_meta[displayMode]">
-        	<option ' . selected( $this->meta['displayMode'], 'window', false ) . ' value="window">' . __( 'Window', $this->textDomainString ) . '</option>
-          <option ' . selected( $this->meta['displayMode'], 'bar', false ) . ' value="bar">' . __( 'Bar', $this->textDomainString ) . '</option>
-        </select>
-      </div>
-      <div class="clear"></div>
-      <div class="misc-pub-section curtime">
-      	<span id="timestamp"><b>' . __( 'Last display date', $this->textDomainString ) . '</b></span>
-        <br/>
-        <input type="text" maxlength="2" size="2" value="' . $date["day"] . '" name="GB_D_date[day]" id="jj">.
-        <select name="GB_D_date[month]" id="mm">';
+		  <div class="misc-pub-section">
+		    <span><b>' . __( 'Who can see:', $this->textDomainString ) . '</b></span>
+		    <select name="GB_D_meta[whoCanSee]">
+		      <option ' . selected( $this->meta['whoCanSee'], 'everyone', false ) . ' value="everyone">' . __( 'Everyone', $this->textDomainString ) . '</option>
+		      <option ' . selected( $this->meta['whoCanSee'], 'onlyUser', false ) . ' value="onlyUser">' . __( 'Only User', $this->textDomainString ) . '</option>
+		    </select>
+		  </div>
+		  <div class="misc-pub-section">
+		    <span><b>' . __( 'Display Mode:', $this->textDomainString ) . '</b></span>
+		    <select name="GB_D_meta[displayMode]">
+		      <option ' . selected( $this->meta['displayMode'], 'window', false ) . ' value="window">' . __( 'Window', $this->textDomainString ) . '</option>
+		      <option ' . selected( $this->meta['displayMode'], 'bar', false ) . ' value="bar">' . __( 'Bar', $this->textDomainString ) . '</option>
+		    </select>
+		  </div>
+		  <div class="clear"></div>
+		  <div class="misc-pub-section curtime">
+		    <span id="timestamp"><b>' . __( 'Last display date', $this->textDomainString ) . '</b></span>
+		    <br/>
+		    <input type="text" maxlength="2" size="2" value="' . $date["day"] . '" name="GB_D_date[day]" id="jj">.
+		    <select name="GB_D_date[month]" id="mm">';
 		for ( $i = 0; $i < 12; $i ++ ) {
 			echo '
-							<option ' . selected( $x[$i], $date['month'], false ) . ' value="' . $x[$i] . '">'
+			  <option ' . selected( $x[$i], $date['month'], false ) . ' value="' . $x[$i] . '">'
 					. $x[$i] . '-' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $x[$i] ) ) . '
-							</option>';
+			  </option>';
 		}
-		echo '</select>.
-        <input type="text" maxlength="4" size="4" value="' . $date["year"] . '" name="GB_D_date[year]" id="aa">@<input type="text" maxlength="2" size="2" value="' . $date["hour"] . '" name="GB_D_date[hour]" id="hh">:<input type="text" maxlength="2" size="2" value="' . $date["minute"] . '" name="GB_D_date[minute]" id="mn">
-      </div>
-      <div class="misc-pub-section misc-pub-section-last">
-      	<span><b>' . __( 'Type:', $this->textDomainString ) . '</b></span>
-        <div class="alert">
-        	<input type="radio" ' . checked( $this->meta['type'], "", false ) . ' name="GB_D_meta[type]" value="">' . __( 'Default', $this->textDomainString ) . '
-        </div>
-        <div class="alert alert-error">
-        	<input type="radio" ' . checked( $this->meta['type'], "alert-error", false ) . ' name="GB_D_meta[type]" value="alert-error">' . __( 'Error', $this->textDomainString ) . '
-        </div>
-        <div class="alert alert-info">
-        	<input type="radio" ' . checked( $this->meta['type'], "alert-info", false ) . ' name="GB_D_meta[type]" value="alert-info">' . __( 'Info', $this->textDomainString ) . '
-        </div>
-        <div class="alert alert-success">
-        	<input type="radio" ' . checked( $this->meta['type'], "alert-success", false ) . ' name="GB_D_meta[type]" value="alert-success">' . __( 'Success', $this->textDomainString ) . '
-        </div>
-				<div class="clear"></div>
-      </div>
-  	</form>';
+		echo '
+		    </select>.
+		    <input type="text" maxlength="4" size="4" value="' . $date["year"] . '" name="GB_D_date[year]" id="aa">@<input type="text" maxlength="2" size="2" value="' . $date["hour"] . '" name="GB_D_date[hour]" id="hh">:<input type="text" maxlength="2" size="2" value="' . $date["minute"] . '" name="GB_D_date[minute]" id="mn">
+		  </div>
+		  <div class="misc-pub-section misc-pub-section-last">
+		    <span><b>' . __( 'Type:', $this->textDomainString ) . '</b></span>
+		    <div class="alert">
+		      <input type="radio" ' . checked( $this->meta['type'], "", false ) . ' name="GB_D_meta[type]" value="">' . __( 'Default', $this->textDomainString ) . '
+		    </div>
+		    <div class="alert alert-error">
+		      <input type="radio" ' . checked( $this->meta['type'], "alert-error", false ) . ' name="GB_D_meta[type]" value="alert-error">' . __( 'Error', $this->textDomainString ) . '
+		    </div>
+		    <div class="alert alert-info">
+		      <input type="radio" ' . checked( $this->meta['type'], "alert-info", false ) . ' name="GB_D_meta[type]" value="alert-info">' . __( 'Info', $this->textDomainString ) . '
+		    </div>
+		    <div class="alert alert-success">
+		      <input type="radio" ' . checked( $this->meta['type'], "alert-success", false ) . ' name="GB_D_meta[type]" value="alert-success">' . __( 'Success', $this->textDomainString ) . '
+		    </div>
+		    <div class="clear"></div>
+		  </div>
+		</form>';
 	}
 
 	/**
@@ -257,44 +263,45 @@ class GB_Duyurular {
 			if ( $this->GB_D_isRead( $notice['ID'] ) ) continue;
 			switch ( $notice['displayMode'] ) {
 				case 'window':
+					$this->isThereWindowType = true;
 					if ( $notice['whoCanSee'] == 'everyone' ) {
 						$this->noticeContent .= '
-                        <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" >
-                                <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
-                                ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
-                                <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
-                        </div>';
+					  <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" >
+					    <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
+					    ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
+					    <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
+					  </div>';
 					}
 					else {
 						if ( is_user_logged_in() ) {
 							$this->noticeContent .= '
-                        <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" >
-                                <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
-                                ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
-                                <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
-                        </div>';
+						    <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" >
+						      <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
+						      ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
+						      <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
+						    </div>';
 						}
 					}
 					break;
 				case 'bar':
 					if ( $notice['whoCanSee'] == 'everyone' ) {
 						$this->noticeContent .= '
-                            <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
-                                <button type="button" class="close" >&times;</button>
-                                <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
-                                ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
-                                <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
-                            </div>';
+					    <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
+					      <button type="button" class="close" >&times;</button>
+					      <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
+					      ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
+					      <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
+					    </div>';
 					}
 					else {
 						if ( is_user_logged_in() ) {
 							$this->noticeContent .= '
-                            <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
-                                <button type="button" class="close">&times;</button>
-                                <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
-                                ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
-                                <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
-                            </div>';
+						  <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
+						    <button type="button" class="close">&times;</button>
+						    <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
+						    ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
+						    <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
+						  </div>';
 						}
 					}
 					break;
@@ -310,9 +317,15 @@ class GB_Duyurular {
 	 *
 	 * @return string
 	 */
-	public
-	function GB_D_noticeContent( $echo = true ) {
-		$this->noticeContent .= '</div>';
+	public function GB_D_noticeContent( $echo = true ) {
+		if ( $this->isThereWindowType ) {
+			$this->noticeContent .= '
+				<script type="text/javascript">
+					jQ(document).ready(function () {showWindowType();});
+				</script>
+			</div>';
+		}
+		else $this->noticeContent .= '</div>';
 		if ( $echo ) {
 			echo $this->noticeContent;
 		}
@@ -325,8 +338,7 @@ class GB_Duyurular {
 	 * style ve script dosyalarını  yükler
 	 * add_action('wp_enqueue_scripts', array(&$this, 'GB_D_addScriptAndStyle'));
 	 */
-	public
-	function  GB_D_addScriptAndStyle() {
+	public function  GB_D_addScriptAndStyle() {
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
 		wp_enqueue_script( 'notice', plugins_url( 'default.js', __FILE__ ), array( 'jquery' ) );
@@ -336,8 +348,7 @@ class GB_Duyurular {
 	 * Admin paneline style dosyasını ekler
 	 * add_action('admin_enqueue_scripts', array(&$this, 'GB_D_addStyleToAdminPage'));
 	 */
-	public
-	function GB_D_addStyleToAdminPage() {
+	public function GB_D_addStyleToAdminPage() {
 		wp_enqueue_style( 'notice_style' );
 	}
 
@@ -346,8 +357,7 @@ class GB_Duyurular {
 	 *
 	 * add_action('template_redirect','GB_D_markAsRead');
 	 */
-	public
-	function GB_D_markAsRead() {
+	public function GB_D_markAsRead() {
 		$blog_id = get_current_blog_id();
 		if ( isset( $_REQUEST['GB_D_noticeId'] ) ) {
 			$noticeId = $_REQUEST['GB_D_noticeId'];
@@ -377,8 +387,7 @@ class GB_Duyurular {
 	 *
 	 * @param $noticeId
 	 */
-	public
-	function GB_D_unmarkAsRead( $noticeId ) {
+	public function GB_D_unmarkAsRead( $noticeId ) {
 		global $wpdb;
 		$blog_id  = get_current_blog_id();
 		$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->usermeta where meta_key='GB_D_{$blog_id}_okunanDuyurular'" );
@@ -407,8 +416,7 @@ class GB_Duyurular {
 	 *
 	 * @return bool
 	 */
-	public
-	function GB_D_isRead( $id ) {
+	public function GB_D_isRead( $id ) {
 		global $blog_id;
 		if ( is_user_logged_in() ) {
 			global $current_user;
@@ -436,8 +444,7 @@ class GB_Duyurular {
 	 *
 	 * @return array|int
 	 */
-	public
-	function GB_D_getDate( $date = null, $mktime = false ) {
+	public function GB_D_getDate( $date = null, $mktime = false ) {
 		if ( is_null( $date ) ) $date = date_i18n( 'Y-m-d H:i:s' );
 		$datearr = array(
 			'year'   => substr( $date, 0, 4 ),
@@ -458,8 +465,7 @@ class GB_Duyurular {
 	/**
 	 * Çöpten çıkarılan duyurunun meta bilgisini öntanımlı ayarlara döndürüyor.
 	 */
-	public
-	function GB_D_trashToPublish() {
+	public function GB_D_trashToPublish() {
 		$post_id = get_the_ID();
 		$date    = $this->GB_D_getDate();
 		$date['month'] ++;

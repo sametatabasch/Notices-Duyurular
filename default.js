@@ -57,15 +57,13 @@ function reLocate() {
 
 }
 
-jQ(document).ready(function (jQ) {
+jQ(document).ready(function () {
 	/* çarpıya  basınca  uyarıyı  ekrandan kaldırma işlemi */
 	jQ('.close').click(function () {
 		jQ(this).parent().fadeOut(function () {
 			jQ(this).remove()
 		});
 	});
-	/*fancy box yerine kullanılacak fonksiyon */
-	showWindowType(); //todo sadece gösterilecek  duyuru olduğunda çalışacak
 });
 
 jQ(window).resize(function () {
