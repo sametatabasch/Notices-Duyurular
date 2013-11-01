@@ -47,7 +47,7 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 ### 1.2 ###
 
--Conflict was resolved by admin bar for MP6 plugin
+- Conflict was resolved by admin bar for MP6 plugin
 
 ### 1.1 ###
 

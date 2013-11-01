@@ -12,6 +12,7 @@
 //todo Multi  site için uyumlu  hale gelecek #14
 //todo Admin panelde  gözükmesi sağlanacak check box ile denetlenebilir.
 //todo * Çöpe taşınıca metaların boşalması #11
+//todo duyurudaki çarpıya basınca kullanıcıya birdaha gösterilsin mi sorusu sorulacak ve ona göre işlem yapılacak okundu linki kaldırılacak
 class GB_Duyurular {
 
 	/**
@@ -320,7 +321,7 @@ class GB_Duyurular {
 		if ( $this->isThereWindowType ) {
 			$this->noticeContent .= '
 				<script type="text/javascript">
-					jQ(document).ready(function () {showWindowType();});
+					jQuery(document).ready(function () {showWindowType();});
 				</script>
 			</div>';
 		}
