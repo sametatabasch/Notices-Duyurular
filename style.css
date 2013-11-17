@@ -23,13 +23,6 @@
 	color: #c09853;
 }
 
-.alert .close {
-	position: relative;
-	top: 0px;
-	right: 5px;
-	line-height: 20px;
-}
-
 .alert-success {
 	color: #468847;
 	background-color: #dff0d8;
@@ -61,6 +54,13 @@
 .alert-info h4,
 .alert-info p {
 	color: #3a87ad;
+}
+
+.alert .close {
+	position: relative;
+	top: 0px;
+	right: 5px;
+	line-height: 20px;
 }
 
 .close {
@@ -175,7 +175,6 @@ button.close {
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.85);
 	z-index: 999998;
-
 }
 
 .window {

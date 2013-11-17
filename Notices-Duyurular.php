@@ -267,6 +267,7 @@ class GB_Duyurular {
 					if ( $notice['whoCanSee'] == 'everyone' ) {
 						$this->noticeContent .= '
 					  <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" >
+					  	<button type="button" class="close" >&times;</button>
 					    <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
 					    ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
 					    <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
@@ -276,6 +277,7 @@ class GB_Duyurular {
 						if ( is_user_logged_in() ) {
 							$this->noticeContent .= '
 						    <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" >
+						    	<button type="button" class="close" >&times;</button>
 						      <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
 						      ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
 						      <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
@@ -321,7 +323,7 @@ class GB_Duyurular {
 		if ( $this->isThereWindowType ) {
 			$this->noticeContent .= '
 				<script type="text/javascript">
-					jQuery(document).ready(function () {showWindowType();});
+
 				</script>
 			</div>';
 		}
