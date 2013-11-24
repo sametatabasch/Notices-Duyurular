@@ -323,7 +323,7 @@ class GB_Duyurular {
 		if ( $this->isThereWindowType ) {
 			$this->noticeContent .= '
 				<script type="text/javascript">
-
+					duyuruWindow.show();
 				</script>
 			</div>';
 		}

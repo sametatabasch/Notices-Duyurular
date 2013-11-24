@@ -1,10 +1,13 @@
 /**
  * pencere modundaki duyuruları gösterecek fonksiyon
  */
+//todo Window sınıfı ile oluşturulan pencelerilerin birbirinden ayrıması için bir id oluşturup bu id eklenen divlere eklenmeli
+//todo pencereden evet yada hayır şeklinde bir dönüt almak için callback tanımlamak bunun için birşeyler yapmak lazım
 jQuery.fn.Window = function (content, isClass) {
 	this.currentIndex = 0;
 	this.getContent = function () {
 		isClass ? this.content = jQuery(content) : this.content = content;
+		console.log(this.content);
 		if (isClass) this.content.remove();//window class ına sahip nesneleri sayfadan temizledik
 	}
 	/**
@@ -26,7 +29,7 @@ jQuery.fn.Window = function (content, isClass) {
 	 * bir önceki  duyuruyu getirir
 	 *
 	 */
-	this.prev = function () {
+	this.next = function () {
 		this.currentIndex--;
 		if (this.currentIndex < 0) this.currentIndex = this.content.length - 1;
 		jQuery('#windowBox').fadeOut(jQuery.proxy(function () {
@@ -43,7 +46,7 @@ jQuery.fn.Window = function (content, isClass) {
 	 * sonraki duyuruyu getirir
 	 *
 	 */
-	this.next = function () {
+	this.prev = function () {
 		this.currentIndex++;
 		if (this.currentIndex > this.content.length - 1) this.currentIndex = 0;
 		jQuery('#windowBox').fadeOut(jQuery.proxy(function () {
@@ -55,10 +58,6 @@ jQuery.fn.Window = function (content, isClass) {
 			this.reLocate();
 		}, this));
 	};
-
-	this.hide = function () {
-		jQuery('#windowBackground').detach();
-	}
 	/**
 	 * pencereyi ekranda gösterir
 	 */
@@ -66,8 +65,12 @@ jQuery.fn.Window = function (content, isClass) {
 		this.getContent();
 		jQuery('body').append('<div id="windowBackground"><div class="windowBackground"></div></div>');
 		jQuery('#windowBackground').append('<div id="windowBox" class=""></div>');//window class lı nesnenin ekleneceği div eklendi
-		jQuery('#windowBox').append(this.content[this.currentIndex]);//ilk içerik windowBox id li  div içine eklendi
-		if (this.content.length > 1) {
+		if (isClass) {
+			jQuery('#windowBox').append(this.content[this.currentIndex]);
+		} else {
+			jQuery('#windowBox').append(this.content);
+		}
+		if (this.content.length > 1 && isClass) {
 			jQuery('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-previous" title="Previous"><span></span></a>');
 			jQuery('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-next" title="Next"><span></span></a>');
 			jQuery('.window-nav-previous').click(jQuery.proxy(function () {
@@ -78,19 +81,27 @@ jQuery.fn.Window = function (content, isClass) {
 			}, this));
 		}
 		jQuery('.window .close').click(jQuery.proxy(function () {
+			this.hide();
+		}, this));
+		//arka plana tıklayınca silinsin
+		jQuery('.windowBackground').click(jQuery.proxy(function () {
 			this.close();
 		}, this));
 		this.reLocate();
 	};
-	this.close = function () {
+	this.hide = function () {
 		currnetId = this.content[this.currentIndex].id;
 		this.content.splice(this.currentIndex, 1);
+		denemeWindow.show();
 		close(jQuery('.window .close').parent());
 		if (this.content.length > 0) {
 			this.next();
 		} else {
 			close(jQuery('#windowBackground'));
 		}
+	}
+	this.close = function () {
+		close(jQuery('#windowBackground'));
 	}
 	return this;
 };
@@ -105,15 +116,12 @@ function close(obj) {
 };
 
 var duyuruWindow = jQuery(document.body).Window('.window', true);
+var denemeWindow = jQuery(document.body).Window('<div class="alert alert-info"><p>Bu duyurunun bir daha gösterilmesini istemiyorsanız bir daha gösterme butonuna basınız.</p></div>', false);
 
 jQuery(document).ready(function () {
 	//adminbar yüksekiliği notice container e aktarılıyor
 	jQuery('.noticeContainer').css({'top': jQuery('#wpadminbar').height()});
-	duyuruWindow.show();
-	//arka plana tıklayınca silinsin
-	jQuery('.windowBackground').click(function () {
-		close(jQuery('#windowBackground'));
-	});
+
 
 	jQuery('.bar .close').click(function () {
 		close(jQuery(this).parent())
