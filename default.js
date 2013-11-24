@@ -1,16 +1,16 @@
 /**
  * pencere modundaki duyuruları gösterecek fonksiyon
  */
-var Window = function (content, isClass) {
-	getContent = function () {
-		isClass ? content = jQuery.makeArray(jQuery(content)) : content = content;
-		console.log(content);
-		if (isClass) jQuery(content).remove();//window class ına sahip nesneleri sayfadan temizledik
+jQuery.fn.Window = function (content, isClass) {
+	this.currentIndex = 0;
+	this.getContent = function () {
+		isClass ? this.content = jQuery(content) : this.content = content;
+		if (isClass) this.content.remove();//window class ına sahip nesneleri sayfadan temizledik
 	}
 	/**
 	 * sayfadaki  konumu  yeniden  düzenler
 	 */
-	reLocate = function () {
+	this.reLocate = function () {
 		jQuery('.window').css({'max-height': (window.innerHeight / 2), 'max-width': (window.innerWidth / 2)});
 		var windowBoxWidth = jQuery('#windowBox').width();
 		var windowBoxHeight = jQuery('#windowBox').height();
@@ -20,74 +20,107 @@ var Window = function (content, isClass) {
 			'left': windowBoxLeft,
 			'top' : windowBoxTop
 		});
-	}
-	this.Locate = function () {
-		reLocate()
 	};
+
+	/**
+	 * bir önceki  duyuruyu getirir
+	 *
+	 */
+	this.prev = function () {
+		this.currentIndex--;
+		if (this.currentIndex < 0) this.currentIndex = this.content.length - 1;
+		jQuery('#windowBox').fadeOut(jQuery.proxy(function () {
+			jQuery('#windowBox').find('.window').replaceWith(this.content[this.currentIndex]);
+			jQuery('#windowBox').css({'display': 'block'});
+			jQuery('.window .close').click(jQuery.proxy(function () {
+				this.close();
+			}, this));
+			this.reLocate();
+		}, this));
+	};
+
+	/**
+	 * sonraki duyuruyu getirir
+	 *
+	 */
+	this.next = function () {
+		this.currentIndex++;
+		if (this.currentIndex > this.content.length - 1) this.currentIndex = 0;
+		jQuery('#windowBox').fadeOut(jQuery.proxy(function () {
+			jQuery('#windowBox').css({'display': 'block'});
+			jQuery('#windowBox').find('.window').replaceWith(this.content[this.currentIndex]);
+			jQuery('.window .close').click(jQuery.proxy(function () {
+				this.close();
+			}, this));
+			this.reLocate();
+		}, this));
+	};
+
+	this.hide = function () {
+		jQuery('#windowBackground').detach();
+	}
 	/**
 	 * pencereyi ekranda gösterir
 	 */
 	this.show = function () {
-		getContent();
+		this.getContent();
 		jQuery('body').append('<div id="windowBackground"><div class="windowBackground"></div></div>');
 		jQuery('#windowBackground').append('<div id="windowBox" class=""></div>');//window class lı nesnenin ekleneceği div eklendi
-		var i = 0;
-		var max = content.length - 1;
-		jQuery('#windowBox').append(content[0]);//ilk içerik windowBox id li  div içine eklendi
-		if (content.length > 1) {
+		jQuery('#windowBox').append(this.content[this.currentIndex]);//ilk içerik windowBox id li  div içine eklendi
+		if (this.content.length > 1) {
 			jQuery('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-previous" title="Previous"><span></span></a>');
 			jQuery('#windowBox').append('<a href="javascript:;" class="window-nav window-nav-next" title="Next"><span></span></a>');
-			jQuery('.window-nav-previous').click(function () {
-				i--;
-				if (i < 0) i = max;
-				jQuery('#windowBox .window').fadeOut(function () {
-					jQuery(this).css({'display': 'block'});
-					jQuery(this).replaceWith(content[i]);
-					reLocate();
-				});
-			});
-			jQuery('.window-nav-next').click(function () {
-				i++;
-				if (i > max) i = 0;
-				jQuery('#windowBox .window').fadeOut(function () {
-					jQuery(this).css({'display': 'block'});
-					jQuery(this).replaceWith(content[i]);
-					reLocate();
-				});
-			});
+			jQuery('.window-nav-previous').click(jQuery.proxy(function () {
+				this.prev();
+			}, this));
+			jQuery('.window-nav-next').click(jQuery.proxy(function () {
+				this.next();
+			}, this));
 		}
-		reLocate();
-	}
-
-	/**
-	 *
-	 */
-	close = function (obj) {
-		if (undefined == !obj) {
-			console.log(obj);
-			obj.fadeOut('slow', function () {
-				jQuery(this).remove();
-			});
-		}
-		;
+		jQuery('.window .close').click(jQuery.proxy(function () {
+			this.close();
+		}, this));
+		this.reLocate();
 	};
-	jQuery('#windowBackground .windowBackground').click(close());//arka plana tıklayınca silinsin
-	jQuery('.close').click(close(jQuery('#windowBackground')));
-}
+	this.close = function () {
+		currnetId = this.content[this.currentIndex].id;
+		this.content.splice(this.currentIndex, 1);
+		close(jQuery('.window .close').parent());
+		if (this.content.length > 0) {
+			this.next();
+		} else {
+			close(jQuery('#windowBackground'));
+		}
+	}
+	return this;
+};
+/**
+ * parametre ile girilen nesneyi  siler
+ * @param obj
+ */
+function close(obj) {
+	obj.fadeOut('slow', function () {
+		jQuery(this).detach();
+	});
+};
 
-var duyuruWindow = new Window(".window", true);
+var duyuruWindow = jQuery(document.body).Window('.window', true);
+
 jQuery(document).ready(function () {
-	/* çarpıya  basınca  uyarıyı  ekrandan kaldırma işlemi */
-	/*jQuery('.close').click(function () {
-	 jQuery(this).parent().fadeOut(function () {
-	 jQuery(this).remove()
-	 });
-	 });*/
-	jQuery('.noticeContainer').css({'top': jQuery('#wpadminbar').height()});//adminbar yüksekiliği notice container e aktarılıyor
+	//adminbar yüksekiliği notice container e aktarılıyor
+	jQuery('.noticeContainer').css({'top': jQuery('#wpadminbar').height()});
 	duyuruWindow.show();
+	//arka plana tıklayınca silinsin
+	jQuery('.windowBackground').click(function () {
+		close(jQuery('#windowBackground'));
+	});
+
+	jQuery('.bar .close').click(function () {
+		close(jQuery(this).parent())
+	});
 
 });
 
 jQuery(window).resize(function () {
-	duyuruWindow.Locate();
+	duyuruWindow.reLocate();
 });
