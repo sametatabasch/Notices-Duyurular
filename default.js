@@ -5,6 +5,7 @@
 //todo pencereden evet yada hayır şeklinde bir dönüt almak için callback tanımlamak bunun için birşeyler yapmak lazım
 jQuery.fn.Window = function (content, isClass) {
 	this.currentIndex = 0;
+	this.return = false;
 	this.getContent = function () {
 		isClass ? this.content = jQuery(content) : this.content = content;
 		console.log(this.content);
@@ -26,7 +27,7 @@ jQuery.fn.Window = function (content, isClass) {
 	};
 
 	/**
-	 * bir önceki  duyuruyu getirir
+	 * sonraki  duyuruyu getirir
 	 *
 	 */
 	this.next = function () {
@@ -36,14 +37,14 @@ jQuery.fn.Window = function (content, isClass) {
 			jQuery('#windowBox').find('.window').replaceWith(this.content[this.currentIndex]);
 			jQuery('#windowBox').css({'display': 'block'});
 			jQuery('.window .close').click(jQuery.proxy(function () {
-				this.close();
+				this.hide();
 			}, this));
 			this.reLocate();
 		}, this));
 	};
 
 	/**
-	 * sonraki duyuruyu getirir
+	 * önceki duyuruyu getirir
 	 *
 	 */
 	this.prev = function () {
@@ -53,7 +54,7 @@ jQuery.fn.Window = function (content, isClass) {
 			jQuery('#windowBox').css({'display': 'block'});
 			jQuery('#windowBox').find('.window').replaceWith(this.content[this.currentIndex]);
 			jQuery('.window .close').click(jQuery.proxy(function () {
-				this.close();
+				this.hide();
 			}, this));
 			this.reLocate();
 		}, this));
@@ -90,15 +91,35 @@ jQuery.fn.Window = function (content, isClass) {
 		this.reLocate();
 	};
 	this.hide = function () {
-		currnetId = this.content[this.currentIndex].id;
-		this.content.splice(this.currentIndex, 1);
-		denemeWindow.show();
-		close(jQuery('.window .close').parent());
-		if (this.content.length > 0) {
+		var icerik = '<div class="alert window alert-info">' +
+				'<h4></h4>' +
+				'<p>Bu duyurunun bir daha gösterilmesini istemiyorsanız bir daha gösterme butonuna basınız.</p>' +
+				'<div id="yes-no" class="center"><button id="yes" class="btn">Bir daha gösterme</button>-<button id="no" class="btn">Kapat</button></div> ' +
+				'</div>';
+		var genislik = jQuery('#windowBox').width();
+		jQuery('#windowBox').find('.window').replaceWith(icerik);
+		jQuery('#windowBox .window').width(genislik);
+		jQuery('#yes-no #yes').click(jQuery.proxy(function () {
+			currentId = this.content[this.currentIndex].id;
+			var reg = /\d/g;
+			currentId = currentId.match(reg).join('');
+			jQuery.ajax({
+				type: "GET",
+				data: "GB_D_noticeId=" + currentId
+			});
+			this.content.splice(this.currentIndex, 1);
 			this.next();
-		} else {
-			close(jQuery('#windowBackground'));
-		}
+			if (this.content.length == 1)jQuery('.window-nav').remove();
+		}, this));
+		jQuery('#yes-no #no').click(jQuery.proxy(function () {
+			this.content.splice(this.currentIndex, 1);
+			if (this.content.length > 0) {
+				this.next();
+				if (this.content.length == 1)jQuery('.window-nav').remove();
+			} else {
+				close(jQuery('#windowBackground'));
+			}
+		}, this));
 	}
 	this.close = function () {
 		close(jQuery('#windowBackground'));
@@ -116,17 +137,13 @@ function close(obj) {
 };
 
 var duyuruWindow = jQuery(document.body).Window('.window', true);
-var denemeWindow = jQuery(document.body).Window('<div class="alert alert-info"><p>Bu duyurunun bir daha gösterilmesini istemiyorsanız bir daha gösterme butonuna basınız.</p></div>', false);
 
 jQuery(document).ready(function () {
 	//adminbar yüksekiliği notice container e aktarılıyor
 	jQuery('.noticeContainer').css({'top': jQuery('#wpadminbar').height()});
-
-
 	jQuery('.bar .close').click(function () {
 		close(jQuery(this).parent())
 	});
-
 });
 
 jQuery(window).resize(function () {
