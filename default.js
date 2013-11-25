@@ -8,7 +8,6 @@ jQuery.fn.Window = function (content, isClass) {
 	this.return = false;
 	this.getContent = function () {
 		isClass ? this.content = jQuery(content) : this.content = content;
-		console.log(this.content);
 		if (isClass) this.content.remove();//window class ına sahip nesneleri sayfadan temizledik
 	}
 	/**
@@ -142,10 +141,28 @@ jQuery(document).ready(function () {
 	//adminbar yüksekiliği notice container e aktarılıyor
 	jQuery('.noticeContainer').css({'top': jQuery('#wpadminbar').height()});
 	jQuery('.bar .close').click(function () {
-		close(jQuery(this).parent())
+		var currentId = jQuery(this).parent()[0].id;
+		var reg = /\d/g;
+		currentId = currentId.match(reg).join('');
+		var icerik =
+				'<div class="bar alert alert-info">' +
+						'<h4></h4>' +
+						'<p>Bu duyurunun bir daha gösterilmesini istemiyorsanız bir daha gösterme butonuna basınız.</p>' +
+						'<button id="yes" class="btn">Bir daha gösterme</button>-<button id="no" class="btn">Kapat</button>' +
+						'</div>';
+		jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
+		jQuery('#yes').click(function () {
+			jQuery.ajax({
+				type: "GET",
+				data: "GB_D_noticeId=" + currentId
+			});
+			close(jQuery(this).parent());
+		});
+		jQuery('#no').click(function () {
+			close(jQuery(this).parent());
+		});
 	});
 });
-
 jQuery(window).resize(function () {
 	duyuruWindow.reLocate();
 });

@@ -290,7 +290,6 @@ class GB_Duyurular {
 					      <button type="button" class="close" >&times;</button>
 					      <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
 					      ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
-					      <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
 					    </div>';
 					}
 					else {
@@ -300,7 +299,6 @@ class GB_Duyurular {
 						    <button type="button" class="close">&times;</button>
 						    <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
 						    ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
-						    <p class="okundu"><a href="?GB_D_noticeId=' . $notice["ID"] . '">' . __( 'Don\'t Show', $this->textDomainString ) . '</a></p>
 						  </div>';
 						}
 					}

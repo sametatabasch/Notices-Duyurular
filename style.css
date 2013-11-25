@@ -105,6 +105,7 @@ button.close {
 	width: 100%;
 	margin-bottom: 2px;
 	min-height: 30px;
+	display: inline-block;
 }
 
 .bar h4 {
@@ -115,6 +116,7 @@ button.close {
 
 .bar p {
 	padding-top: 5px;
+	display: inline-block;
 }
 
 .noticeContainer {
@@ -123,37 +125,6 @@ button.close {
 	left: 0;
 	z-index: 9999;
 	width: 100%;
-}
-
-.alert .okundu {
-	font-size: 10px;
-	padding: 0 5px 0 0;
-	text-align: right;
-	text-decoration: none;
-	display: none;
-	font-weight: bold;
-	margin-top: 5px;
-}
-
-.alert .okundu a {
-	color: #c09853;
-}
-
-.alert-info .okundu a {
-	color: #3a87ad;
-}
-
-.alert-danger .okundu a,
-.alert-error .okundu a {
-	color: #b94a48;
-}
-
-.alert-success .okundu a {
-	color: #468847;
-}
-
-.alert:hover .okundu {
-	display: block;
 }
 
 /*Admin Panel*/
