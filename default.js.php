@@ -1,8 +1,12 @@
+<?php
+@ini_set( 'display_errors', 1 );
+header( "content-type: application/x-javascript" );
+_e( 'Who can see:', 'Notices-Duyurular' );
+//todo  Fatal error: Call to undefined function _e() in /var/www/wordpress/wp-content/plugins/Notices-Duyurular/default.js.php on line 4
+?>
 /**
  * pencere modundaki duyuruları gösterecek fonksiyon
  */
-//todo Window sınıfı ile oluşturulan pencelerilerin birbirinden ayrıması için bir id oluşturup bu id eklenen divlere eklenmeli
-//todo pencereden evet yada hayır şeklinde bir dönüt almak için callback tanımlamak bunun için birşeyler yapmak lazım
 jQuery.fn.Window = function (content, isClass) {
 	this.currentIndex = 0;
 	this.return = false;

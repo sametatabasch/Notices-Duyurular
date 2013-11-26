@@ -339,7 +339,7 @@ class GB_Duyurular {
 	public function  GB_D_addScriptAndStyle() {
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
-		wp_enqueue_script( 'notice', plugins_url( 'default.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( 'notice', plugins_url( 'default.js.php', __FILE__ ), array( 'jquery' ) );
 	}
 
 	/**
