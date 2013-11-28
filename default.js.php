@@ -120,9 +120,13 @@ var genislik = jQuery('#windowBox').width();
 				data: "GB_D_noticeId=" + currentId
 			});
 			this.content.splice(this.currentIndex, 1);
-			this.next();
-			if (this.content.length == 1)jQuery('.window-nav').remove();
-		}, this));
+if (this.content.length > 0) {
+this.next();
+if (this.content.length == 1)jQuery('.window-nav').remove();
+} else {
+close(jQuery('#windowBackground'));
+}
+}, this));
 		jQuery('#yes-no #no').click(jQuery.proxy(function () {
 			this.content.splice(this.currentIndex, 1);
 			if (this.content.length > 0) {
