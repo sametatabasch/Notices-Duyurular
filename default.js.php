@@ -1,8 +1,6 @@
 <?php
-@ini_set( 'display_errors', 1 );
+include "../../../wp-load.php";
 header( "content-type: application/x-javascript" );
-_e( 'Who can see:', 'Notices-Duyurular' );
-//todo  Fatal error: Call to undefined function _e() in /var/www/wordpress/wp-content/plugins/Notices-Duyurular/default.js.php on line 4
 ?>
 /**
  * pencere modundaki duyuruları gösterecek fonksiyon
@@ -96,9 +94,16 @@ jQuery.fn.Window = function (content, isClass) {
 	this.hide = function () {
 		var icerik = '<div class="alert window alert-info">' +
 				'<h4></h4>' +
-				'<p>Bu duyurunun bir daha gösterilmesini istemiyorsanız bir daha gösterme butonuna basınız.</p>' +
-				'<div id="yes-no" class="center"><button id="yes" class="btn">Bir daha gösterme</button>-<button id="no" class="btn">Kapat</button></div> ' +
-				'</div>';
+	'
+	<p><?php _e( 'If you do not want to see again this notice,click "do not show again".', $GB_Duyurular->textDomainString ) ?></p>' +
+	'
+	<div id="yes-no" class="center">
+		<button id="yes" class="btn"><?php _e( 'Do not show again', $GB_Duyurular->textDomainString ) ?></button>
+		-
+		<button id="no" class="btn"><?php _e( 'Close', $GB_Duyurular->textDomainString ) ?></button>
+	</div>
+	' +
+	'</div>';
 		var genislik = jQuery('#windowBox').width();
 		jQuery('#windowBox').find('.window').replaceWith(icerik);
 		jQuery('#windowBox .window').width(genislik);
@@ -151,9 +156,14 @@ jQuery(document).ready(function () {
 		var icerik =
 				'<div class="bar alert alert-info">' +
 						'<h4></h4>' +
-						'<p>Bu duyurunun bir daha gösterilmesini istemiyorsanız bir daha gösterme butonuna basınız.</p>' +
-						'<button id="yes" class="btn">Bir daha gösterme</button>-<button id="no" class="btn">Kapat</button>' +
-						'</div>';
+	'
+	<p><?php _e( 'If you do not want to see again this notice,click "do not show again".', $GB_Duyurular->textDomainString ) ?></p>' +
+	'
+	<button id="yes" class="btn"><?php _e( 'Do not show again', $GB_Duyurular->textDomainString ) ?></button>
+	-
+	<button id="no" class="btn"><?php _e( 'Close', $GB_Duyurular->textDomainString ) ?></button>
+	' +
+	'</div>';
 		jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
 		jQuery('#yes').click(function () {
 			jQuery.ajax({
