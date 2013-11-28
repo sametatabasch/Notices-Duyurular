@@ -94,20 +94,11 @@ jQuery.fn.Window = function (content, isClass) {
 	this.hide = function () {
 		var icerik = '<div class="alert window alert-info">' +
 				'<h4></h4>' +
-	'
-	<p><?php _e( 'If you do not want to see again this notice,click "do not show again".', $GB_Duyurular->textDomainString ) ?></p>' +
-	'
-	<div id="yes-no" class="center">' +
-		'
-		<button id="yes" class="btn"><?php _e( 'Do not show again', $GB_Duyurular->textDomainString ) ?></button>
-		-
-		<button id="no" class="btn"><?php _e( 'Close', $GB_Duyurular->textDomainString ) ?></button>
-		' +
-		'
-	</div>
-	' +
-	'
-</div>';
+				'<p><?php _e( 'If you do not want to see again this notice,click "do not show again".', $GB_Duyurular->textDomainString ) ?></p>' +
+				'<div id="yes-no" class="center">' +
+					'<button id="yes" class="btn"><?php _e( 'Do not show again', $GB_Duyurular->textDomainString ) ?></button> - <button id="no" class="btn"><?php _e( 'Close', $GB_Duyurular->textDomainString ) ?></button>' +
+				'</div>' +
+			'</div>';
 var genislik = jQuery('#windowBox').width();
 		jQuery('#windowBox').find('.window').replaceWith(icerik);
 		jQuery('#windowBox .window').width(genislik);
@@ -120,12 +111,12 @@ var genislik = jQuery('#windowBox').width();
 				data: "GB_D_noticeId=" + currentId
 			});
 			this.content.splice(this.currentIndex, 1);
-if (this.content.length > 0) {
-this.next();
-if (this.content.length == 1)jQuery('.window-nav').remove();
-} else {
-close(jQuery('#windowBackground'));
-}
+			if (this.content.length > 0) {
+				this.next();
+				if (this.content.length == 1)jQuery('.window-nav').remove();
+			} else {
+				close(jQuery('#windowBackground'));
+			}
 }, this));
 		jQuery('#yes-no #no').click(jQuery.proxy(function () {
 			this.content.splice(this.currentIndex, 1);
@@ -161,18 +152,11 @@ jQuery(document).ready(function () {
 		var currentId = jQuery(this).parent()[0].id;
 		var reg = /\d/g;
 		currentId = currentId.match(reg).join('');
-var icerik ='
-<div class="bar alert alert-info">' +
-	'<h4></h4>' +
-	'
-	<p><?php _e( 'If you do not want to see again this notice,click "do not show again".', $GB_Duyurular->textDomainString ) ?></p>' +
-	'
-	<button id="yes" class="btn"><?php _e( 'Do not show again', $GB_Duyurular->textDomainString ) ?></button>
-	-
-	<button id="no" class="btn"><?php _e( 'Close', $GB_Duyurular->textDomainString ) ?></button>
-	' +
-	'
-</div>';
+var icerik ='<div class="bar alert alert-info">' +
+		'<h4></h4>' +
+		'<p><?php _e( 'If you do not want to see again this notice,click "do not show again".', $GB_Duyurular->textDomainString ) ?></p>' +
+		'<button id="yes" class="btn"><?php _e( 'Do not show again', $GB_Duyurular->textDomainString ) ?></button> - <button id="no" class="btn"><?php _e( 'Close', $GB_Duyurular->textDomainString ) ?></button>' +
+	'</div>';
 jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
 		jQuery('#yes').click(function () {
 			jQuery.ajax({
