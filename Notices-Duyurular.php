@@ -114,8 +114,9 @@ class GB_Duyurular {
 		$this->GB_D_getMeta( $post_id );
 		if ( empty( $this->meta['lastDisplayDate'] ) ) {
 			$date = $this->GB_D_getDate();
-			$date['month'] ++;
-		}
+			$date['month'] ++;// ön tanımlı tarih o anın bir ay sonrası
+                        if($date['month']<10) $date['month']='0'.$date['month'];
+                }
 		else {
 			$date = $this->GB_D_getDate( $this->meta['lastDisplayDate'] );
 		}
