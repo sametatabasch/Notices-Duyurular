@@ -12,7 +12,7 @@ jQuery.fn.Window = function (content, isClass) {
 	 * sayfadaki  konumu  yeniden  düzenler
 	 */
 	this.reLocate = function () {
-		jQuery('.window').css({'max-height': (window.innerHeight / 2), 'max-width': (window.innerWidth / 2)});
+		jQuery('.window').css({'max-height': (window.innerHeight -100), 'max-width': (window.innerWidth - 100)});
 		var windowBoxWidth = jQuery('#windowBox').width();
 		var windowBoxHeight = jQuery('#windowBox').height();
 		var windowBoxLeft = (window.innerWidth - windowBoxWidth) / 2;
