@@ -404,6 +404,10 @@ class GB_Duyurular {
 			}
 			else continue;
 		}
+		/**
+		 * Okundu işareti kaldırılan duyurunun eğer cookiesi  varsa o cookie yi siliyor
+		 * okunması olarak işaretle işlemini kullanıcı kendisi yapamadığı için bu işlem şimdilik amaçsız
+		 */
 		if ( isset( $_COOKIE["GB_D_{$blog_id}_okunanDuyurular"] ) ) {
 			$okunanDuyurular = $_COOKIE["GB_D_{$blog_id}_okunanDuyurular"];
 			if ( array_key_exists( $noticeId, $okunanDuyurular ) ) {
