@@ -2,8 +2,8 @@
 Contributors: sametatabasch
 Tags: notice, duyuru,post_type,cookie
 Requires at least: 3.0.1
-Tested up to: 3.7.1
-Stable tag: 1.4
+Tested up to: 3.8.1
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,19 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 3. Example for add new notice page.
 
 ## Changelog ##
+
+### 1.4.3 ###
+
+- maximun size changed
+- Localization bug fixed
+
+### 1.4.2 ###
+
+- Bug fix
+
+### 1.4.1 ###
+
+- Bug fix
 
 ### 1.4 ###
 
