@@ -12,7 +12,7 @@ jQuery.fn.Window = function (content, isClass) {
 	 * sayfadaki  konumu  yeniden  düzenler
 	 */
 	this.reLocate = function () {
-		jQuery('.window').css({'max-height': (window.innerHeight -100), 'max-width': (window.innerWidth - 100)});
+		jQuery('.window').css({'max-height': (window.innerHeight - 100), 'max-width': (window.innerWidth - 100)});
 		var windowBoxWidth = jQuery('#windowBox').width();
 		var windowBoxHeight = jQuery('#windowBox').height();
 		var windowBoxLeft = (window.innerWidth - windowBoxWidth) / 2;
@@ -90,12 +90,12 @@ jQuery.fn.Window = function (content, isClass) {
 	this.hide = function () {
 		var icerik = '<div class="alert window alert-info">' +
 				'<h4></h4>' +
-				'<p>'+message.content+'</p>' +
+				'<p>' + message.content + '</p>' +
 				'<div id="yes-no" class="center">' +
-					'<button id="yes" class="btn">'+message.dontShow+'</button> - <button id="no" class="btn">'+message.close+'</button>' +
+				'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
 				'</div>' +
-			'</div>';
-var genislik = jQuery('#windowBox').width();
+				'</div>';
+		var genislik = jQuery('#windowBox').width();
 		jQuery('#windowBox').find('.window').replaceWith(icerik);
 		jQuery('#windowBox .window').width(genislik);
 		jQuery('#yes-no #yes').click(jQuery.proxy(function () {
@@ -113,7 +113,7 @@ var genislik = jQuery('#windowBox').width();
 			} else {
 				close(jQuery('#windowBackground'));
 			}
-}, this));
+		}, this));
 		jQuery('#yes-no #no').click(jQuery.proxy(function () {
 			this.content.splice(this.currentIndex, 1);
 			if (this.content.length > 0) {
@@ -148,12 +148,12 @@ jQuery(document).ready(function () {
 		var currentId = jQuery(this).parent()[0].id;
 		var reg = /\d/g;
 		currentId = currentId.match(reg).join('');
-var icerik ='<div class="bar alert alert-info">' +
-		'<h4></h4>' +
-		'<p></p>' +
-		'<button id="yes" class="btn">'+message.dontShow+'</button> - <button id="no" class="btn">'+message.close+'</button>' +
-	'</div>';
-jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
+		var icerik = '<div class="bar alert alert-info">' +
+				'<h4></h4>' +
+				'<p></p>' +
+				'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
+				'</div>';
+		jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
 		jQuery('#yes').click(function () {
 			jQuery.ajax({
 				type: "GET",

@@ -68,28 +68,28 @@ class GB_Duyurular {
 	 */
 	public function GB_D_addPostType() {
 		register_post_type( 'Notice',
-			array(
-				'labels'       => array(
-					'name'               => __( 'Notice', $this->textDomainString ),
-					'singular_name'      => __( 'Notice', $this->textDomainString ),
-					'add_new'            => __( 'New Notice', $this->textDomainString ),
-					'add_new_item'       => __( 'Add New Notice', $this->textDomainString ),
-					'edit_item'          => __( 'Edit Notice', $this->textDomainString ),
-					'new_item'           => __( 'New Notice', $this->textDomainString ),
-					'all_items'          => __( 'All Notice', $this->textDomainString ),
-					'view_item'          => __( 'View Notice', $this->textDomainString ),
-					'search_items'       => __( 'Search Notice', $this->textDomainString ),
-					'not_found'          => __( 'Notice Not Found', $this->textDomainString ),
-					'not_found_in_trash' => __( 'Notice Not Found In Trash', $this->textDomainString ),
-					'parent_item_colon'  => '',
-					'menu_name'          => __( 'Notices', $this->textDomainString )
-				),
-				'public'       => false,
-				'has_archive'  => true,
-				'show_ui'      => true,
-				'show_in_menu' => true,
-				'menu_icon'    => $this->pathUrl . 'duyuru.png'
-			)
+				array(
+						'labels'       => array(
+								'name'               => __( 'Notice', $this->textDomainString ),
+								'singular_name'      => __( 'Notice', $this->textDomainString ),
+								'add_new'            => __( 'New Notice', $this->textDomainString ),
+								'add_new_item'       => __( 'Add New Notice', $this->textDomainString ),
+								'edit_item'          => __( 'Edit Notice', $this->textDomainString ),
+								'new_item'           => __( 'New Notice', $this->textDomainString ),
+								'all_items'          => __( 'All Notice', $this->textDomainString ),
+								'view_item'          => __( 'View Notice', $this->textDomainString ),
+								'search_items'       => __( 'Search Notice', $this->textDomainString ),
+								'not_found'          => __( 'Notice Not Found', $this->textDomainString ),
+								'not_found_in_trash' => __( 'Notice Not Found In Trash', $this->textDomainString ),
+								'parent_item_colon'  => '',
+								'menu_name'          => __( 'Notices', $this->textDomainString )
+						),
+						'public'       => false,
+						'has_archive'  => true,
+						'show_ui'      => true,
+						'show_in_menu' => true,
+						'menu_icon'    => $this->pathUrl . 'duyuru.png'
+				)
 		);
 		/**
 		 * Admin paneline eklenecek style dosyasını wp scriptlerine ekleriyor
@@ -114,9 +114,9 @@ class GB_Duyurular {
 		$this->GB_D_getMeta( $post_id );
 		if ( empty( $this->meta['lastDisplayDate'] ) ) {
 			$date = $this->GB_D_getDate();
-			$date['month'] ++;// ön tanımlı tarih o anın bir ay sonrası
-                        if($date['month']<10) $date['month']='0'.$date['month'];
-                }
+			$date['month'] ++; // ön tanımlı tarih o anın bir ay sonrası
+			if ( $date['month'] < 10 ) $date['month'] = '0' . $date['month'];
+		}
 		else {
 			$date = $this->GB_D_getDate( $this->meta['lastDisplayDate'] );
 		}
@@ -124,14 +124,14 @@ class GB_Duyurular {
 		echo '
 		<form>
 		  <div class="misc-pub-section">
-		    <span><b>' . __( 'Who can see:', $this->textDomainString ) . '</b></span>
+		    <span><b>' . __( 'Who can see :', $this->textDomainString ) . '</b></span>
 		    <select name="GB_D_meta[whoCanSee]">
 		      <option ' . selected( $this->meta['whoCanSee'], 'everyone', false ) . ' value="everyone">' . __( 'Everyone', $this->textDomainString ) . '</option>
 		      <option ' . selected( $this->meta['whoCanSee'], 'onlyUser', false ) . ' value="onlyUser">' . __( 'Only User', $this->textDomainString ) . '</option>
 		    </select>
 		  </div>
 		  <div class="misc-pub-section">
-		    <span><b>' . __( 'Display Mode:', $this->textDomainString ) . '</b></span>
+		    <span><b>' . __( 'Display Mode :', $this->textDomainString ) . '</b></span>
 		    <select name="GB_D_meta[displayMode]">
 		      <option ' . selected( $this->meta['displayMode'], 'window', false ) . ' value="window">' . __( 'Window', $this->textDomainString ) . '</option>
 		      <option ' . selected( $this->meta['displayMode'], 'bar', false ) . ' value="bar">' . __( 'Bar', $this->textDomainString ) . '</option>
@@ -139,7 +139,7 @@ class GB_Duyurular {
 		  </div>
 		  <div class="clear"></div>
 		  <div class="misc-pub-section curtime">
-		    <span id="timestamp"><b>' . __( 'Last display date', $this->textDomainString ) . '</b></span>
+		    <span id="timestamp"><b>' . __( 'Last display date :', $this->textDomainString ) . '</b></span>
 		    <br/>
 		    <input type="text" maxlength="2" size="2" value="' . $date["day"] . '" name="GB_D_date[day]" id="jj">.
 		    <select name="GB_D_date[month]" id="mm">';
@@ -153,8 +153,8 @@ class GB_Duyurular {
 		    </select>.
 		    <input type="text" maxlength="4" size="4" value="' . $date["year"] . '" name="GB_D_date[year]" id="aa">@<input type="text" maxlength="2" size="2" value="' . $date["hour"] . '" name="GB_D_date[hour]" id="hh">:<input type="text" maxlength="2" size="2" value="' . $date["minute"] . '" name="GB_D_date[minute]" id="mn">
 		  </div>
-		  <div class="misc-pub-section misc-pub-section-last">
-		    <span><b>' . __( 'Type:', $this->textDomainString ) . '</b></span>
+		  <div class="misc-pub-section">
+		    <span><b>' . __( 'Type :', $this->textDomainString ) . '</b></span>
 		    <div class="alert">
 		      <input type="radio" ' . checked( $this->meta['type'], "", false ) . ' name="GB_D_meta[type]" value="">' . __( 'Default', $this->textDomainString ) . '
 		    </div>
@@ -168,6 +168,10 @@ class GB_Duyurular {
 		      <input type="radio" ' . checked( $this->meta['type'], "alert-success", false ) . ' name="GB_D_meta[type]" value="alert-success">' . __( 'Success', $this->textDomainString ) . '
 		    </div>
 		    <div class="clear"></div>
+		  </div>
+		  <div class="misc-pub-section misc-pub-section-last">
+		  	<span><b>' . __( 'Disptle Time :', $this->textDomainString ) . '</b></span>
+		  	<input type="text" name="GB_D_meta[displayTime]" value="0" />
 		  </div>
 		</form>';
 	}
@@ -340,12 +344,12 @@ class GB_Duyurular {
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
 		wp_enqueue_script( 'notice', plugins_url( 'default.js', __FILE__ ), array( 'jquery' ) );
-                $translation_array = array( 
-                    'content' => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', $this->textDomainString ), 
-                    'dontShow'=> __('Do not show again', $this->textDomainString),
-                    'close'   => __('Close', $this->textDomainString)
-                );
-                wp_localize_script( 'notice', 'message', $translation_array );
+		$translation_array = array(
+				'content'  => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', $this->textDomainString ),
+				'dontShow' => __( 'Do not show again', $this->textDomainString ),
+				'close'    => __( 'Close', $this->textDomainString )
+		);
+		wp_localize_script( 'notice', 'message', $translation_array );
 	}
 
 	/**
@@ -455,12 +459,12 @@ class GB_Duyurular {
 	public function GB_D_getDate( $date = null, $mktime = false ) {
 		if ( is_null( $date ) ) $date = date_i18n( 'Y-m-d H:i:s' );
 		$datearr = array(
-			'year'   => substr( $date, 0, 4 ),
-			'month'  => substr( $date, 5, 2 ),
-			'day'    => substr( $date, 8, 2 ),
-			'hour'   => substr( $date, 11, 2 ),
-			'minute' => substr( $date, 14, 2 ),
-			'second' => substr( $date, 17, 2 )
+				'year'   => substr( $date, 0, 4 ),
+				'month'  => substr( $date, 5, 2 ),
+				'day'    => substr( $date, 8, 2 ),
+				'hour'   => substr( $date, 11, 2 ),
+				'minute' => substr( $date, 14, 2 ),
+				'second' => substr( $date, 17, 2 )
 		);
 		if ( $mktime ) {
 			return mktime( $datearr['hour'], $datearr['minute'], $datearr['second'], $datearr['month'], $datearr['day'], $datearr['year'] );
@@ -479,10 +483,10 @@ class GB_Duyurular {
 		$date['month'] ++;
 		$lastDisplayDate = $date['year'] . '-' . $date['month'] . '-' . $date['day'] . ' ' . $date['hour'] . ':' . $date['minute'] . ':00';
 		$this->meta      = array(
-			'whoCanSee'       => 'everyone',
-			'displayMode'     => 'window',
-			'lastDisplayDate' => $lastDisplayDate,
-			'type'            => ''
+				'whoCanSee'       => 'everyone',
+				'displayMode'     => 'window',
+				'lastDisplayDate' => $lastDisplayDate,
+				'type'            => ''
 		);
 		update_post_meta( $post_id, 'GB_D_meta', $this->meta );
 	}
