@@ -18,8 +18,10 @@ jQuery.fn.Window = function (content, isClass) {
 		var windowBoxLeft = (window.innerWidth - windowBoxWidth) / 2;
 		var windowBoxTop = (window.innerHeight - windowBoxHeight) / 2;
 		jQuery('#windowBox').css({
-			'left': windowBoxLeft,
-			'top' : windowBoxTop
+			'left'      : windowBoxLeft,
+			'top'       : windowBoxTop,
+			'max-height': (window.innerHeight - 100),
+			'max-width' : (window.innerWidth - 100)
 		});
 	};
 
