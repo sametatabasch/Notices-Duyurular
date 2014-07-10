@@ -218,3 +218,7 @@ button.close {
 	-webkit-font-smoothing: antialiased;
 	margin-bottom: 5px;
 }
+/*New Admin Menu Icon*/
+#adminmenu #menu-posts-notice div.wp-menu-image:before {
+	content: "\f488";
+}

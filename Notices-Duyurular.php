@@ -12,6 +12,11 @@
 //todo Multi  site için uyumlu  hale gelecek #14
 //todo Admin panelde  gözükmesi sağlanacak check box ile denetlenebilir.
 //todo * Çöpe taşınıca metaların boşalması #11
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 class GB_Duyurular {
 
 	/**
@@ -41,9 +46,26 @@ class GB_Duyurular {
 	private $meta = array();
 
 	/**
+	 * The single instance of the class
+	 * @var null
+	 */
+	protected static $_instance = null;
+	/**
 	 * Pencere modunda duyurunun olup olmadığını  belirtir
 	 */
 	public $isThereWindowType = false;
+
+	/**
+	 *
+	 *
+	 * @return GB_Duyurular|null
+	 */
+	public static function instance() {
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+		return self::$_instance;
+	}
 
 	public function __construct() {
 		$this->path    = plugin_dir_path( __FILE__ );
@@ -88,7 +110,6 @@ class GB_Duyurular {
 						'has_archive'  => true,
 						'show_ui'      => true,
 						'show_in_menu' => true,
-						'menu_icon'    => $this->pathUrl . 'duyuru.png'
 				)
 		);
 		/**
@@ -166,13 +187,15 @@ class GB_Duyurular {
 		    </div>
 		    <div class="alert alert-success">
 		      <input type="radio" ' . checked( $this->meta['type'], "alert-success", false ) . ' name="GB_D_meta[type]" value="alert-success">' . __( 'Success', $this->textDomainString ) . '
-		    </div>
-		    <div class="clear"></div>
+		    </div>';
+		/* <div class="clear"></div>
 		  </div>
 		  <div class="misc-pub-section misc-pub-section-last">
-		  	<span><b>' . __( 'Disptle Time :', $this->textDomainString ) . '</b></span>
-		  	<input type="text" name="GB_D_meta[displayTime]" value="0" />
+		  	<span><b>' . __( 'Display Time :', $this->textDomainString ) . '</b></span>
+		  	<input type="text" name="GB_D_meta[displayTime]" value="' . $this->meta['displayTime'] . '" />
 		  </div>
+		 */
+		echo '
 		</form>';
 	}
 
@@ -247,7 +270,7 @@ class GB_Duyurular {
 		$out     = array();
 		foreach ( $notices as $notice ) {
 			$this->GB_D_getMeta( $notice['ID'] );
-			$notice = array_merge( $notice, $this->meta );
+			$notice = array_merge( $notice, $this->meta ); //Meta bilgileri  ekleniyor.
 			$out[]  = $notice;
 		}
 		//echo '<pre>';print_r( $out );echo '</pre>';
@@ -265,12 +288,12 @@ class GB_Duyurular {
 				continue;
 			}
 			if ( $this->GB_D_isRead( $notice['ID'] ) ) continue;
-			switch ( $notice['displayMode'] ) {
+			switch ( $notice['displayMode'] ) { //todo eğer başlıl  boş  ise <h4></h4> tagları eklenmeyecek
 				case 'window':
-					$this->isThereWindowType = true;
+					$this->isThereWindowType = true; // pencere  görünümünü sağlayan scriptin sayfaya eklenemesini sağlamak için
 					if ( $notice['whoCanSee'] == 'everyone' ) {
 						$this->noticeContent .= '
-					  <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" >
+					  <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" displayTime="' . $notice['displayTime'] . '" >
 					  	<button type="button" class="close" >&times;</button>
 					    <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
 					    ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
@@ -279,7 +302,7 @@ class GB_Duyurular {
 					else {
 						if ( is_user_logged_in() ) {
 							$this->noticeContent .= '
-						    <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" >
+						    <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" displayTime="' . $notice['displayTime'] . '">
 						    	<button type="button" class="close" >&times;</button>
 						      <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
 						      ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
@@ -492,5 +515,12 @@ class GB_Duyurular {
 	}
 }
 
-$GB_Duyurular = new GB_Duyurular();
-?>
+/**
+ * GB_Duyurular sınıfını  çağırır
+ * @return GB_Duyurular|null
+ */
+function GB_D() {
+	return GB_Duyurular::instance();
+}
+
+$GLOBALS['GB_D'] = GB_D();

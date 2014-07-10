@@ -9,6 +9,12 @@ jQuery.fn.Window = function (content, isClass) {
 		if (isClass) this.content.remove();//window class ına sahip nesneleri sayfadan temizledik
 	}
 	/**
+	 * Duyurunun ekranda gösterim süresini alan fonksiyon
+	 */
+	this.getDisplayTime = jQuery.proxy(function () {
+		console.log(jQuery(this.content[this.currentIndex]).attr('displaytime'));
+	},this);
+	/**
 	 * sayfadaki  konumu  yeniden  düzenler
 	 */
 	this.reLocate = function () {
@@ -34,6 +40,7 @@ jQuery.fn.Window = function (content, isClass) {
 		if (this.currentIndex < 0) this.currentIndex = this.content.length - 1;
 		jQuery('#windowBox').fadeOut(jQuery.proxy(function () {
 			jQuery('#windowBox').find('.window').replaceWith(this.content[this.currentIndex]);
+			this.getDisplayTime();
 			jQuery('#windowBox').css({'display': 'block'});
 			jQuery('.window .close').click(jQuery.proxy(function () {
 				this.hide();
@@ -52,6 +59,7 @@ jQuery.fn.Window = function (content, isClass) {
 		jQuery('#windowBox').fadeOut(jQuery.proxy(function () {
 			jQuery('#windowBox').css({'display': 'block'});
 			jQuery('#windowBox').find('.window').replaceWith(this.content[this.currentIndex]);
+			this.getDisplayTime();
 			jQuery('.window .close').click(jQuery.proxy(function () {
 				this.hide();
 			}, this));
@@ -67,6 +75,7 @@ jQuery.fn.Window = function (content, isClass) {
 		jQuery('#windowBackground').append('<div id="windowBox" class=""></div>');//window class lı nesnenin ekleneceği div eklendi
 		if (isClass) {
 			jQuery('#windowBox').append(this.content[this.currentIndex]);
+			this.getDisplayTime();
 		} else {
 			jQuery('#windowBox').append(this.content);
 		}
@@ -152,7 +161,7 @@ jQuery(document).ready(function () {
 		currentId = currentId.match(reg).join('');
 		var icerik = '<div class="bar alert alert-info">' +
 				'<h4></h4>' +
-				'<p></p>' +
+				'<p>' + message.content + '</p>' +
 				'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
 				'</div>';
 		jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
