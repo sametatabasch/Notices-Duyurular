@@ -294,18 +294,18 @@ class GB_Duyurular {
 					if ( $notice['whoCanSee'] == 'everyone' ) {
 						$this->noticeContent .= '
 					  <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" displayTime="' . $notice['displayTime'] . '" >
-					  	<button type="button" class="close" >&times;</button>
-					    <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
-					    ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
+					  	<button type="button" class="close" >&times;</button>';
+						if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+						$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
 					  </div>';
 					}
 					else {
 						if ( is_user_logged_in() ) {
 							$this->noticeContent .= '
 						    <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" displayTime="' . $notice['displayTime'] . '">
-						    	<button type="button" class="close" >&times;</button>
-						      <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
-						      ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
+						    	<button type="button" class="close" >&times;</button>';
+							if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+							$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
 						    </div>';
 						}
 					}
@@ -314,18 +314,18 @@ class GB_Duyurular {
 					if ( $notice['whoCanSee'] == 'everyone' ) {
 						$this->noticeContent .= '
 					    <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
-					      <button type="button" class="close" >&times;</button>
-					      <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
-					      ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
+					      <button type="button" class="close" >&times;</button>';
+								if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+								$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
 					    </div>';
 					}
 					else {
 						if ( is_user_logged_in() ) {
 							$this->noticeContent .= '
 						  <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
-						    <button type="button" class="close">&times;</button>
-						    <h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>
-						    ' . do_shortcode( wpautop( $notice['post_content'] ) ) . '
+						    <button type="button" class="close" >&times;</button>';
+								if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+								$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
 						  </div>';
 						}
 					}
