@@ -187,10 +187,14 @@ class GB_Duyurular {
 		    </div>
 		    <div class="alert alert-success">
 		      <input type="radio" ' . checked( $this->meta['type'], "alert-success", false ) . ' name="GB_D_meta[type]" value="alert-success">' . __( 'Success', $this->textDomainString ) . '
-		    </div>';
-		/* <div class="clear"></div>
+		    </div>
+		 		<div class="clear"></div>
 		  </div>
 		  <div class="misc-pub-section misc-pub-section-last">
+		  	<span><b>' . __( 'No Border :', $this->textDomainString ) . '</b></span>
+		  	<input type="checkbox" name="GB_D_meta[noBorder]" ' . checked( $this->meta['noBorder'], 'on', false ) . ' />
+		  </div>';
+		/*<div class="misc-pub-section misc-pub-section-last">
 		  	<span><b>' . __( 'Display Time :', $this->textDomainString ) . '</b></span>
 		  	<input type="text" name="GB_D_meta[displayTime]" value="' . $this->meta['displayTime'] . '" />
 		  </div>
@@ -291,9 +295,10 @@ class GB_Duyurular {
 			switch ( $notice['displayMode'] ) { //todo eğer başlıl  boş  ise <h4></h4> tagları eklenmeyecek
 				case 'window':
 					$this->isThereWindowType = true; // pencere  görünümünü sağlayan scriptin sayfaya eklenemesini sağlamak için
+					$notice['noBorder'] === 'on' ? $noBorder = 'noborder' : $noBorder = ''; //set noborder class
 					if ( $notice['whoCanSee'] == 'everyone' ) {
 						$this->noticeContent .= '
-					  <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" displayTime="' . $notice['displayTime'] . '" >
+					  <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . ' ' . $noBorder . '" displayTime="' . $notice['displayTime'] . '" >
 					  	<button type="button" class="close" >&times;</button>';
 						if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
 						$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
@@ -302,7 +307,7 @@ class GB_Duyurular {
 					else {
 						if ( is_user_logged_in() ) {
 							$this->noticeContent .= '
-						    <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . '" displayTime="' . $notice['displayTime'] . '">
+						    <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . ' ' . $noBorder . $this->meta['noBorder'] . '" displayTime="' . $notice['displayTime'] . '">
 						    	<button type="button" class="close" >&times;</button>';
 							if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
 							$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
@@ -315,8 +320,8 @@ class GB_Duyurular {
 						$this->noticeContent .= '
 					    <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
 					      <button type="button" class="close" >&times;</button>';
-								if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
-								$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
+						if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+						$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
 					    </div>';
 					}
 					else {
@@ -324,8 +329,8 @@ class GB_Duyurular {
 							$this->noticeContent .= '
 						  <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
 						    <button type="button" class="close" >&times;</button>';
-								if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
-								$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
+							if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+							$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
 						  </div>';
 						}
 					}

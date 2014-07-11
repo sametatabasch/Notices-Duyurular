@@ -13,12 +13,13 @@ jQuery.fn.Window = function (content, isClass) {
 	 */
 	this.getDisplayTime = jQuery.proxy(function () {
 		console.log(jQuery(this.content[this.currentIndex]).attr('displaytime'));
-	},this);
+	}, this);
 	/**
 	 * sayfadaki  konumu  yeniden  düzenler
 	 */
 	this.reLocate = function () {
 		jQuery('.window').css({'max-height': (window.innerHeight - 100), 'max-width': (window.innerWidth - 100)});
+		jQuery('.window *').css({'max-height': (window.innerHeight - 128), 'max-width': (window.innerWidth - 128)});
 		var windowBoxWidth = jQuery('#windowBox').width();
 		var windowBoxHeight = jQuery('#windowBox').height();
 		var windowBoxLeft = (window.innerWidth - windowBoxWidth) / 2;
