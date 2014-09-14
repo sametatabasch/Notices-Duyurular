@@ -372,6 +372,14 @@ class GB_Duyurular {
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
 		wp_enqueue_script( 'notice', plugins_url( 'default.js', __FILE__ ), array( 'jquery' ) );
+
+		/*
+		 *  Javascript dosyasında çoklu  dil  desteği
+		 * <?php wp_localize_script( $handle, $name, $data ); ?>
+		 * $handle -> Çoklu  dil  desteğinin  sağlanacağı js dosyasının enqueue kayıt ismi
+		 * $name   -> Dizeleri  taşıyan java nesnesinin  adı
+		 * $data   -> Dil desteği  sağlanan dizeler
+		 */
 		$translation_array = array(
 				'content'  => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', $this->textDomainString ),
 				'dontShow' => __( 'Do not show again', $this->textDomainString ),

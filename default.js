@@ -156,16 +156,24 @@ var duyuruWindow = jQuery(document.body).Window('.window', true);
 jQuery(document).ready(function () {
 	//adminbar yüksekiliği notice container e aktarılıyor
 	jQuery('.noticeContainer').css({'top': jQuery('#wpadminbar').height()});
+
 	jQuery('.bar .close').click(function () {
+		//Aktif duyurunun id bilgisi  alınıyor
 		var currentId = jQuery(this).parent()[0].id;
+
 		var reg = /\d/g;
-		currentId = currentId.match(reg).join('');
-		var icerik = '<div class="bar alert alert-info">' +
-				'<h4></h4>' +
+		currentId = currentId.match(reg).join(''); //id  değerinin sadece sayı olduğu doğrulanıyor.
+
+		// çoklu  dil desteği için message nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle
+		var icerik =
+				'<div class="bar alert alert-info">' +
+						'<h4></h4>' +
 				'<p>' + message.content + '</p>' +
 				'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
 				'</div>';
+
 		jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
+
 		jQuery('#yes').click(function () {
 			jQuery.ajax({
 				type: "GET",
@@ -173,11 +181,13 @@ jQuery(document).ready(function () {
 			});
 			close(jQuery(this).parent());
 		});
+
 		jQuery('#no').click(function () {
 			close(jQuery(this).parent());
 		});
 	});
 });
+//Sayfa boyutu değiştirildiğinde duyuru yeniden konumlandırılıyor.
 jQuery(window).resize(function () {
 	duyuruWindow.reLocate();
 });
