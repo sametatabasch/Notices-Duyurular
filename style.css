@@ -1,3 +1,6 @@
+.notice-class * {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
 .alert {
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	background-color: #fcf8e3;
@@ -21,6 +24,12 @@
 
 .alert p {
 	color: #c09853;
+	margin: 0 10px 0 10px;
+	line-height: 20px;
+}
+
+.alert p img{
+	margin: auto;
 }
 
 .alert-success {
@@ -93,11 +102,6 @@ button.close {
 
 .alert h1, h2, h3, h4, h5, h6 {
 	clear: none;
-}
-
-.alert p {
-	margin: 0 10px 0 10px;
-	line-height: 20px;
 }
 
 .bar {

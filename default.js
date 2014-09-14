@@ -72,7 +72,7 @@ jQuery.fn.Window = function (content, isClass) {
 	 */
 	this.show = function () {
 		this.getContent();
-		jQuery('body').append('<div id="windowBackground"><div class="windowBackground"></div></div>');
+		jQuery('body').append('<div id="windowBackground" class="notice-class"><div class="windowBackground"></div></div>');
 		jQuery('#windowBackground').append('<div id="windowBox" class=""></div>');//window class lı nesnenin ekleneceği div eklendi
 		if (isClass) {
 			jQuery('#windowBox').append(this.content[this.currentIndex]);

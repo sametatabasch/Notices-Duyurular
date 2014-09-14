@@ -33,7 +33,7 @@ class GB_Duyurular {
 	 * wp_footer  a  eklenecek  duyuruların html kodlarını  barındırır
 	 * @var string
 	 */
-	public $noticeContent = '<div class="noticeContainer">';
+	public $noticeContent = '<div class="noticeContainer notice-class">';
 	/**
 	 * Çoklu dil için eklenti  text domain bilgisini tutar
 	 * @var string
@@ -78,7 +78,7 @@ class GB_Duyurular {
 		add_action( 'wp_trash_post', array( &$this, 'GB_D_moveTrashNotice' ) );
 		add_action( 'trash_to_publish', array( &$this, 'GB_D_trashToPublish' ) );
 		add_action( 'wp_footer', array( &$this, 'GB_D_showNotice' ) );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'GB_D_addScriptAndStyle' ) );
+		add_action( 'after_setup_theme', array( &$this, 'GB_D_addScriptAndStyle' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'GB_D_addStyleToAdminPage' ) );
 		add_action( 'template_redirect', array( &$this, 'GB_D_markAsRead' ) );
 
@@ -112,10 +112,6 @@ class GB_Duyurular {
 						'show_in_menu' => true,
 				)
 		);
-		/**
-		 * Admin paneline eklenecek style dosyasını wp scriptlerine ekleriyor
-		 */
-		wp_register_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
 	}
 
 	/**
@@ -365,13 +361,28 @@ class GB_Duyurular {
 	}
 
 	/**
-	 * style ve script dosyalarını  yükler
-	 * add_action('wp_enqueue_scripts', array(&$this, 'GB_D_addScriptAndStyle'));
+	 * Tema yüklendikten sonra script ve style  dosyalarını  ekler
+	 * add_action( 'after_setup_theme', array( &$this, 'GB_D_addScriptAndStyle' ) );
 	 */
 	public function  GB_D_addScriptAndStyle() {
+		add_action( 'wp_enqueue_scripts', array( &$this, 'GB_D_enqueueScriptAndStyle' ) );
+	}
+
+	/**
+	 * style ve script dosyalarını  yükler
+	 * add_action('wp_enqueue_scripts', array(&$this, 'GB_D_enqueueScriptAndStyle'));
+	 */
+	public function  GB_D_enqueueScriptAndStyle() {
+
+		wp_register_script( 'notice', plugins_url( 'default.js', __FILE__ ), array( 'jquery' ) );
+
+		wp_register_style( 'notice_style', plugins_url( 'style.css', __FILE__ ), array( 'notice_style-reset' ) );
+		wp_register_style( 'notice_style-reset', plugins_url( 'style-reset.css', __FILE__ ) );
+
 		wp_enqueue_script( 'jquery' );
-		wp_enqueue_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
-		wp_enqueue_script( 'notice', plugins_url( 'default.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_style( 'notice_style' );
+		wp_enqueue_style( 'notice_style-reset' );
+		wp_enqueue_script( 'notice' );
 
 		/*
 		 *  Javascript dosyasında çoklu  dil  desteği
@@ -393,6 +404,13 @@ class GB_Duyurular {
 	 * add_action('admin_enqueue_scripts', array(&$this, 'GB_D_addStyleToAdminPage'));
 	 */
 	public function GB_D_addStyleToAdminPage() {
+		/**
+		 * Admin paneline eklenecek style dosyasını wordpress e kaydediyorum
+		 */
+		wp_register_style( 'notice_style', plugins_url( 'style.css', __FILE__ ) );
+		/**
+		 * Admin paneline eklenecek style dosyasını wordpress e ekliyorum
+		 */
 		wp_enqueue_style( 'notice_style' );
 	}
 
