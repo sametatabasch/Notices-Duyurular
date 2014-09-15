@@ -221,6 +221,10 @@ button.close {
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.16);
 	-webkit-font-smoothing: antialiased;
 	margin-bottom: 5px;
+	padding: 3px;
+	border-radius: 3px;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-weight: normal;
 }
 /*New Admin Menu Icon*/
 #adminmenu #menu-posts-notice div.wp-menu-image:before {

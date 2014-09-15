@@ -170,7 +170,6 @@ jQuery(document).ready(function () {
 						'<p>' + message.content + '</p>' +
 						'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
 				'</div>';
-		console.log(jQuery('.noticeContainer').find('.bar'));
 		jQuery('.noticeContainer').find('#bar-' + currentId).replaceWith(icerik);
 
 		jQuery('#yes').click(function () {
