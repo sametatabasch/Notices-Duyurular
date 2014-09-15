@@ -172,7 +172,12 @@ jQuery(document).ready(function () {
 				'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
 				'</div>';
 <<<<<<< HEAD
+<<<<<<< HEAD
 		jQuery('.noticeContainer').find('#bar-' + currentId).replaceWith(icerik);
+=======
+
+		jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
+>>>>>>> parent of 39ab2f4... bug fix
 =======
 
 		jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
