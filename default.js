@@ -160,11 +160,10 @@ jQuery(document).ready(function () {
 	jQuery('.bar .close').click(function () {
 		//Aktif duyurunun id bilgisi  alınıyor
 		var currentId = jQuery(this).parent()[0].id;
-		console.log('id = ' + currentId);
 
 		var reg = /\d/g;
-		currentId = currentId.match(reg).join(''); //id  değerinin sadece sayı kısmı  alınıyor.
-		console.log('id = ' + currentId);
+		currentId = currentId.match(reg).join(''); //id  değerinin sadece sayı olduğu doğrulanıyor.
+
 		// çoklu  dil desteği için message nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle
 		var icerik =
 				'<div class="bar alert alert-info">' +
@@ -172,6 +171,7 @@ jQuery(document).ready(function () {
 						'<p>' + message.content + '</p>' +
 						'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
 				'</div>';
+
 		console.log(jQuery('.noticeContainer').find('.bar'));
 		jQuery('.noticeContainer').find('#bar-' + currentId).replaceWith(icerik);
 
