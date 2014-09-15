@@ -162,17 +162,16 @@ jQuery(document).ready(function () {
 		var currentId = jQuery(this).parent()[0].id;
 
 		var reg = /\d/g;
-		currentId = currentId.match(reg).join(''); //id  değerinin sadece sayı olduğu doğrulanıyor.
-
+		currentId = currentId.match(reg).join(''); //id  değerinin sadece sayı kısmı  alınıyor.
 		// çoklu  dil desteği için message nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle
 		var icerik =
 				'<div class="bar alert alert-info">' +
 						'<h4></h4>' +
-				'<p>' + message.content + '</p>' +
-				'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
+						'<p>' + message.content + '</p>' +
+						'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
 				'</div>';
-
-		jQuery('.noticeContainer').find('.bar').replaceWith(icerik);
+		console.log(jQuery('.noticeContainer').find('.bar'));
+		jQuery('.noticeContainer').find('#bar-' + currentId).replaceWith(icerik);
 
 		jQuery('#yes').click(function () {
 			jQuery.ajax({
