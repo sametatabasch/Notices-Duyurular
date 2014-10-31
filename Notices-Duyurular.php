@@ -288,7 +288,7 @@ class GB_Duyurular {
 				continue;
 			}
 			if ( $this->GB_D_isRead( $notice['ID'] ) ) continue;
-			switch ( $notice['displayMode'] ) { //todo eğer başlıl  boş  ise <h4></h4> tagları eklenmeyecek
+			switch ( $notice['displayMode'] ) {
 				case 'window':
 					$this->isThereWindowType = true; // pencere  görünümünü sağlayan scriptin sayfaya eklenemesini sağlamak için
 					$notice['noBorder'] === 'on' ? $noBorder = 'noborder' : $noBorder = ''; //set noborder class
