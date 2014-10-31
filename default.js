@@ -20,16 +20,20 @@ jQuery.fn.Window = function (content, isClass) {
 	this.reLocate = function () {
 		jQuery('.window').css({'max-height': (window.innerHeight - 100), 'max-width': (window.innerWidth - 100)});
 		jQuery('.window *').css({'max-height': (window.innerHeight - 128), 'max-width': (window.innerWidth - 128)});
-		var windowBoxWidth = jQuery('#windowBox').width();
-		var windowBoxHeight = jQuery('#windowBox').height();
-		var windowBoxLeft = (window.innerWidth - windowBoxWidth) / 2;
-		var windowBoxTop = (window.innerHeight - windowBoxHeight) / 2;
-		jQuery('#windowBox').css({
-			'left'      : windowBoxLeft,
-			'top'       : windowBoxTop,
-			'max-height': (window.innerHeight - 100),
-			'max-width' : (window.innerWidth - 100)
-		});
+		setTimeout(function(){
+			var windowBoxWidth = jQuery('#windowBox').width();
+			var windowBoxHeight = jQuery('#windowBox').children('.alert').outerHeight(); console.log('height='+windowBoxHeight);
+			var windowBoxLeft = (window.innerWidth - windowBoxWidth) / 2;
+			var windowBoxTop = (window.innerHeight - windowBoxHeight) / 2;console.log('top='+windowBoxTop);console.log('window.innerHeight='+window.innerHeight);
+			jQuery('#windowBox').css({
+				'left'      : windowBoxLeft,
+				'top'       : windowBoxTop,
+				'max-height': (window.innerHeight - 100),
+				'max-width' : (window.innerWidth - 100)
+			});
+		},500);//yeni boyuta göre yüksekliğin ayarlanması ve sonra konumlandırılması için bekleme
+
+
 	};
 
 	/**
