@@ -180,6 +180,9 @@ class GB_Duyurular {
 		    <div class="alert">
 		      <input type="radio" ' . checked( $this->meta['type'], "", false ) . ' name="GB_D_meta[type]" value="">' . __( 'Default', $this->textDomainString ) . '
 		    </div>
+		    <div class="alert alert-white">
+		      <input type="radio" ' . checked( $this->meta['type'], "alert-white", false ) . ' name="GB_D_meta[type]" value="alert-white">' . __( 'White', $this->textDomainString ) . '
+		    </div>
 		    <div class="alert alert-error">
 		      <input type="radio" ' . checked( $this->meta['type'], "alert-error", false ) . ' name="GB_D_meta[type]" value="alert-error">' . __( 'Error', $this->textDomainString ) . '
 		    </div>
@@ -286,7 +289,6 @@ class GB_Duyurular {
 			$out[]  = $notice;
 		}
 
-		//echo '<pre>';print_r( $out );echo '</pre>';
 		return $out;
 	}
 

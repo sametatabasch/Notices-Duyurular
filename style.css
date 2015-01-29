@@ -65,6 +65,16 @@
 	color: #3a87ad;
 }
 
+.alert-white{
+	color: #555555;
+	background-color: #ffffff;
+	border-color: #EEEEEE;
+}
+
+.alert-white h4,
+.alert-white p{
+	color: #000000;
+}
 .alert .close {
 	position: relative;
 	top: 0px;
