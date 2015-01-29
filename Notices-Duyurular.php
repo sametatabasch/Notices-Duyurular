@@ -303,50 +303,27 @@ class GB_Duyurular {
 			if ( $this->GB_D_isRead( $notice['ID'] ) ) {
 				continue;
 			}
+			$title   = get_the_title( $notice["ID"] ) != '' ? '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>' : null;
+			$content = do_shortcode( wpautop( $notice['post_content'] ) );
+			$noBorder = $notice['noBorder'] === 'on' ? 'noborder' : ''; //set noborder class
 			switch ( $notice['displayMode'] ) {
 				case 'window':
-					$notice['noBorder'] === 'on' ? $noBorder = 'noborder' : $noBorder = ''; //set noborder class
-					if ( $notice['whoCanSee'] == 'everyone' ) {
+					if ( $notice['whoCanSee'] == 'everyone' || is_user_logged_in() ) {
 						$this->isThereWindowType = true; // pencere  görünümünü sağlayan scriptin sayfaya eklenemesini sağlamak için
-						$this->noticeContent .= '
-					  <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . ' ' . $noBorder . '" displayTime="' . $notice['displayTime'] . '" >
-					  	<button type="button" class="close" >&times;</button>';
-						if ( get_the_title( $notice["ID"] ) != '' ) {
-							$this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
-						}
-						$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
-					  </div>';
-					} elseif ( is_user_logged_in() ) {
-							$this->isThereWindowType = true; // pencere  görünümünü sağlayan scriptin sayfaya eklenemesini sağlamak için
-							$this->noticeContent .= '
-						    <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . ' ' . $noBorder . $this->meta['noBorder'] . '" displayTime="' . $notice['displayTime'] . '">
-						    	<button type="button" class="close" >&times;</button>';
-							if ( get_the_title( $notice["ID"] ) != '' ) {
-								$this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
-							}
-							$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
-						    </div>';
+						$this->noticeContent .= sprintf(
+							'<div id="fancy-%d" class="alert window %s %s" displayTime="%d" >
+								<button type="button" class="close" >&times;</button>
+								%s %s
+							</div>', $notice['ID'], $notice['type'], $noBorder, $notice['displayTime'], $title, $content );
 					}
 				break;
 				case 'bar':
-					if ( $notice['whoCanSee'] == 'everyone' ) {
-						$this->noticeContent .= '
-					    <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
-					      <button type="button" class="close" >&times;</button>';
-						if ( get_the_title( $notice["ID"] ) != '' ) {
-							$this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
-						}
-						$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
-					    </div>';
-					} elseif ( is_user_logged_in() ) {
-						$this->noticeContent .= '
-						  <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
-						    <button type="button" class="close" >&times;</button>';
-						if ( get_the_title( $notice["ID"] ) != '' ) {
-							$this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
-						}
-						$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
-						  </div>';
+					if ( $notice['whoCanSee'] == 'everyone' || is_user_logged_in() ) {
+						$this->noticeContent .= sprintf(
+							'<div id="bar-%d" class="bar alert %s">
+								<button type="button" class="close" >&times;</button>
+								%s %s
+							</div>', $notice['ID'], $notice['type'], $title, $content );
 					}
 				break;
 			}
