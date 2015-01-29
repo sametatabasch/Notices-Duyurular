@@ -64,6 +64,7 @@ class GB_Duyurular {
 		if ( is_null( self::$_instance ) ) {
 			self::$_instance = new self();
 		}
+
 		return self::$_instance;
 	}
 
@@ -90,27 +91,27 @@ class GB_Duyurular {
 	 */
 	public function GB_D_addPostType() {
 		register_post_type( 'Notice',
-				array(
-						'labels'       => array(
-								'name'               => __( 'Notice', $this->textDomainString ),
-								'singular_name'      => __( 'Notice', $this->textDomainString ),
-								'add_new'            => __( 'New Notice', $this->textDomainString ),
-								'add_new_item'       => __( 'Add New Notice', $this->textDomainString ),
-								'edit_item'          => __( 'Edit Notice', $this->textDomainString ),
-								'new_item'           => __( 'New Notice', $this->textDomainString ),
-								'all_items'          => __( 'All Notice', $this->textDomainString ),
-								'view_item'          => __( 'View Notice', $this->textDomainString ),
-								'search_items'       => __( 'Search Notice', $this->textDomainString ),
-								'not_found'          => __( 'Notice Not Found', $this->textDomainString ),
-								'not_found_in_trash' => __( 'Notice Not Found In Trash', $this->textDomainString ),
-								'parent_item_colon'  => '',
-								'menu_name'          => __( 'Notices', $this->textDomainString )
-						),
-						'public'       => false,
-						'has_archive'  => true,
-						'show_ui'      => true,
-						'show_in_menu' => true,
-				)
+			array(
+				'labels'       => array(
+					'name'               => __( 'Notice', $this->textDomainString ),
+					'singular_name'      => __( 'Notice', $this->textDomainString ),
+					'add_new'            => __( 'New Notice', $this->textDomainString ),
+					'add_new_item'       => __( 'Add New Notice', $this->textDomainString ),
+					'edit_item'          => __( 'Edit Notice', $this->textDomainString ),
+					'new_item'           => __( 'New Notice', $this->textDomainString ),
+					'all_items'          => __( 'All Notice', $this->textDomainString ),
+					'view_item'          => __( 'View Notice', $this->textDomainString ),
+					'search_items'       => __( 'Search Notice', $this->textDomainString ),
+					'not_found'          => __( 'Notice Not Found', $this->textDomainString ),
+					'not_found_in_trash' => __( 'Notice Not Found In Trash', $this->textDomainString ),
+					'parent_item_colon'  => '',
+					'menu_name'          => __( 'Notices', $this->textDomainString )
+				),
+				'public'       => false,
+				'has_archive'  => true,
+				'show_ui'      => true,
+				'show_in_menu' => true,
+			)
 		);
 	}
 
@@ -120,7 +121,10 @@ class GB_Duyurular {
 	 * add_action('add_meta_boxes', array(&$this, 'GB_D_addMetaBox'));
 	 */
 	public function GB_D_addMetaBox() { //todo #5
-		add_meta_box( 'GB_noticeMetaBox', __( 'Notice Settings', $this->textDomainString ), array( &$this, 'noticeMetaBox' ), 'Notice', 'side', 'default' );
+		add_meta_box( 'GB_noticeMetaBox', __( 'Notice Settings', $this->textDomainString ), array(
+			&$this,
+			'noticeMetaBox'
+		), 'Notice', 'side', 'default' );
 	}
 
 	/**
@@ -132,12 +136,13 @@ class GB_Duyurular {
 		if ( empty( $this->meta['lastDisplayDate'] ) ) {
 			$date = $this->GB_D_getDate();
 			$date['month'] ++; // ön tanımlı tarih o anın bir ay sonrası
-			if ( $date['month'] < 10 ) $date['month'] = '0' . $date['month'];
-		}
-		else {
+			if ( $date['month'] < 10 ) {
+				$date['month'] = '0' . $date['month'];
+			}
+		} else {
 			$date = $this->GB_D_getDate( $this->meta['lastDisplayDate'] );
 		}
-		$x = array( '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', ); //get_date_from_gtm fonkisiyonun da 1 yerine 01 olması gerekiyor
+		$x = array('01','02','03','04','05','06','07','08','09','10','11','12',); //get_date_from_gtm fonkisiyonun da 1 yerine 01 olması gerekiyor
 		echo '
 		<form>
 		  <div class="misc-pub-section">
@@ -162,8 +167,8 @@ class GB_Duyurular {
 		    <select name="GB_D_date[month]" id="mm">';
 		for ( $i = 0; $i < 12; $i ++ ) {
 			echo '
-			  <option ' . selected( $x[$i], $date['month'], false ) . ' value="' . $x[$i] . '">'
-					. $x[$i] . '-' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $x[$i] ) ) . '
+			  <option ' . selected( $x[ $i ], $date['month'], false ) . ' value="' . $x[ $i ] . '">'
+			     . $x[ $i ] . '-' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $x[ $i ] ) ) . '
 			  </option>';
 		}
 		echo '
@@ -207,11 +212,14 @@ class GB_Duyurular {
 	public function GB_D_saveNotice() {
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
-		if ( $post_type != 'notice' ) return;
+		if ( $post_type != 'notice' ) {
+			return;
+		}
 		$this->meta                    = $_POST['GB_D_meta'];
 		$GB_D_date                     = $_POST['GB_D_date'];
 		$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
 		add_post_meta( $post_id, "GB_D_meta", $this->meta, true );
+
 	}
 
 	/**
@@ -222,7 +230,9 @@ class GB_Duyurular {
 	public function GB_D_editNotice() {
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
-		if ( $post_type != 'notice' ) return;
+		if ( $post_type != 'notice' ) {
+			return;
+		}
 		$this->meta                    = $_POST['GB_D_meta'];
 		$GB_D_date                     = $_POST['GB_D_date'];
 		$this->meta['lastDisplayDate'] = $GB_D_date['year'] . '-' . $GB_D_date['month'] . '-' . $GB_D_date['day'] . ' ' . $GB_D_date['hour'] . ':' . $GB_D_date['minute'] . ':00';
@@ -236,7 +246,9 @@ class GB_Duyurular {
 	public function GB_D_moveTrashNotice() {
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
-		if ( $post_type != 'notice' ) return;
+		if ( $post_type != 'notice' ) {
+			return;
+		}
 		$this->GB_D_unmarkAsRead( $post_id );
 	}
 
@@ -273,12 +285,13 @@ class GB_Duyurular {
 			$notice = array_merge( $notice, $this->meta ); //Meta bilgileri  ekleniyor.
 			$out[]  = $notice;
 		}
+
 		//echo '<pre>';print_r( $out );echo '</pre>';
 		return $out;
 	}
 
 	/**
-	 * Uygun duyuruları sayfaya basar
+	 * Uygun duyuruları sayfayada gösterir
 	 *  add_action('wp_footer', array(&$this, 'GB_D_showNotice'));
 	 */
 	public function GB_D_showNotice() {
@@ -287,50 +300,55 @@ class GB_Duyurular {
 				wp_trash_post( $notice['ID'] );
 				continue;
 			}
-			if ( $this->GB_D_isRead( $notice['ID'] ) ) continue;
+			if ( $this->GB_D_isRead( $notice['ID'] ) ) {
+				continue;
+			}
 			switch ( $notice['displayMode'] ) {
 				case 'window':
-					$this->isThereWindowType = true; // pencere  görünümünü sağlayan scriptin sayfaya eklenemesini sağlamak için
 					$notice['noBorder'] === 'on' ? $noBorder = 'noborder' : $noBorder = ''; //set noborder class
 					if ( $notice['whoCanSee'] == 'everyone' ) {
+						$this->isThereWindowType = true; // pencere  görünümünü sağlayan scriptin sayfaya eklenemesini sağlamak için
 						$this->noticeContent .= '
 					  <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . ' ' . $noBorder . '" displayTime="' . $notice['displayTime'] . '" >
 					  	<button type="button" class="close" >&times;</button>';
-						if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+						if ( get_the_title( $notice["ID"] ) != '' ) {
+							$this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+						}
 						$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
 					  </div>';
-					}
-					else {
-						if ( is_user_logged_in() ) {
+					} elseif ( is_user_logged_in() ) {
+							$this->isThereWindowType = true; // pencere  görünümünü sağlayan scriptin sayfaya eklenemesini sağlamak için
 							$this->noticeContent .= '
 						    <div id="fancy-' . $notice['ID'] . '" class="alert window ' . $notice['type'] . ' ' . $noBorder . $this->meta['noBorder'] . '" displayTime="' . $notice['displayTime'] . '">
 						    	<button type="button" class="close" >&times;</button>';
-							if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+							if ( get_the_title( $notice["ID"] ) != '' ) {
+								$this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+							}
 							$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
 						    </div>';
-						}
 					}
-					break;
+				break;
 				case 'bar':
 					if ( $notice['whoCanSee'] == 'everyone' ) {
 						$this->noticeContent .= '
 					    <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
 					      <button type="button" class="close" >&times;</button>';
-						if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+						if ( get_the_title( $notice["ID"] ) != '' ) {
+							$this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
+						}
 						$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
 					    </div>';
-					}
-					else {
-						if ( is_user_logged_in() ) {
-							$this->noticeContent .= '
+					} elseif ( is_user_logged_in() ) {
+						$this->noticeContent .= '
 						  <div id="bar-' . $notice['ID'] . '" class="bar alert ' . $notice['type'] . '">
 						    <button type="button" class="close" >&times;</button>';
-							if ( get_the_title( $notice["ID"] ) != '' ) $this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
-							$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
-						  </div>';
+						if ( get_the_title( $notice["ID"] ) != '' ) {
+							$this->noticeContent .= '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>';
 						}
+						$this->noticeContent .= do_shortcode( wpautop( $notice['post_content'] ) ) . '
+						  </div>';
 					}
-					break;
+				break;
 			}
 		endforeach;
 		$this->GB_D_noticeContent();
@@ -350,12 +368,12 @@ class GB_Duyurular {
 					duyuruWindow.show();
 				</script>
 			</div>';
+		} else {
+			$this->noticeContent .= '</div>';
 		}
-		else $this->noticeContent .= '</div>';
 		if ( $echo ) {
 			echo $this->noticeContent;
-		}
-		else {
+		} else {
 			return $this->noticeContent;
 		}
 	}
@@ -392,9 +410,9 @@ class GB_Duyurular {
 		 * $data   -> Dil desteği  sağlanan dizeler
 		 */
 		$translation_array = array(
-				'content'  => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', $this->textDomainString ),
-				'dontShow' => __( 'Do not show again', $this->textDomainString ),
-				'close'    => __( 'Close', $this->textDomainString )
+			'content'  => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', $this->textDomainString ),
+			'dontShow' => __( 'Do not show again', $this->textDomainString ),
+			'close'    => __( 'Close', $this->textDomainString )
 		);
 		wp_localize_script( 'notice', 'message', $translation_array );
 	}
@@ -423,8 +441,7 @@ class GB_Duyurular {
 		$blog_id = get_current_blog_id();
 		if ( isset( $_REQUEST['GB_D_noticeId'] ) ) {
 			$noticeId = $_REQUEST['GB_D_noticeId'];
-		}
-		else {
+		} else {
 			return;
 		}
 		if ( is_user_logged_in() ) {
@@ -434,14 +451,15 @@ class GB_Duyurular {
 			$okunanDuyurular[] = $noticeId;
 			update_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", $okunanDuyurular );
 
-		}
-		else {
+		} else {
 			$this->GB_D_getMeta( $noticeId );
 			$expire = $this->GB_D_getDate( $this->meta['lastDisplayDate'], true );
 			//todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
 			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire, '/', $_SERVER['HTTP_HOST'] );
 		}
-		if ( isset( $_SERVER['HTTP_REFERER'] ) ) wp_redirect( $_SERVER['HTTP_REFERER'] );
+		if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
+			wp_redirect( $_SERVER['HTTP_REFERER'] );
+		}
 	}
 
 	/**
@@ -456,11 +474,12 @@ class GB_Duyurular {
 		foreach ( $user_ids as $user_id ) {
 			$okunanDuyurular = get_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", true );
 			if ( array_search( $noticeId, $okunanDuyurular ) !== false ) {
-				unset( $okunanDuyurular[array_search( $noticeId, $okunanDuyurular )] );
+				unset( $okunanDuyurular[ array_search( $noticeId, $okunanDuyurular ) ] );
 				$okunanDuyurular = array_merge( $okunanDuyurular ); //indexler  yeniden düzenleniyor
 				update_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", $okunanDuyurular );
+			} else {
+				continue;
 			}
-			else continue;
 		}
 		/**
 		 * Okundu işareti kaldırılan duyurunun eğer cookiesi  varsa o cookie yi siliyor
@@ -488,14 +507,14 @@ class GB_Duyurular {
 			global $current_user;
 			get_currentuserinfo();
 			$okunanDuyurular = get_user_meta( $current_user->ID, 'GB_D_' . $blog_id . '_okunanDuyurular', true );
+
 			return empty( $okunanDuyurular ) ? false : in_array( $id, $okunanDuyurular );
-		}
-		else {
-			if ( isset( $_COOKIE['GB_D_' . $blog_id . '_okunanDuyurular'] ) ) {
-				$okunanDuyurular = $_COOKIE['GB_D_' . $blog_id . '_okunanDuyurular'];
+		} else {
+			if ( isset( $_COOKIE[ 'GB_D_' . $blog_id . '_okunanDuyurular' ] ) ) {
+				$okunanDuyurular = $_COOKIE[ 'GB_D_' . $blog_id . '_okunanDuyurular' ];
+
 				return array_key_exists( $id, $okunanDuyurular );
-			}
-			else {
+			} else {
 				return false;
 			}
 		}
@@ -511,19 +530,20 @@ class GB_Duyurular {
 	 * @return array|int
 	 */
 	public function GB_D_getDate( $date = null, $mktime = false ) {
-		if ( is_null( $date ) ) $date = date_i18n( 'Y-m-d H:i:s' );
+		if ( is_null( $date ) ) {
+			$date = date_i18n( 'Y-m-d H:i:s' );
+		}
 		$datearr = array(
-				'year'   => substr( $date, 0, 4 ),
-				'month'  => substr( $date, 5, 2 ),
-				'day'    => substr( $date, 8, 2 ),
-				'hour'   => substr( $date, 11, 2 ),
-				'minute' => substr( $date, 14, 2 ),
-				'second' => substr( $date, 17, 2 )
+			'year'   => substr( $date, 0, 4 ),
+			'month'  => substr( $date, 5, 2 ),
+			'day'    => substr( $date, 8, 2 ),
+			'hour'   => substr( $date, 11, 2 ),
+			'minute' => substr( $date, 14, 2 ),
+			'second' => substr( $date, 17, 2 )
 		);
 		if ( $mktime ) {
 			return mktime( $datearr['hour'], $datearr['minute'], $datearr['second'], $datearr['month'], $datearr['day'], $datearr['year'] );
-		}
-		else {
+		} else {
 			return $datearr;
 		}
 	}
@@ -537,10 +557,10 @@ class GB_Duyurular {
 		$date['month'] ++;
 		$lastDisplayDate = $date['year'] . '-' . $date['month'] . '-' . $date['day'] . ' ' . $date['hour'] . ':' . $date['minute'] . ':00';
 		$this->meta      = array(
-				'whoCanSee'       => 'everyone',
-				'displayMode'     => 'window',
-				'lastDisplayDate' => $lastDisplayDate,
-				'type'            => ''
+			'whoCanSee'       => 'everyone',
+			'displayMode'     => 'window',
+			'lastDisplayDate' => $lastDisplayDate,
+			'type'            => ''
 		);
 		update_post_meta( $post_id, 'GB_D_meta', $this->meta );
 	}
