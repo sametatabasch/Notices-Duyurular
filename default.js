@@ -98,12 +98,11 @@ jQuery(document).ready(function ($) {
 		 *  duyuruyu kapatır ve varsa sonraki duyuruyu gösterir
 		 */
 		$('.close', this).click(function () {
-			notices.eq(activeIndex).fadeOut();
-			$('#windowBox').width(350).children('.window').replaceWith(isShowAgain);
+			notices.eq(activeIndex).replaceWith(isShowAgain);
+			$('#windowBox').width(350);
 			reLocate();
 			nextButton.hide();
 			previousButton.hide();
-			notices.eq(activeIndex).fadeIn();
 			$('#closeButtons #dontShow').click(function () {
 				var currentId = notices.eq(activeIndex).attr('id');
 				var reg = /\d/g;
@@ -125,6 +124,9 @@ jQuery(document).ready(function ($) {
 					if (notices.length == 1) {// eğer tek bir duyuru kaldıysa ileri ve geri butonları kaldırılıyor.
 						nextButton.remove();
 						previousButton.remove();
+					} else {
+						nextButton.show();
+						previousButton.show();
 					}
 
 					activeIndex++;
