@@ -300,6 +300,8 @@ class GB_Duyurular {
 		foreach ( $this->GB_D_getNotice() as $notice ):
 			if ( $notice['lastDisplayDate'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
 				wp_trash_post( $notice['ID'] );
+				$data = $notice['ID'] . 'id numaralı ' . get_the_title( $notice['ID'] ) . 'duyurusu silindi';
+				file_put_contents( $this->path . "/log.txt", $data, FILE_APPEND );
 				continue;
 			}
 			if ( $this->GB_D_isRead( $notice['ID'] ) ) {
@@ -307,16 +309,16 @@ class GB_Duyurular {
 			}
 			$title   = get_the_title( $notice["ID"] ) != '' ? '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>' : null;
 			$content = do_shortcode( wpautop( $notice['post_content'] ) );
-			$noBorder = $notice['noBorder'] === 'on' ? 'noborder' : ''; //set noborder class
+			@$noBorder = $notice['noBorder'] === 'on' ? 'noborder' : ''; //set noborder class
 			switch ( $notice['displayMode'] ) {
 				case 'window':
 					if ( $notice['whoCanSee'] == 'everyone' || is_user_logged_in() ) {
-						$this->isThereWindowType = true; // pencere  görünümünü sağlayan scriptin sayfaya eklenemesini sağlamak için
+
 						$this->noticeContent .= sprintf(
-							'<div id="fancy-%d" class="alert window %s %s" displayTime="%d" >
+							'<div id="window-%d" class="alert window %s %s" displayTime="%d" >
 								<button type="button" class="close" >&times;</button>
 								%s %s
-							</div>', $notice['ID'], $notice['type'], $noBorder, $notice['displayTime'], $title, $content );
+							</div>', $notice['ID'], $notice['type'], $noBorder, @$notice['displayTime'], $title, $content );
 					}
 				break;
 				case 'bar':
@@ -330,33 +332,16 @@ class GB_Duyurular {
 				break;
 			}
 		endforeach;
-		$this->GB_D_noticeContent();
-	}
+		$this->noticeContent .= '</div>
+			<script type="application/javascript">
+				jQuery(document).ready(function ($) {
+					$(".noticeContainer").GBWindow()
+				});
+			</script>
+			';
+		echo $this->noticeContent;
 
-	/**
-	 * Duyuruları saklayan <div class="noticeContainer"> tağını döner/yazdırır.
-	 *
-	 * @param bool $echo
-	 *
-	 * @return string
-	 */
-	public function GB_D_noticeContent( $echo = true ) {
-		if ( $this->isThereWindowType ) {
-			$this->noticeContent .= '
-				<script type="text/javascript">
-					duyuruWindow.show();
-				</script>
-			</div>';
-		} else {
-			$this->noticeContent .= '</div>';
-		}
-		if ( $echo ) {
-			echo $this->noticeContent;
-		} else {
-			return $this->noticeContent;
-		}
 	}
-
 	/**
 	 * Tema yüklendikten sonra script ve style  dosyalarını  ekler
 	 * add_action( 'after_setup_theme', array( &$this, 'GB_D_addScriptAndStyle' ) );
@@ -418,8 +403,8 @@ class GB_Duyurular {
 	 */
 	public function GB_D_markAsRead() {
 		$blog_id = get_current_blog_id();
-		if ( isset( $_REQUEST['GB_D_noticeId'] ) ) {
-			$noticeId = $_REQUEST['GB_D_noticeId'];
+		if ( isset( $_POST['GB_D_noticeId'] ) ) {
+			$noticeId = $_POST['GB_D_noticeId'];
 		} else {
 			return;
 		}
@@ -462,7 +447,7 @@ class GB_Duyurular {
 		}
 		/**
 		 * Okundu işareti kaldırılan duyurunun eğer cookiesi  varsa o cookie yi siliyor
-		 * okunması olarak işaretle işlemini kullanıcı kendisi yapamadığı için bu işlem şimdilik amaçsız
+		 * okunmadı olarak işaretle işlemini kullanıcı kendisi yapamadığı için bu işlem şimdilik amaçsız
 		 */
 		if ( isset( $_COOKIE["GB_D_{$blog_id}_okunanDuyurular"] ) ) {
 			$okunanDuyurular = $_COOKIE["GB_D_{$blog_id}_okunanDuyurular"];

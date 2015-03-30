@@ -159,24 +159,27 @@ button.close {
 	width: 100%;
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.85);
-	z-index: 999998;
+	z-index: 2147483645;
 }
 
 .window {
 	overflow: auto;
 	min-height: 50px;
 	min-width: 200px;
+	z-index: 2147483646;
+	display: inline-block;
 }
 
 #windowBox {
-	background-color: rgba(0, 0, 0, 0.85);
-	position: fixed;
+	background: transparent;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
-	z-index: 999999;
-	max-width: 95%;
+	z-index: 2147483647;
+	margin: 0 auto;
+	padding: 0;
 	max-height: 95%;
+	position: relative;
 }
 
 .window-nav {
@@ -241,7 +244,7 @@ button.close {
 	content: "\f488";
 }
 
-.noborder * {
+.noborder, .noborder * {
 	margin: 0 !important;
 	padding: 0 !important;
 	overflow: hidden !important;
@@ -252,4 +255,11 @@ button.close {
 	right: -20px;
 	opacity: 1;
 	color: #fff;
+}
+
+#GBWindow {
+	border: 2px solid;
+	position: fixed;
+	top: 0;
+	width: 100%;
 }
