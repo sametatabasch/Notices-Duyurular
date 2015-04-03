@@ -72,24 +72,24 @@ class GB_Duyurular {
 		$this->path    = plugin_dir_path( __FILE__ );
 		$this->pathUrl = plugin_dir_url( __FILE__ );
 		load_plugin_textDomain( $this->textDomainString, false, basename( dirname( __FILE__ ) ) . '/lang' );
-		add_action( 'add_meta_boxes', array( &$this, 'GB_D_addMetaBox' ) );
-		add_action( 'init', array( &$this, 'GB_D_addPostType' ) );
-		add_action( 'save_post', array( &$this, 'GB_D_saveNotice' ) );
-		add_action( 'edit_post', array( &$this, 'GB_D_editNotice' ) );
-		add_action( 'wp_trash_post', array( &$this, 'GB_D_moveTrashNotice' ) );
-		add_action( 'trash_to_publish', array( &$this, 'GB_D_trashToPublish' ) );
-		add_action( 'wp_footer', array( &$this, 'GB_D_showNotice' ) );
-		add_action( 'after_setup_theme', array( &$this, 'GB_D_addScriptAndStyle' ) );
-		add_action( 'admin_enqueue_scripts', array( &$this, 'GB_D_addStyleToAdminPage' ) );
-		add_action( 'template_redirect', array( &$this, 'GB_D_markAsRead' ) );
+		add_action( 'add_meta_boxes', array( &$this, 'addMetaBox' ) );
+		add_action( 'init', array( &$this, 'addPostType' ) );
+		add_action( 'save_post', array( &$this, 'saveNotice' ) );
+		add_action( 'edit_post', array( &$this, 'editNotice' ) );
+		add_action( 'wp_trash_post', array( &$this, 'moveTrashNotice' ) );
+		add_action( 'trash_to_publish', array( &$this, 'trashToPublish' ) );
+		add_action( 'wp_footer', array( &$this, 'showNotice' ) );
+		add_action( 'after_setup_theme', array( &$this, 'addScriptAndStyle' ) );
+		add_action( 'admin_enqueue_scripts', array( &$this, 'addStyleToAdminPage' ) );
+		add_action( 'template_redirect', array( &$this, 'markAsRead' ) );
 
 	}
 
 	/**
 	 * init action a Duyurular için yeni  post type ın  özelliklerini belirler.
-	 * add_action('init', array(&$this, 'GB_D_addPostType'));
+	 * add_action('init', array(&$this, 'addPostType'));
 	 */
-	public function GB_D_addPostType() {
+	public function addPostType() {
 		register_post_type( 'Notice',
 			array(
 				'labels'       => array(
@@ -118,9 +118,9 @@ class GB_Duyurular {
 	/**
 	 * Duyuru ayarlarını  belirlemek için Meta Box ekler
 	 *
-	 * add_action('add_meta_boxes', array(&$this, 'GB_D_addMetaBox'));
+	 * add_action('add_meta_boxes', array(&$this, 'addMetaBox'));
 	 */
-	public function GB_D_addMetaBox() { //todo #5
+	public function addMetaBox() { //todo #5
 		add_meta_box( 'GB_noticeMetaBox', __( 'Notice Settings', $this->textDomainString ), array(
 			&$this,
 			'noticeMetaBox'
@@ -132,15 +132,15 @@ class GB_Duyurular {
 	 */
 	public function noticeMetaBox() {
 		global $post_id, $wp_locale;
-		$this->GB_D_getMeta( $post_id );
+		$this->getMeta( $post_id );
 		if ( empty( $this->meta['lastDisplayDate'] ) ) {
-			$date = $this->GB_D_getDate();
+			$date = $this->getDate();
 			$date['month'] ++; // ön tanımlı tarih o anın bir ay sonrası
 			if ( $date['month'] < 10 ) {
 				$date['month'] = '0' . $date['month'];
 			}
 		} else {
-			$date = $this->GB_D_getDate( $this->meta['lastDisplayDate'] );
+			$date = $this->getDate( $this->meta['lastDisplayDate'] );
 		}
 		$x = array('01','02','03','04','05','06','07','08','09','10','11','12',); //get_date_from_gtm fonkisiyonun da 1 yerine 01 olması gerekiyor
 		echo '
@@ -210,9 +210,9 @@ class GB_Duyurular {
 	/**
 	 * Meta box dan  gelen duyuru ayarlarını  kaydeder
 	 *
-	 *  add_action('save_post', array(&$this, 'GB_D_saveNotice'));
+	 *  add_action('save_post', array(&$this, 'saveNotice'));
 	 */
-	public function GB_D_saveNotice() {
+	public function saveNotice() {
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
 		if ( $post_type != 'notice' ) {
@@ -228,9 +228,9 @@ class GB_Duyurular {
 	/**
 	 * Duyuru güncellendiğinde meta box daki  verileri ile duyuru ayarlarını günceller
 	 *
-	 * add_action('edit_post', array(&$this, 'GB_D_editNotice'));
+	 * add_action('edit_post', array(&$this, 'editNotice'));
 	 */
-	public function GB_D_editNotice() {
+	public function editNotice() {
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
 		if ( $post_type != 'notice' ) {
@@ -244,15 +244,15 @@ class GB_Duyurular {
 
 	/**
 	 * Duyuru Çöpe yollandığında çöpe yollanan duyurunun okundu  bilgileri silinir.
-	 * add_action('wp_trash_post', array(&$this, 'GB_D_moveTrashNotice'));
+	 * add_action('wp_trash_post', array(&$this, 'moveTrashNotice'));
 	 */
-	public function GB_D_moveTrashNotice() {
+	public function moveTrashNotice() {
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
 		if ( $post_type != 'notice' ) {
 			return;
 		}
-		$this->GB_D_unmarkAsRead( $post_id );
+		$this->unmarkAsRead( $post_id );
 	}
 
 	/**
@@ -260,7 +260,7 @@ class GB_Duyurular {
 	 *
 	 * @param $id meta bilgileri alınan duyurunun id numarası
 	 */
-	public function GB_D_getMeta( $id ) {
+	public function getMeta( $id ) {
 		$this->meta = get_post_meta( $id, 'GB_D_meta', true );
 	}
 
@@ -279,12 +279,12 @@ class GB_Duyurular {
 	 *
 	 * @return array
 	 */
-	public function GB_D_getNotice() {
+	public function getNotice() {
 		global $wpdb;
 		$notices = $wpdb->get_results( "SELECT ID,post_date_gmt,post_content,post_title FROM $wpdb->posts WHERE post_type='notice' AND post_status='publish' ORDER BY ID DESC", ARRAY_A );
 		$out     = array();
 		foreach ( $notices as $notice ) {
-			$this->GB_D_getMeta( $notice['ID'] );
+			$this->getMeta( $notice['ID'] );
 			$notice = array_merge( $notice, $this->meta ); //Meta bilgileri  ekleniyor.
 			$out[]  = $notice;
 		}
@@ -294,17 +294,17 @@ class GB_Duyurular {
 
 	/**
 	 * Uygun duyuruları sayfayada gösterir
-	 *  add_action('wp_footer', array(&$this, 'GB_D_showNotice'));
+	 *  add_action('wp_footer', array(&$this, 'showNotice'));
 	 */
-	public function GB_D_showNotice() {
-		foreach ( $this->GB_D_getNotice() as $notice ):
+	public function showNotice() {
+		foreach ( $this->getNotice() as $notice ):
 			if ( $notice['lastDisplayDate'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
 				wp_trash_post( $notice['ID'] );
 				$data = $notice['ID'] . 'id numaralı ' . get_the_title( $notice['ID'] ) . 'duyurusu silindi';
 				file_put_contents( $this->path . "/log.txt", $data, FILE_APPEND );
 				continue;
 			}
-			if ( $this->GB_D_isRead( $notice['ID'] ) ) {
+			if ( $this->isRead( $notice['ID'] ) ) {
 				continue;
 			}
 			$title   = get_the_title( $notice["ID"] ) != '' ? '<h4>' . ucfirst( get_the_title( $notice["ID"] ) ) . '</h4>' : null;
@@ -344,17 +344,17 @@ class GB_Duyurular {
 	}
 	/**
 	 * Tema yüklendikten sonra script ve style  dosyalarını  ekler
-	 * add_action( 'after_setup_theme', array( &$this, 'GB_D_addScriptAndStyle' ) );
+	 * add_action( 'after_setup_theme', array( &$this, 'addScriptAndStyle' ) );
 	 */
-	public function  GB_D_addScriptAndStyle() {
-		add_action( 'wp_enqueue_scripts', array( &$this, 'GB_D_enqueueScriptAndStyle' ) );
+	public function  addScriptAndStyle() {
+		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueueScriptAndStyle' ) );
 	}
 
 	/**
 	 * style ve script dosyalarını  yükler
-	 * add_action('wp_enqueue_scripts', array(&$this, 'GB_D_enqueueScriptAndStyle'));
+	 * add_action('wp_enqueue_scripts', array(&$this, 'enqueueScriptAndStyle'));
 	 */
-	public function  GB_D_enqueueScriptAndStyle() {
+	public function  enqueueScriptAndStyle() {
 
 		wp_register_script( 'notice', plugins_url( 'default.js', __FILE__ ), array( 'jquery' ) );
 
@@ -383,9 +383,9 @@ class GB_Duyurular {
 
 	/**
 	 * Admin paneline style dosyasını ekler
-	 * add_action('admin_enqueue_scripts', array(&$this, 'GB_D_addStyleToAdminPage'));
+	 * add_action('admin_enqueue_scripts', array(&$this, 'addStyleToAdminPage'));
 	 */
-	public function GB_D_addStyleToAdminPage() {
+	public function addStyleToAdminPage() {
 		/**
 		 * Admin paneline eklenecek style dosyasını wordpress e kaydediyorum
 		 */
@@ -399,9 +399,9 @@ class GB_Duyurular {
 	/**
 	 * Duyurudaki  okundu linki tıklandığında ilgili duyuruyu okundu olarak kaydeder
 	 *
-	 * add_action('template_redirect','GB_D_markAsRead');
+	 * add_action('template_redirect','markAsRead');
 	 */
-	public function GB_D_markAsRead() {
+	public function markAsRead() {
 		$blog_id = get_current_blog_id();
 		if ( isset( $_POST['GB_D_noticeId'] ) ) {
 			$noticeId = $_POST['GB_D_noticeId'];
@@ -416,8 +416,8 @@ class GB_Duyurular {
 			update_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", $okunanDuyurular );
 
 		} else {
-			$this->GB_D_getMeta( $noticeId );
-			$expire = $this->GB_D_getDate( $this->meta['lastDisplayDate'], true );
+			$this->getMeta( $noticeId );
+			$expire = $this->getDate( $this->meta['lastDisplayDate'], true );
 			//todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
 			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire, '/', $_SERVER['HTTP_HOST'] );
 		}
@@ -431,7 +431,7 @@ class GB_Duyurular {
 	 *
 	 * @param $noticeId
 	 */
-	public function GB_D_unmarkAsRead( $noticeId ) {
+	public function unmarkAsRead( $noticeId ) {
 		global $wpdb;
 		$blog_id  = get_current_blog_id();
 		$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->usermeta where meta_key='GB_D_{$blog_id}_okunanDuyurular'" );
@@ -465,7 +465,7 @@ class GB_Duyurular {
 	 *
 	 * @return bool
 	 */
-	public function GB_D_isRead( $id ) {
+	public function isRead( $id ) {
 		global $blog_id;
 		if ( is_user_logged_in() ) {
 			global $current_user;
@@ -493,7 +493,7 @@ class GB_Duyurular {
 	 *
 	 * @return array|int
 	 */
-	public function GB_D_getDate( $date = null, $mktime = false ) {
+	public function getDate( $date = null, $mktime = false ) {
 		if ( is_null( $date ) ) {
 			$date = date_i18n( 'Y-m-d H:i:s' );
 		}
@@ -515,9 +515,9 @@ class GB_Duyurular {
 	/**
 	 * Çöpten çıkarılan duyurunun meta bilgisini öntanımlı ayarlara döndürüyor.
 	 */
-	public function GB_D_trashToPublish() {
+	public function trashToPublish() {
 		$post_id = get_the_ID();
-		$date    = $this->GB_D_getDate();
+		$date    = $this->getDate();
 		$date['month'] ++;
 		$lastDisplayDate = $date['year'] . '-' . $date['month'] . '-' . $date['day'] . ' ' . $date['hour'] . ':' . $date['minute'] . ':00';
 		$this->meta      = array(
