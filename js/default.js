@@ -8,39 +8,42 @@ jQuery(document).ready(function ($) {
 
 		var notices = $('.' + param.noticesClass, this).hide();
 		var activeIndex = 0;
-		var widths = [];
 		/**
 		 * Duyuru kapatılmadan önce tekrar gösterilip gösterilmeyeceğinin belirelemek için gösterilecek mesaj
-		 * @type {string}
+		 *
+		 * @type {*|jQuery|HTMLElement}
 		 */
-		var isShowAgain = $('<div class="alert window alert-info" style="width: 100%">' +
-		'<p>' + message.content + '</p>' +
-		'<div id="closeButtons" class="center">' +
-		'<button id="dontShow" class="btn">' + message.dontShow + '</button> - <button id="closeNotice" class="btn">' + message.close + '</button>' +
-		'</div>' +
-		'</div>');
+		var isShowAgain = $(
+				'<div class="alert window alert-info" style="width: 100%">' +
+					'<p>' + message.content + '</p>' +
+					'<div id="closeButtons" class="center">' +
+						'<button id="dontShow" class="btn">' + message.dontShow + '</button> - <button id="closeNotice" class="btn">' + message.close + '</button>' +
+					'</div>' +
+				'</div>');
 		/**
-		 * duyuruların ilk genişlik bilgilerini widths dizisine aktarıyorum
-		 * bu sayede bir önceki duyurunun boyutlarından etkilenmeden kendi boyutlarında gösteriliyorlar
+		 * Duyuru içeriğindeki resim yüklenirken gösterilecek animasyon
+		 *
+		 * @type {*|jQuery|HTMLElement}
 		 */
-		notices.each(function (index, value) {
-			setTimeout(function () {
-				widths[index] = $(value).width();
-				console.log($(value).width());
-			}, 1);//güncel boyutların belirlenmesi için beklenen süre
-		});
+		var loadingAnimation=
+			'<div id="noticeLoading" class="spinner">' +
+			'		<div class="bounce1"></div>' +
+			'		<div class="bounce2"></div>' +
+			'		<div class="bounce3"></div>' +
+			'</div>';
+
 		/**
 		 * bir mili saniye erteleme sonrası sayfa boyutlarına göre maksimum ve minimum boyutları belirler ve uygular
 		 */
 		function reLocate() {
-			setTimeout(function () {
+			$('#windowBox').imagesLoaded().done(function(instance){
 				var maxHeight = window.innerHeight - 80; //
 				$('#windowBox .window *').css({'max-height': maxHeight})
 				var top = (window.innerHeight - notices.eq(activeIndex).height()) / 2;
 				var maxWidth = window.innerWidth - 115;
 				$('#windowBox').css({'top': top, 'max-width': maxWidth});
 				$('#windowBox .window').css({'max-width': maxWidth});
-			}, 2);//güncel boyutların belirlenmesi için beklenen süre
+			});
 		}
 
 		/**
@@ -48,13 +51,23 @@ jQuery(document).ready(function ($) {
 		 * konumlandırır ve fade in animasyonu ile gösterir
 		 */
 		function showNotice() {
-			$('#windowBox').width(widths[activeIndex]).append(notices.eq(activeIndex));
-			reLocate();
-			notices.eq(activeIndex).fadeIn();
+			$('#windowBox').imagesLoaded()
+					.progress(function (instance, image) {
+						if(!$('div').is('#noticeLoading')){
+							$('#windowBox').append(loadingAnimation);
+						}
+					})
+					.done(function (instance) {
+						$('#noticeLoading','#windowBox').remove();
+						$('#windowBox').width(notices.eq(activeIndex).width()).append(notices.eq(activeIndex));
+						reLocate();
+						notices.eq(activeIndex).fadeIn();
+					})
 		}
 
 		/**
 		 * body etiketi içine duyuruların gözükmesini sağlayan arka plan ekleniyor.
+		 * todo show notice içerisine alına bilir eğer yoksa ekle şeklinde
 		 */
 		$('body').append(
 				'<div id="GBWindow">' +
@@ -97,12 +110,14 @@ jQuery(document).ready(function ($) {
 		 *  kapat butonuna basıldığında bir daha gösterilsin mi uyarısı gösterir ve sonrasında gelen yanıta göre
 		 *  duyuruyu kapatır ve varsa sonraki duyuruyu gösterir
 		 */
-		$('.close', this).click(function () {
+		$('.close').click(function () {
 			notices.eq(activeIndex).replaceWith(isShowAgain);
 			$('#windowBox').width(350);
 			reLocate();
-			nextButton.hide();
-			previousButton.hide();
+			if (notices.length > 1) {
+				nextButton.hide();
+				previousButton.hide();
+			}
 			$('#closeButtons #dontShow').click(function () {
 				var currentId = notices.eq(activeIndex).attr('id');
 				var reg = /\d/g;
@@ -119,7 +134,6 @@ jQuery(document).ready(function ($) {
 			function close() {
 				notices.eq(activeIndex).remove();
 				notices.splice(activeIndex, 1);// duyurulardan kapatılan duyuru kaldırılıyor
-				widths.splice(activeIndex, 1);// duyuruların genişliklerinden kapatılan duyur kaldırılıyor.
 				if (notices.length > 0) {
 					if (notices.length == 1) {// eğer tek bir duyuru kaldıysa ileri ve geri butonları kaldırılıyor.
 						nextButton.remove();

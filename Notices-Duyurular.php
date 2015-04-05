@@ -313,7 +313,7 @@ class GB_Duyurular {
 			switch ( $notice['displayMode'] ) {
 				case 'window':
 					if ( $notice['whoCanSee'] == 'everyone' || is_user_logged_in() ) {
-
+						$this->isThereWindowType=true;
 						$this->noticeContent .= sprintf(
 							'<div id="window-%d" class="alert window %s %s" displayTime="%d" >
 								<button type="button" class="close" >&times;</button>
@@ -332,13 +332,15 @@ class GB_Duyurular {
 				break;
 			}
 		endforeach;
-		$this->noticeContent .= '</div>
+		if($this->isThereWindowType){
+			$this->noticeContent .= '</div>
 			<script type="application/javascript">
 				jQuery(document).ready(function ($) {
 					$(".noticeContainer").GBWindow()
 				});
 			</script>
 			';
+		}
 		echo $this->noticeContent;
 
 	}
@@ -355,8 +357,8 @@ class GB_Duyurular {
 	 * add_action('wp_enqueue_scripts', array(&$this, 'enqueueScriptAndStyle'));
 	 */
 	public function  enqueueScriptAndStyle() {
-		wp_register_script( 'notice_script', plugins_url( 'js/default.js', __FILE__ ), array( 'jquery' ) );
 		wp_register_script( 'imagesloaded_script', plugins_url( 'js/imagesloaded.pkgd.min.js', __FILE__ ), array( 'jquery' ) );
+		wp_register_script( 'notice_script', plugins_url( 'js/default.js', __FILE__ ), array( 'jquery','imagesloaded_script' ) );
 
 		wp_register_style( 'notice_style', plugins_url( 'style.css', __FILE__ ), array( 'notice_style-reset' ) );
 		wp_register_style( 'notice_style-reset', plugins_url( 'style-reset.css', __FILE__ ) );
