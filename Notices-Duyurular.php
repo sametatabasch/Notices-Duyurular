@@ -355,8 +355,8 @@ class GB_Duyurular {
 	 * add_action('wp_enqueue_scripts', array(&$this, 'enqueueScriptAndStyle'));
 	 */
 	public function  enqueueScriptAndStyle() {
-
-		wp_register_script( 'notice', plugins_url( 'default.js', __FILE__ ), array( 'jquery' ) );
+		wp_register_script( 'notice_script', plugins_url( 'js/default.js', __FILE__ ), array( 'jquery' ) );
+		wp_register_script( 'imagesloaded_script', plugins_url( 'js/imagesloaded.pkgd.min.js', __FILE__ ), array( 'jquery' ) );
 
 		wp_register_style( 'notice_style', plugins_url( 'style.css', __FILE__ ), array( 'notice_style-reset' ) );
 		wp_register_style( 'notice_style-reset', plugins_url( 'style-reset.css', __FILE__ ) );
@@ -364,7 +364,8 @@ class GB_Duyurular {
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_style( 'notice_style' );
 		wp_enqueue_style( 'notice_style-reset' );
-		wp_enqueue_script( 'notice' );
+		wp_enqueue_script( 'notice_script' );
+		wp_enqueue_script( 'imagesloaded_script' );
 
 		/*
 		 *  Javascript dosyasında çoklu  dil  desteği
@@ -378,7 +379,7 @@ class GB_Duyurular {
 			'dontShow' => __( 'Do not show again', $this->textDomainString ),
 			'close'    => __( 'Close', $this->textDomainString )
 		);
-		wp_localize_script( 'notice', 'message', $translation_array );
+		wp_localize_script( 'notice_script', 'message', $translation_array );
 	}
 
 	/**
