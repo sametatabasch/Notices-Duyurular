@@ -421,8 +421,8 @@ class GB_Duyurular {
 		} else {
 			$this->getMeta( $noticeId );
 			$expire = $this->getDate( $this->meta['lastDisplayDate'], true );
-			//todo setcookie zaman dilimini  yanlış hesaplıyor 1 saat 30 dk  fazladan ekliyor bu yüzden cookie zaman aşımı yanlış oluyor #12
-			setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire, '/', $_SERVER['HTTP_HOST'] );
+			$name= 'GB_D_'.$blog_id.'_'.md5(get_site_url($blog_id).'|'.$noticeId);
+			setcookie( $name, true, $expire, '/', $_SERVER['HTTP_HOST'],is_ssl(),true );
 		}
 		if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
 			wp_redirect( $_SERVER['HTTP_REFERER'] );
@@ -452,38 +452,33 @@ class GB_Duyurular {
 		 * Okundu işareti kaldırılan duyurunun eğer cookiesi  varsa o cookie yi siliyor
 		 * okunmadı olarak işaretle işlemini kullanıcı kendisi yapamadığı için bu işlem şimdilik amaçsız
 		 */
-		if ( isset( $_COOKIE["GB_D_{$blog_id}_okunanDuyurular"] ) ) {
-			$okunanDuyurular = $_COOKIE["GB_D_{$blog_id}_okunanDuyurular"];
-			if ( array_key_exists( $noticeId, $okunanDuyurular ) ) {
-				$expire = time() - 36000;
-				setcookie( "GB_D_{$blog_id}_okunanDuyurular[$noticeId]", 'true', $expire, '/', $_SERVER['HTTP_HOST'] );
-			}
+		if ( isset( $_COOKIE['GB_D_'.$blog_id.'_'.md5(get_site_url($blog_id).'|'.$noticeId)] ) ) {
+			$name= 'GB_D_'.$blog_id.'_'.md5(get_site_url($blog_id).'|'.$noticeId);
+			$expire = time() - 36000;
+			setcookie( $name, true, $expire, '/', $_SERVER['HTTP_HOST'],is_ssl(),true );
 		}
 	}
 
 	/**
 	 * ID numarası  belirtilen duyurunun okundu olarak işaretlenmiş olup olmadığını kontrol eder
 	 *
-	 * @param $id Kontrol edilecek duyurunun ID numarası
+	 * Kontrol edilecek duyurunun ID numarası
+	 * @param $noticeId
 	 *
 	 * @return bool
 	 */
-	public function isRead( $id ) {
+	public function isRead( $noticeId ) {
 		global $blog_id;
 		if ( is_user_logged_in() ) {
 			global $current_user;
 			get_currentuserinfo();
 			$okunanDuyurular = get_user_meta( $current_user->ID, 'GB_D_' . $blog_id . '_okunanDuyurular', true );
 
-			return empty( $okunanDuyurular ) ? false : in_array( $id, $okunanDuyurular );
+			return empty( $okunanDuyurular ) ? false : in_array( $noticeId, $okunanDuyurular );
 		} else {
-			if ( isset( $_COOKIE[ 'GB_D_' . $blog_id . '_okunanDuyurular' ] ) ) {
-				$okunanDuyurular = $_COOKIE[ 'GB_D_' . $blog_id . '_okunanDuyurular' ];
+			$name= 'GB_D_'.$blog_id.'_'.md5(get_site_url($blog_id).'|'.$noticeId);
 
-				return array_key_exists( $id, $okunanDuyurular );
-			} else {
-				return false;
-			}
+			return isset( $_COOKIE[ $name ] );
 		}
 	}
 
