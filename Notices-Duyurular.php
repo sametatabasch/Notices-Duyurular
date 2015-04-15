@@ -300,7 +300,10 @@ class GB_Duyurular {
 		foreach ( $this->getNotice() as $notice ):
 			if ( $notice['lastDisplayDate'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
 				wp_trash_post( $notice['ID'] );
-				$data = $notice['ID'] . 'id numaralı ' . get_the_title( $notice['ID'] ) . 'duyurusu silindi';
+				//log
+				$data ='kullanıcı ip adresi:'.$_SERVER['REMOTE_ADDR'].'|'.$_SERVER['HTTP_USER_AGENT']."\n";
+				$data .= date_i18n( 'Y-m-d H:i:s' ).' | '. $notice['ID'] . ' id numaralı ' . get_the_title( $notice['ID'] ) . ' duyurusu silindi. Duyuru son gösterim tarihi:'.$notice['lastDisplayDate'].' Aktif kullanıcı: '.wp_get_current_user()->user_login."\n";
+				wp_mail('samet@gencbilisim.net','Duyuru Log',$data);
 				file_put_contents( $this->path . "/log.txt", $data, FILE_APPEND );
 				continue;
 			}
