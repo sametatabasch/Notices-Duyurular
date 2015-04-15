@@ -67,7 +67,7 @@ jQuery(document).ready(function ($) {
 
 		/**
 		 * body etiketi içine duyuruların gözükmesini sağlayan arka plan ekleniyor.
-		 * todo show notice içerisine alına bilir eğer yoksa ekle şeklinde
+		 * todo show notice içerisine alına bilir, eğer yoksa ekle şeklinde
 		 */
 		$('body').append(
 				'<div id="GBWindow">' +
@@ -113,6 +113,7 @@ jQuery(document).ready(function ($) {
 		$('.close').click(function () {
 			notices.eq(activeIndex).replaceWith(isShowAgain);
 			$('#windowBox').width(350);
+			isShowAgain.show();
 			reLocate();
 			if (notices.length > 1) {
 				nextButton.hide();
