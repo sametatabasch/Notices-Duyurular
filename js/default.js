@@ -15,12 +15,16 @@ jQuery(document).ready(function ($) {
 		 */
 		var isShowAgain = $(
 				'<div class="alert window alert-info" style="width: 100%">' +
-					'<p>' + message.content + '</p>' +
+					'<p>' + closeMessage.content + '</p>' +
 					'<div id="closeButtons" class="center">' +
-						'<button id="dontShow" class="btn">' + message.dontShow + '</button> - <button id="closeNotice" class="btn">' + message.close + '</button>' +
+						'<button id="dontShow" class="btn">' + closeMessage.dontShow + '</button> - <button id="closeNotice" class="btn">' + closeMessage.close + '</button>' +
 					'</div>' +
 				'</div>');
-		/**
+		var isBackgrounClicked= false;
+		var isClickBackground= $(
+				'<div class="alert window alert-error" style="width: 100%">' +
+					'<p>' + backgroundClickMessage.content + '</p>' +
+				'</div>');		/**
 		 * Duyuru içeriğindeki resim yüklenirken gösterilecek animasyon
 		 *
 		 * @type {*|jQuery|HTMLElement}
@@ -154,6 +158,22 @@ jQuery(document).ready(function ($) {
 				}
 			}
 		});
+
+		$('.windowBackground').click(function () {
+			if (!isBackgrounClicked) {
+				isBackgrounClicked=true;
+				notices.eq(activeIndex).replaceWith(isClickBackground);
+				$('#windowBox').width(350);
+				isClickBackground.show();
+				nextButton.hide();
+				previousButton.hide();
+				reLocate();
+				setTimeout(function () {
+					$('#GBWindow').fadeOut();
+				}, 5500);
+			}
+		});
+
 		/**
 		 * ekran yeniden boyutlandırıldığında duyuruyu sayfada yeniden konumlandırır
 		 */
@@ -176,12 +196,12 @@ jQuery(document).ready(function () {
 		var reg = /\d/g;
 		currentId = currentId.match(reg).join(''); //id  değerinin sadece sayı olduğu doğrulanıyor.
 
-		// çoklu  dil desteği için message nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle
+		// çoklu  dil desteği için closeMessage nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle
 		var icerik =
 				'<div class="bar alert alert-info">' +
 						'<h4></h4>' +
-						'<p>' + message.content + '</p>' +
-						'<button id="yes" class="btn">' + message.dontShow + '</button> - <button id="no" class="btn">' + message.close + '</button>' +
+						'<p>' + closeMessage.content + '</p>' +
+						'<button id="yes" class="btn">' + closeMessage.dontShow + '</button> - <button id="no" class="btn">' + closeMessage.close + '</button>' +
 				'</div>';
 
 		jQuery('.noticeContainer').find('#bar-' + currentId).replaceWith(icerik);

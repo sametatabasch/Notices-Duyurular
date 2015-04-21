@@ -2,10 +2,10 @@
 /*
  * Plugin Name: Notices-Duyurular
  * Plugin URI: http://gencbilisim.net/notices-duyurular-eklentisi/
- * Description: Easy way to publish Notices in your Wordpress site
+ * Description: Easy way to publish Notices in your Wordpress
  * Author: Samet ATABAŞ
  * Version: 1.5
- * Author URI: http://www.gençbilişim.net
+ * Author URI: http://www.gencbilisim.net
  * Text Domain: Notices-Duyurular
  * Domain Path: /lang
  */
@@ -379,12 +379,16 @@ class GB_Duyurular {
 		 * $name   -> Dizeleri  taşıyan java nesnesinin  adı
 		 * $data   -> Dil desteği  sağlanan dizeler
 		 */
-		$translation_array = array(
-			'content'  => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', $this->textDomainString ),
-			'dontShow' => __( 'Do not show again', $this->textDomainString ),
-			'close'    => __( 'Close', $this->textDomainString )
+		$closeMessage_translation_array = array(
+			'content'                => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', $this->textDomainString ),
+			'dontShow'               => __( 'Do not show again', $this->textDomainString ),
+			'close'                  => __( 'Close', $this->textDomainString )
 		);
-		wp_localize_script( 'notice_script', 'message', $translation_array );
+		$backgroundClickMessage_translation_array= array(
+			'content'=> __( 'if you close notices with click background, you see notices again and again. İf you dont want see notices again, close notices with close button.', $this->textDomainString  )
+		);
+		wp_localize_script( 'notice_script', 'closeMessage', $closeMessage_translation_array );
+		wp_localize_script( 'notice_script', 'backgroundClickMessage', $backgroundClickMessage_translation_array );
 	}
 
 	/**
