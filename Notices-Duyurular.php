@@ -257,6 +257,10 @@ class GB_Duyurular {
 
 	/**
 	 * İd numarası  verilen duyurunun meta değerleri $this->meta değişkenine aktarılır.
+	 * 'whoCanSee' => (everyone,onlyUser)
+	 * 'displayMode' =>  (window,bar)
+	 * 'type' => ('',alert-white,alert-error,alert-info,alert-success)
+	 * 'lastDisplayDate' =>
 	 *
 	 * @param $id meta bilgileri alınan duyurunun id numarası
 	 */
@@ -266,30 +270,26 @@ class GB_Duyurular {
 
 	/**
 	 * Duyuru bilgilerini  array olarak  getirir
-	 * array(8) {
-	 *  ["ID"]=>
-	 *  ["post_date_gmt"]=>
-	 *  ["post_content"]=>
-	 *  ["post_title"]=>
-	 *  ["whoCanSee"]=>
-	 *  ["displayMode"]=>
-	 *  ["lastDisplayDate"]=>
-	 *  ["type"]=>
-	 *}
-	 *
+
 	 * @return array
+	 *
 	 */
-	public function getNotice() {
-		global $wpdb;
-		$notices = $wpdb->get_results( "SELECT ID,post_date_gmt,post_content,post_title FROM $wpdb->posts WHERE post_type='notice' AND post_status='publish' ORDER BY ID DESC", ARRAY_A );
-		$out     = array();
-		foreach ( $notices as $notice ) {
-			$this->getMeta( $notice['ID'] );
-			$notice = array_merge( $notice, $this->meta ); //Meta bilgileri  ekleniyor.
-			$out[]  = $notice;
+	public function getNotices() {
+		$arg = array(
+			'numberposts' => -1,
+			'post_type' =>'notice',
+			'post_status' =>'publish'
+
+		);
+
+		$notices = get_posts($arg);
+
+		foreach ( $notices as &$notice ) {
+			$this->getMeta( $notice->ID );
+			$notice = array_merge( $notice->to_array(), $this->meta ); //Meta bilgileri  ekleniyor.
 		}
 
-		return $out;
+		return $notices;
 	}
 
 	/**
@@ -297,7 +297,9 @@ class GB_Duyurular {
 	 *  add_action('wp_footer', array(&$this, 'showNotice'));
 	 */
 	public function showNotice() {
-		foreach ( $this->getNotice() as $notice ):
+		var_export($this->getNotices());
+
+		foreach ($this->getNotices() as $notice ):
 			if ( $notice['lastDisplayDate'] < date_i18n( 'Y-m-d H:i:s' ) ) { // Son gösterim tarihi geçen duyuru çöpe taşınır
 				wp_trash_post( $notice['ID'] );
 				//log
