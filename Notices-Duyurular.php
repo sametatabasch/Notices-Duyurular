@@ -148,7 +148,7 @@ class GB_Duyurular
         $monthOptionList = '';
         for ($i = 1; $i <= 12; $i++) {
             $monthOptionList .= '
-			  <option ' . selected(zeroise($i, 2), $date['month'], false) . ' value="' . $i . '">'
+			  <option ' . selected(zeroise($i, 2), $date['month'], false) . ' value="' . zeroise($i, 2) . '">'
                 . zeroise($i, 2) . ' - ' . $wp_locale->get_month_abbrev($wp_locale->get_month($i)) . '
 			  </option>';
         }
@@ -235,10 +235,14 @@ class GB_Duyurular
         );
 
         $notices = get_posts($arg);
-
+        /*
+         * Meta değerleri ekleniyor
+         */
         foreach ($notices as &$notice) {
             $this->getMeta($notice->ID);
-            $notice = array_merge($notice->to_array(), $this->meta); //Meta bilgileri  ekleniyor.
+            foreach ($this->meta as $key => $value) {
+                $notice->$key = $value;
+            }
         }
 
         return $notices;
@@ -250,41 +254,42 @@ class GB_Duyurular
      */
     public function showNotice()
     {
-        var_export($this->getNotices());
 
         foreach ($this->getNotices() as $notice):
-            if ($notice['lastDisplayDate'] < date_i18n('Y-m-d H:i:s')) { // Son gösterim tarihi geçen duyuru çöpe taşınır
-                wp_trash_post($notice['ID']);
+            setup_postdata($notice);
+            $expireDate=new DateTime($notice->lastDisplayDate);
+            $now=new DateTime('now');
+            if ($expireDate < $now && $notice->post_type === 'notice') {
+                // Son gösterim tarihi geçen duyuru çöpe taşınır post_type diğer tipteki gönderilerin silinmesini engellemek için ekledim
+                wp_trash_post($notice->ID);
                 //log
-                $data = 'kullanıcı ip adresi:' . $_SERVER['REMOTE_ADDR'] . '|' . $_SERVER['HTTP_USER_AGENT'] . "\n";
-                $data .= date_i18n('Y-m-d H:i:s') . ' | ' . $notice['ID'] . ' id numaralı ' . get_the_title($notice['ID']) . ' duyurusu silindi. Duyuru son gösterim tarihi:' . $notice['lastDisplayDate'] . ' Aktif kullanıcı: ' . wp_get_current_user()->user_login . "\n";
-                file_put_contents($this->path . "/log.txt", $data, FILE_APPEND);
+                $this->setLog($notice);
                 continue;
             }
-            if ($this->isRead($notice['ID'])) {
+            if ($this->isRead($notice->ID)) {
                 continue;
             }
-            $title = get_the_title($notice["ID"]) != '' ? '<h4>' . ucfirst(get_the_title($notice["ID"])) . '</h4>' : null;
-            $content = do_shortcode(wpautop($notice['post_content']));
-            @$noBorder = $notice['noBorder'] === 'on' ? 'noborder' : ''; //set noborder class
-            switch ($notice['displayMode']) {
+            $title = get_the_title($notice->ID) != '' ? '<h4>' . ucfirst(get_the_title($notice->ID)) . '</h4>' : null;
+            $content = do_shortcode(wpautop($notice->post_content));
+            @$noBorder = $notice->noBorder === 'on' ? 'noborder' : ''; //set noborder class
+            switch ($notice->displayMode) {
                 case 'window':
-                    if ($notice['whoCanSee'] == 'everyone' || is_user_logged_in()) {
+                    if ($notice->whoCanSee == 'everyone' || is_user_logged_in()) {
                         $this->isThereWindowType = true;
                         $this->noticeContent .= sprintf(
                             '<div id="window-%d" class="alert window %s %s" displayTime="%d" >
 								<button type="button" class="close" >&times;</button>
 								%s %s
-							</div>', $notice['ID'], $notice['type'], $noBorder, @$notice['displayTime'], $title, $content);
+							</div>', $notice->ID, $notice->type, $noBorder, @$notice->displayTime, $title, $content);
                     }
                     break;
                 case 'bar':
-                    if ($notice['whoCanSee'] == 'everyone' || is_user_logged_in()) {
+                    if ($notice->whoCanSee == 'everyone' || is_user_logged_in()) {
                         $this->noticeContent .= sprintf(
                             '<div id="bar-%d" class="bar alert %s">
 								<button type="button" class="close" >&times;</button>
 								%s %s
-							</div>', $notice['ID'], $notice['type'], $title, $content);
+							</div>', $notice->ID, $notice->type, $title, $content);
                     }
                     break;
             }
@@ -495,6 +500,21 @@ class GB_Duyurular
             'type' => ''
         );
         update_post_meta($post_id, 'GB_D_meta', $this->meta);
+    }
+
+    public function setLog($notice)
+    {
+        $data="
+        {
+            'ip': " . $_SERVER['REMOTE_ADDR'] . ",
+            'user_agent': ". $_SERVER['HTTP_USER_AGENT'] .",
+            'date': ".date_i18n('Y-m-d H:i:s').",
+            'noticeId': ".$notice->ID.",
+            'noticeTitle': ".get_the_title($notice->ID).",
+            'expireDate': ".$notice->lastDisplayDate.",
+            'logedinUser': ".wp_get_current_user()->user_login."
+        }";
+        file_put_contents($this->path . "/log.txt", $data, FILE_APPEND);
     }
 }
 
