@@ -257,8 +257,8 @@ class GB_Duyurular
 
         foreach ($this->getNotices() as $notice):
             setup_postdata($notice);
-            $expireDate=new DateTime($notice->lastDisplayDate);
-            $now=new DateTime('now');
+            $expireDate = new DateTime($notice->lastDisplayDate);
+            $now = new DateTime('now');
             if ($expireDate < $now && $notice->post_type === 'notice') {
                 // Son gösterim tarihi geçen duyuru çöpe taşınır post_type diğer tipteki gönderilerin silinmesini engellemek için ekledim
                 wp_trash_post($notice->ID);
@@ -504,15 +504,15 @@ class GB_Duyurular
 
     public function setLog($notice)
     {
-        $data="
+        $data = "
         {
             'ip': " . $_SERVER['REMOTE_ADDR'] . ",
-            'user_agent': ". $_SERVER['HTTP_USER_AGENT'] .",
-            'date': ".date_i18n('Y-m-d H:i:s').",
-            'noticeId': ".$notice->ID.",
-            'noticeTitle': ".get_the_title($notice->ID).",
-            'expireDate': ".$notice->lastDisplayDate.",
-            'logedinUser': ".wp_get_current_user()->user_login."
+            'user_agent': " . $_SERVER['HTTP_USER_AGENT'] . ",
+            'date': " . date_i18n('Y-m-d H:i:s') . ",
+            'noticeId': " . $notice->ID . ",
+            'noticeTitle': " . get_the_title($notice->ID) . ",
+            'expireDate': " . $notice->lastDisplayDate . ",
+            'logedinUser': " . wp_get_current_user()->user_login . "
         }";
         file_put_contents($this->path . "/log.txt", $data, FILE_APPEND);
     }

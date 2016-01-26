@@ -187,7 +187,7 @@ button.close {
 }
 
 .window-nav span {
-	background-image: url("fancybox_sprite.png");
+	background-image: url("../fancybox_sprite.png");
 	cursor: pointer;
 	height: 34px;
 	margin-top: -18px;
