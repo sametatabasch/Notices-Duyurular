@@ -325,8 +325,8 @@ class GB_Duyurular
         wp_register_script('imagesloaded_script', plugins_url('js/imagesloaded.pkgd.min.js', __FILE__), array('jquery'));
         wp_register_script('notice_script', plugins_url('js/default.js', __FILE__), array('jquery', 'imagesloaded_script'));
 
-        wp_register_style('notice_style', plugins_url('style.css', __FILE__), array('notice_style-reset'));
-        wp_register_style('notice_style-reset', plugins_url('style-reset.css', __FILE__));
+        wp_register_style('notice_style', plugins_url('css/style.css', __FILE__), array('notice_style-reset'));
+        wp_register_style('notice_style-reset', plugins_url('css/style-reset.css', __FILE__));
 
         wp_enqueue_script('jquery');
         wp_enqueue_style('notice_style');
