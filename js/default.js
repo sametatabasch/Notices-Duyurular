@@ -7,6 +7,17 @@ jQuery(document).ready(function ($) {
 		}, parameters);
 
 		var notices = $('.' + param.noticesClass, this).hide();
+        /**
+         *
+         * @type {Array}
+         */
+        var widths = [];
+        /*
+         * set notices widths
+         */
+        notices.each(function () {
+            widths.push($(this).width());
+        });
 		var activeIndex = 0;
 		/**
 		 * Duyuru kapatılmadan önce tekrar gösterilip gösterilmeyeceğinin belirelemek için gösterilecek mesaj
@@ -68,7 +79,7 @@ jQuery(document).ready(function ($) {
 					})
 					.done(function (instance) {
 						$('#noticeLoading','#windowBox').remove();
-						$('#windowBox').width(notices.eq(activeIndex).width()).append(notices.eq(activeIndex));
+                        $('#windowBox').width(widths[activeIndex]).append(notices.eq(activeIndex));
 						reLocate();
 						notices.eq(activeIndex).fadeIn();
 					})
@@ -187,9 +198,7 @@ jQuery(document).ready(function ($) {
 
 		showNotice();
 	};
-});
 
-jQuery(document).ready(function () {
 	//adminbar yüksekiliği notice container e aktarılıyor
 	jQuery('.noticeContainer').css({'top': jQuery('#wpadminbar').height()});
 
@@ -211,15 +220,12 @@ jQuery(document).ready(function () {
 		jQuery('.noticeContainer').find('#bar-' + currentId).replaceWith(icerik);
 
 		jQuery('#yes').click(function () {
-			jQuery.ajax({
-				type: "GET",
-				data: "GB_D_noticeId=" + currentId
-			});
-			close(jQuery(this).parent());
+            $.post('', {GB_D_noticeId: +currentId}, 'json'); //okundu olarak işaretleme yapılıyor
+            jQuery(this).parent().remove();
 		});
 
 		jQuery('#no').click(function () {
-			close(jQuery(this).parent());
+            jQuery(this).parent().remove();
 		});
 	});
 });

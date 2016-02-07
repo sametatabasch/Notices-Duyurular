@@ -362,7 +362,7 @@ class GB_Duyurular
         /**
          * Admin paneline eklenecek style dosyasını wordpress e kaydediyorum
          */
-        wp_register_style('notice_style', plugins_url('style.css', __FILE__));
+        wp_register_style('notice_style', plugins_url('css/style.css', __FILE__));
         /**
          * Admin paneline eklenecek style dosyasını wordpress e ekliyorum
          */
