@@ -1,5 +1,3 @@
-//todo gözükme süresi
-//todo arka plana tıklayınca uyarı ve kapatma #35
 jQuery(document).ready(function ($) {
 	$.fn.GBWindow = function (parameters) {
 		var param = $.extend({
