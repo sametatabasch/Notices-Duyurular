@@ -212,7 +212,7 @@ class GB_Duyurular {
 
 	/**
 	 * Duyuru bilgilerini  array olarak  getirir
-	 * @return array
+	 * @return array|bool
 	 *
 	 */
 	public function getNotices() {
@@ -224,17 +224,21 @@ class GB_Duyurular {
 		);
 
 		$notices = get_posts( $arg );
-		/*
-		 * Meta değerleri ekleniyor
-		 */
-		foreach ( $notices as &$notice ) {
-			$this->getMeta( $notice->ID );
-			foreach ( $this->meta as $key => $value ) {
-				$notice->$key = $value;
+		if ( count( $notices ) > 0 ) {
+			/*
+			 * Meta değerleri ekleniyor
+			 */
+			foreach ( $notices as &$notice ) {
+				$this->getMeta( $notice->ID );
+				foreach ( $this->meta as $key => $value ) {
+					$notice->$key = $value;
+				}
 			}
-		}
 
-		return $notices;
+			return $notices;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -242,57 +246,57 @@ class GB_Duyurular {
 	 *  add_action('wp_footer', array(&$this, 'showNotice'));
 	 */
 	public function showNotice() {
-
-		foreach ( $this->getNotices() as $notice ):
-			setup_postdata( $notice );
-			$expireDate = new DateTime( $notice->lastDisplayDate );
-			$now        = new DateTime( 'now' );
-			if ( $expireDate < $now && $notice->post_type === 'notice' ) {
-				// Son gösterim tarihi geçen duyuru çöpe taşınır post_type diğer tipteki gönderilerin silinmesini engellemek için ekledim
-				wp_trash_post( $notice->ID );
-				//log
-				$this->setLog( $notice );
-				continue;
-			}
-			if ( $this->isRead( $notice->ID ) ) {
-				continue;
-			}
-			$title   = get_the_title( $notice->ID ) != '' ? '<h4>' . ucfirst( get_the_title( $notice->ID ) ) . '</h4>' : null;
-			$content = do_shortcode( wpautop( $notice->post_content ) );
-			@$noBorder = $notice->noBorder === 'on' ? 'noborder' : ''; //set noborder class
-			switch ( $notice->displayMode ) {
-				case 'window':
-					if ( $notice->whoCanSee == 'everyone' || is_user_logged_in() ) {
-						$this->isThereWindowType = true;
-						$this->noticeContent .= sprintf(
-							'<div id="window-%d" class="alert window %s %s" displayTime="%d" >
+		if ( $notices = $this->getNotices() ) {
+			foreach ( $notices as $notice ):
+				setup_postdata( $notice );
+				$expireDate = new DateTime( $notice->lastDisplayDate );
+				$now        = new DateTime( 'now' );
+				if ( $expireDate < $now && $notice->post_type === 'notice' ) {
+					// Son gösterim tarihi geçen duyuru çöpe taşınır post_type diğer tipteki gönderilerin silinmesini engellemek için ekledim
+					wp_trash_post( $notice->ID );
+					//log
+					$this->setLog( $notice );
+					continue;
+				}
+				if ( $this->isRead( $notice->ID ) ) {
+					continue;
+				}
+				$title   = get_the_title( $notice->ID ) != '' ? '<h4>' . ucfirst( get_the_title( $notice->ID ) ) . '</h4>' : null;
+				$content = do_shortcode( wpautop( $notice->post_content ) );
+				@$noBorder = $notice->noBorder === 'on' ? 'noborder' : ''; //set noborder class
+				switch ( $notice->displayMode ) {
+					case 'window':
+						if ( $notice->whoCanSee == 'everyone' || is_user_logged_in() ) {
+							$this->isThereWindowType = true;
+							$this->noticeContent .= sprintf(
+								'<div id="window-%d" class="alert window %s %s" displayTime="%d" >
 								<button type="button" class="close" >&times;</button>
 								%s %s
 							</div>', $notice->ID, $notice->type, $noBorder, @$notice->displayTime, $title, $content );
-					}
-					break;
-				case 'bar':
-					if ( $notice->whoCanSee == 'everyone' || is_user_logged_in() ) {
-						$this->noticeContent .= sprintf(
-							'<div id="bar-%d" class="bar alert %s">
+						}
+						break;
+					case 'bar':
+						if ( $notice->whoCanSee == 'everyone' || is_user_logged_in() ) {
+							$this->noticeContent .= sprintf(
+								'<div id="bar-%d" class="bar alert %s">
 								<button type="button" class="close" >&times;</button>
 								%s %s
 							</div>', $notice->ID, $notice->type, $title, $content );
-					}
-					break;
-			}
-		endforeach;
-		if ( $this->isThereWindowType ) {
-			$this->noticeContent .= '</div>
+						}
+						break;
+				}
+			endforeach;
+			if ( $this->isThereWindowType ) {
+				$this->noticeContent .= '</div>
 			<script type="application/javascript">
 				jQuery(document).ready(function ($) {
 					$(".noticeContainer").GBWindow()
 				});
 			</script>
 			';
+			}
+			echo $this->noticeContent;
 		}
-		echo $this->noticeContent;
-
 	}
 
 	/**
@@ -300,7 +304,9 @@ class GB_Duyurular {
 	 * add_action( 'after_setup_theme', array( &$this, 'addScriptAndStyle' ) );
 	 */
 	public function addScriptAndStyle() {
-		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueueScriptAndStyle' ) );
+		if ( $this->getNotices() ) {
+			add_action( 'wp_enqueue_scripts', array( &$this, 'enqueueScriptAndStyle' ) );
+		}
 	}
 
 	/**
@@ -371,7 +377,7 @@ class GB_Duyurular {
 		}
 		if ( is_user_logged_in() ) {
 			global $current_user;
-			get_currentuserinfo();
+			wp_get_current_user();
 			$okunanDuyurular   = get_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", true );
 			$okunanDuyurular[] = $noticeId;
 			update_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", $okunanDuyurular );
@@ -430,7 +436,7 @@ class GB_Duyurular {
 		global $blog_id;
 		if ( is_user_logged_in() ) {
 			global $current_user;
-			get_currentuserinfo();
+			wp_get_current_user();
 			$okunanDuyurular = get_user_meta( $current_user->ID, 'GB_D_' . $blog_id . '_okunanDuyurular', true );
 
 			return empty( $okunanDuyurular ) ? false : in_array( $noticeId, $okunanDuyurular );
