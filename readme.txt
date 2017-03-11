@@ -1,9 +1,9 @@
 ===Notices-Duyurular===
 Contributors: sametatabasch
-Tags: notice, duyuru,post_type,cookie
+Tags: notice, duyuru, cookie, announcement
 Requires at least: 3.0.1
-Tested up to: 4.4.2
-Stable tag: 1.6.3
+Tested up to: 4.7.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ Bunlara ek olarak  ziyaretci duyuruyu bir daha görmek istemediğinde gözükmes
 
 = Translations =
 
-* English (en\_US), built-in
+* English (en\_US)
 * Turkish (tr\_TR), native support
 
 == Installation ==
@@ -44,6 +44,11 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 3. Example for add new notice page.
 
 == Changelog ==
+
+= 1.6.4 =
+
+- Css and js files will not load if there is no notice
+- Fix Bug
 
 = 1.6.3 =
 
