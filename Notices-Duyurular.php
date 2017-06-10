@@ -278,6 +278,7 @@ class GB_Duyurular {
 						break;
 				}
 			endforeach;
+
 			if ( $this->isThereWindowType ) {
 				$this->noticeContent .= '</div>
 			<script type="application/javascript">
@@ -312,12 +313,16 @@ class GB_Duyurular {
 			'imagesloaded_script'
 		) );
 
-		wp_register_style( 'notice_style', plugins_url( 'css/style.css', __FILE__ ), array( 'notice_style-reset' ) );
-		wp_register_style( 'notice_style-reset', plugins_url( 'css/style-reset.css', __FILE__ ) );
+		wp_register_style( 'notice_style', plugins_url( 'css/style.css', __FILE__ ), array( 'notice_styleReset' ) );
+		wp_register_style( 'notice_alert_style', plugins_url( 'css/alert.css', __FILE__ ), array( 'notice_styleReset' ) );
+		wp_register_style( 'notice_loadingAnimation_style', plugins_url( 'css/loadingAnimation.css', __FILE__ ), array( 'notice_styleReset' ) );
+		wp_register_style( 'notice_styleReset', plugins_url( 'css/styleReset.css', __FILE__ ) );
 
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_style( 'notice_style' );
-		wp_enqueue_style( 'notice_style-reset' );
+		wp_enqueue_style( 'notice_alert_style' );
+		wp_enqueue_style( 'notice_loadingAnimation_style' );
+		wp_enqueue_style( 'notice_styleReset' );
 		wp_enqueue_script( 'notice_script' );
 		wp_enqueue_script( 'imagesloaded_script' );
 
