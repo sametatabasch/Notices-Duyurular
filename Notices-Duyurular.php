@@ -268,20 +268,12 @@ class GB_Duyurular {
 					case 'window':
 						if ( $notice->whoCanSee == 'everyone' || is_user_logged_in() ) {
 							$this->isThereWindowType = true;
-							$this->noticeContent .= sprintf(
-								'<div id="window-%d" class="alert window %s %s" displayTime="%d" >
-								<button type="button" class="close" >&times;</button>
-								%s %s
-							</div>', $notice->ID, $notice->type, $noBorder, @$notice->displayTime, $title, $content );
+							$this->noticeContent .= require "views/window.php";
 						}
 						break;
 					case 'bar':
 						if ( $notice->whoCanSee == 'everyone' || is_user_logged_in() ) {
-							$this->noticeContent .= sprintf(
-								'<div id="bar-%d" class="bar alert %s">
-								<button type="button" class="close" >&times;</button>
-								%s %s
-							</div>', $notice->ID, $notice->type, $title, $content );
+							$this->noticeContent .= require "views/bar.php";
 						}
 						break;
 				}
