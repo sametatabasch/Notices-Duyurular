@@ -3,66 +3,66 @@
 } ?>
 <form>
     <div class="misc-pub-section">
-        <span><b><?= __('Who can see :', $this->textDomainString) ?> </b></span>
-        <select name="GB_D_meta[whoCanSee]">
-            <option <?= selected($this->meta['whoCanSee'], 'everyone', false) ?>
-                value="everyone"><?= __('Everyone', $this->textDomainString) ?></option>
-            <option <?= selected($this->meta['whoCanSee'], 'onlyUser', false) ?>
-                value="onlyUser"><?= __('Only User', $this->textDomainString) ?></option>
+        <span><b><?= __('Who can see :', GB_D_textDomainString) ?> </b></span>
+        <select name="noticeMetaData[whoCanSee]">
+            <option <?= selected($notice->postMeta['whoCanSee'], 'everyone', false) ?>
+                value="everyone"><?= __('Everyone', GB_D_textDomainString) ?></option>
+            <option <?= selected($notice->postMeta['whoCanSee'], 'onlyUser', false) ?>
+                value="onlyUser"><?= __('Only User', GB_D_textDomainString) ?></option>
         </select>
     </div>
     <div class="misc-pub-section">
-        <span><b><?= __('Display Mode :', $this->textDomainString) ?></b></span>
-        <select name="GB_D_meta[displayMode]">
-            <option <?= selected($this->meta['displayMode'], 'window', false) ?>
-                value="window"><?= __('Window', $this->textDomainString) ?></option>
-            <option <?= selected($this->meta['displayMode'], 'bar', false) ?>
-                value="bar"><?= __('Bar', $this->textDomainString) ?></option>
+        <span><b><?= __('Display Mode :', GB_D_textDomainString) ?></b></span>
+        <select name="noticeMetaData[displayMode]">
+            <option <?= selected($notice->displayMode, 'window', false) ?>
+                value="window"><?= __('Window', GB_D_textDomainString) ?></option>
+            <option <?= selected($notice->displayMode, 'bar', false) ?>
+                value="bar"><?= __('Bar', GB_D_textDomainString) ?></option>
         </select>
     </div>
     <div class="clear"></div>
     <div class="misc-pub-section curtime">
-        <span id="timestamp"><b><?= __('Last display date :', $this->textDomainString) ?></b></span>
+        <span id="timestamp"><b><?= __('Last display date :', GB_D_textDomainString) ?></b></span>
         <br/>
-        <input type="text" maxlength="2" size="2" value="<?= $date["day"] ?>" name="GB_D_date[day]" id="jj">
-        <select name="GB_D_date[month]" id="mm">
-            <?= $monthOptionList ?>
+        <input type="text" maxlength="2" size="2" value="<?= $date["day"] ?>" name="noticeExpireDate[day]" id="jj">
+        <select name="noticeExpireDate[month]" id="mm">
+            <?= createMonthOptionList($selectedMonth)?>
         </select>
-        <input type="text" maxlength="4" size="4" value="<?= $date["year"] ?>" name="GB_D_date[year]" id="aa">@<input
-            type="text" maxlength="2" size="2" value="<?= $date["hour"] ?>" name="GB_D_date[hour]" id="hh">:<input
-            type="text" maxlength="2" size="2" value="<?= $date["minute"] ?>" name="GB_D_date[minute]" id="mn">
+        <input type="text" maxlength="4" size="4" value="<?= $date["year"] ?>" name="noticeExpireDate[year]" id="aa">@<input
+            type="text" maxlength="2" size="2" value="<?= $date["hour"] ?>" name="noticeExpireDate[hour]" id="hh">:<input
+            type="text" maxlength="2" size="2" value="<?= $date["minute"] ?>" name="noticeExpireDate[minute]" id="mn">
     </div>
     <div class="misc-pub-section">
-        <span><b><?= __('Type :', $this->textDomainString) ?></b></span>
-        <div class="alert">
-            <input type="radio" <?= checked($this->meta['type'], "", false) ?> name="GB_D_meta[type]"
-                   value=""><?= __('Default', $this->textDomainString) ?>
+        <span><b><?= __('Type :', GB_D_textDomainString) ?></b></span>
+        <div class="alert-default">
+            <input type="radio" <?= checked($notice->type, "", false) ?> name="noticeMetaData[type]"
+                   value=""><?= __('Default', GB_D_textDomainString) ?>
         </div>
-        <div class="alert alert-white">
-            <input type="radio" <?= checked($this->meta['type'], "alert-white", false) ?> name="GB_D_meta[type]"
-                   value="alert-white"><?= __('White', $this->textDomainString) ?>
+        <div class="alert-white">
+            <input type="radio" <?= checked($notice->type, "alert-white", false) ?> name="noticeMetaData[type]"
+                   value="alert-white"><?= __('White', GB_D_textDomainString) ?>
         </div>
-        <div class="alert alert-error">
-            <input type="radio" <?= checked($this->meta['type'], "alert-error", false) ?> name="GB_D_meta[type]"
-                   value="alert-error"><?= __('Error', $this->textDomainString) ?>
+        <div class="alert-error">
+            <input type="radio" <?= checked($notice->type, "alert-error", false) ?> name="noticeMetaData[type]"
+                   value="alert-error"><?= __('Error', GB_D_textDomainString) ?>
         </div>
-        <div class="alert alert-info">
-            <input type="radio" <?= checked($this->meta['type'], "alert-info", false) ?> name="GB_D_meta[type]"
-                   value="alert-info"><?= __('Info', $this->textDomainString) ?>
+        <div class="alert-info">
+            <input type="radio" <?= checked($notice->type, "alert-info", false) ?> name="noticeMetaData[type]"
+                   value="alert-info"><?= __('Info', GB_D_textDomainString) ?>
         </div>
-        <div class="alert alert-success">
-            <input type="radio" <?= checked($this->meta['type'], "alert-success", false) ?> name="GB_D_meta[type]"
-                   value="alert-success"><?= __('Success', $this->textDomainString) ?>
+        <div class="alert-success">
+            <input type="radio" <?= checked($notice->type, "alert-success", false) ?> name="noticeMetaData[type]"
+                   value="alert-success"><?= __('Success', GB_D_textDomainString) ?>
         </div>
         <div class="clear"></div>
     </div>
     <div class="misc-pub-section misc-pub-section-last">
-        <span><b><?= __('No Border :', $this->textDomainString) ?></b></span>
-        <input type="checkbox" name="GB_D_meta[noBorder]" <?= checked($this->meta['noBorder'], 'on', false) ?> />
+        <span><b><?= __('No Border :', GB_D_textDomainString) ?></b></span>
+        <input type="checkbox" name="noticeMetaData[noBorder]" <?= checked(@$notice->postMeta['noBorder'], 'on', false) ?> />
     </div>
     <!--<div class="misc-pub-section misc-pub-section-last">
-        <span><b><?= __('Display Time :', $this->textDomainString) ?></b></span>
-        <input type="text" name="GB_D_meta[displayTime]" value="<?= $this->meta['displayTime'] ?>" />
+        <span><b><?= __('Display Time :', GB_D_textDomainString) ?></b></span>
+        <input type="text" name="noticeMetaData[displayTime]" value="<?= $this->meta['displayTime'] ?>" />
     </div>
     -->
 </form>
