@@ -25,7 +25,7 @@
     line-height: 20px;
 }
 
-.alert p img{
+.alert p img {
     margin: auto;
 }
 
@@ -62,16 +62,17 @@
     color: #3a87ad;
 }
 
-.alert-white{
+.alert-white {
     color: #555555;
     background-color: #ffffff;
     border-color: #EEEEEE;
 }
 
 .alert-white h4,
-.alert-white p{
+.alert-white p {
     color: #000000;
 }
+
 .alert .close {
     position: relative;
     top: 0px;
@@ -79,6 +80,6 @@
     line-height: 20px;
 }
 
-.alert h1, h2, h3, h4, h5, h6 {
+.alert h1, .alert h2, .alert h3, .alerth4, .alert h5, .alerth6 {
     clear: none;
 }
