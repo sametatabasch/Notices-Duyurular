@@ -1,6 +1,13 @@
 .notice-class * ,#GBWindow *{
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
+.noticeContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
 /**
     Duyuruyu kapatmak için kullanılan buton sınıfı
  */
@@ -47,22 +54,6 @@
 	display: inline-block;
 }
 
-.noticeContainer {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-}
-
-/*Admin Panel*/
-.misc-pub-section .alert {
-	margin-bottom: 3px;
-}
-
-.misc-pub-section .alert input {
-	margin-right: 5px;
-	vertical-align: text-bottom;
-}
 
 /*style fo  showWindowTypeNotices*/
 .windowBackground {

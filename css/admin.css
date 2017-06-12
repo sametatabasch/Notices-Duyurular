@@ -32,3 +32,8 @@
 #adminmenu #menu-posts-notice div.wp-menu-image:before {
     content: "\f488";
 }
+
+.misc-pub-section .alert-* input {
+    margin-right: 5px;
+    vertical-align: text-bottom;
+}
