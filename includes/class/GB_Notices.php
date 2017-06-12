@@ -188,7 +188,7 @@ class GB_Notices {
 	 *
 	 */
 	public function markAsRead() {
-		check_ajax_referer( 'getNoticesContainer', 'security' );
+		check_ajax_referer( 'markAsReadNotice', 'security' );
 		if ( is_null( $_POST['noticeId'] ) && ! is_int( $_POST['noticeId'] ) ) {
 			return;
 		} else {
@@ -216,6 +216,8 @@ class GB_Notices {
 			setcookie( $name, true, $expire, '/', $_SERVER['HTTP_HOST'], is_ssl(), true );
 		}
 		echo __( 'Notice mark as read successfully', GB_D_textDomainString );
+		setLog($notice,'markAsRead');
+		wp_die();
 	}
 
 	/**
@@ -241,6 +243,8 @@ class GB_Notices {
 				continue;
 			}
 		}
+
+		setLog(new GB_Notice($noticeId),'unmarkAsRead');
 	}
 
 	/**
