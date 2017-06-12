@@ -87,7 +87,7 @@ class GB_Notice extends GB_Notices {
 			/*
 			 * if notice is not read and everyone can see or user is logged in then set notice html
 			 */
-			if ( ! $this->isRead() && ($this->postMeta['whoCanSee'] == 'everyone' || is_user_logged_in()) ) {
+			if ( ! $this->isRead() && ( $this->postMeta['whoCanSee'] == 'everyone' || is_user_logged_in() ) ) {
 				$this->setHtml();
 			}
 		}
@@ -131,7 +131,7 @@ class GB_Notice extends GB_Notices {
 	 * Set content of Notice to Notice->content
 	 */
 	private function setContent() {
-		$this->content = do_shortcode( wpautop( get_post_field('post_content', $this->id) ) );
+		$this->content = do_shortcode( wpautop( get_post_field( 'post_content', $this->id ) ) );
 	}
 
 	/**
@@ -152,8 +152,9 @@ class GB_Notice extends GB_Notices {
 	 * Set html class of Totice to Notice->htmlClass
 	 */
 	private function setHtmlClass() {
-		$border          = isset($this->postMeta['noBorder']) ? 'noborder' : '';
-		$this->htmlClass = 'alert ' . $this->displayMode . ' ' . $this->type . ' ' . $border;
+		$border          = isset( $this->postMeta['noBorder'] ) ? 'noborder' : '';
+		//todo tüm duyurulara alert ekleme olayını kaldırdım ?
+		$this->htmlClass = '' . $this->displayMode . ' ' . $this->type . ' ' . $border;
 	}
 
 	/**
@@ -170,9 +171,13 @@ class GB_Notice extends GB_Notices {
 
 		$this->html = '
 		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '">
-    		<button type="button" class="close">&times;</button>
-    		' . $this->title . '
-    		' . $this->content . '
+    		<div class="window-content">
+    			' . $this->title . '
+				<div>
+    				' . $this->content . '
+    				<button type="button" class="close">&times;</button>
+    			</div>
+			</div>
 		</div>';
 
 	}
@@ -217,6 +222,6 @@ class GB_Notice extends GB_Notices {
 		if ( $this->postMeta['post_type'] === 'notice' ) {
 			wp_trash_post( $this->id );
 		}
-		setLog($this);
+		setLog( $this );
 	}
 }

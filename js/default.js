@@ -64,13 +64,24 @@
         function reLocate() {
             $('#windowBox').imagesLoaded().done(function (instance) {
                 var maxHeight = window.innerHeight - 80; //
-                $('#windowBox .window *').css({'max-height': maxHeight})
+                //$('#windowBox .window *').css({'max-height': maxHeight});//todo window un altındaki tüm nesnelere yapmak mantıklı değil.
                 var top = (window.innerHeight - notices.eq(activeIndex).height()) / 2;
                 var maxWidth = window.innerWidth - 115;
                 $('#windowBox').css({'top': top, 'max-width': maxWidth});
-                $('#windowBox .window').css({'max-width': maxWidth});
+                //$('#windowBox .window').css({'max-width': maxWidth});// todo yeni planımda window sınıfının boyutu değiştirilmeyecek
             });
         }
+
+        /**
+         * body etiketi içine duyuruların gözükmesini sağlayan arka plan ekleniyor.
+         */
+        $('body').append(
+            '<div id="GBWindow">' +
+            '<div class="windowBackground"></div>' +
+            '<div id="windowBox">' +
+            '</div>' +
+            '</div>'
+        );
 
         /**
          * windowBox id sine sahip nesnenin genişliğini duyurunun genişliğine ayarlayıp duyuruyu windowBox nesnesine ekler
@@ -85,22 +96,13 @@
                 })
                 .done(function (instance) {
                     $('#noticeLoading', '#windowBox').remove();
-                    $('#windowBox').width(widths[activeIndex]).append(notices.eq(activeIndex));
+                    $('#windowBox').append(notices.eq(activeIndex));
                     reLocate();
                     notices.eq(activeIndex).fadeIn();
                 })
         }
 
-        /**
-         * body etiketi içine duyuruların gözükmesini sağlayan arka plan ekleniyor.
-         */
-        $('body').append(
-            '<div id="GBWindow">' +
-            '<div class="windowBackground"></div>' +
-            '<div id="windowBox">' +
-            '</div>' +
-            '</div>'
-        );
+
         /**
          * eğer birden fazla duyuru varsa ileri ve geri butonları ekleniyor
          */
@@ -147,11 +149,13 @@
                 var currentId = notices.eq(activeIndex).attr('id');
                 var reg = /\d/g;
                 currentId = currentId.match(reg).join(''); // sadece sayı kısmı alınıyor
-                //$.post('', {GB_D_noticeId: +currentId}, 'json'); //okundu olarak işaretleme yapılıyor
+                /*
+                 * Send mark as read request
+                 */
                 $.post(ajaxData.ajaxurl, {
                     noticeId: currentId,
                     action: 'markAsReadNotice',
-                    security: ajaxData.security
+                    security: ajaxData.securityFor_markAsReadNotice
                 }, function (response) {
                     console.log(response);
                 });
@@ -257,7 +261,7 @@ jQuery(document).ready(function ($) {
     $.ajax({
         type: "post",
         url: ajaxData.ajaxurl,
-        data: {action: "getNoticesContainer", security: ajaxData.security},
+        data: {action: "getNoticesContainer", security: ajaxData.securityFor_getNoticesContainer},
         beforeSend: function () {
         },
         complete: function () {
