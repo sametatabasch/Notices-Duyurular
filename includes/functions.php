@@ -35,18 +35,21 @@ function dateStringToArray( $dateString = null ) {
  * @param $action string
  */
 function setLog( $notice, $action = '' ) {
-	$data = "
+	if ( true === WP_DEBUG ) {
+		$data = "
         {
-            'ip': " . $_SERVER['REMOTE_ADDR'] . ",
-            'user_agent': " . $_SERVER['HTTP_USER_AGENT'] . ",
-            'date': " . date_i18n( 'Y-m-d H:i:s' ) . ",
-            'noticeId': " . $notice->id . ",
-            'noticeTitle': $notice->title,
-            'expireDate': " . $notice->expireDate . ",
-            'logedinUser': " . wp_get_current_user()->user_login . ",
-            'action': $action
+            'ip': '" . $_SERVER['REMOTE_ADDR'] . "',
+            'user_agent': '" . $_SERVER['HTTP_USER_AGENT'] . "',
+            'date': '" . date_i18n( 'Y-m-d H:i:s' ) . "',
+            'noticeId': '" . $notice->id . "',
+            'noticeTitle':'" . $notice->title . "',
+            'noticeContent:'" . $notice->content . "',
+            'expireDate': '" . $notice->expireDate . "',
+            'logedinUser': '" . wp_get_current_user()->user_login . "',
+            'action':'" . $action . "'
         }";
-	file_put_contents( GB_Notices_Plugin::$path . "/log.txt", $data, FILE_APPEND );
+		file_put_contents( GB_Notices_Plugin::$path . "/log.txt", $data, FILE_APPEND );
+	}
 }
 
 /**
