@@ -29,11 +29,16 @@
          * @type {*|jQuery|HTMLElement}
          */
         var isShowAgain = $(
-            '<div class="alert window alert-info" style="width: 100%">' +
+            '<div id="closeDialog" class="window" data-size="small">'+
+            '<div class="window-content">'+
+            '<div>'+
             '<p>' + closeMessage.content + '</p>' +
-            '<div id="closeButtons" class="center">' +
-            '<button id="dontShow" class="btn">' + closeMessage.dontShow + '</button> - <button id="closeNotice" class="btn">' + closeMessage.close + '</button>' +
-            '</div>' +
+            '<div class="center" style="width: 75%"> '+
+            '<button id="dontShow">' + closeMessage.dontShow + '</button>  <button id="closeNotice">' + closeMessage.close + '</button>' +
+            '<div style="clear: both"></div> '+
+            '</div>'+
+            '</div>'+
+            '</div>'+
             '</div>');
         var isBackgrounClicked = false;
         var isClickBackground = $(
@@ -138,7 +143,7 @@
          */
         $('.close').click(function () {
             notices.eq(activeIndex).replaceWith(isShowAgain);
-            $('#windowBox').width(350);
+            $('#windowBox').width(500);
             isShowAgain.show();
             reLocate();
             if (notices.length > 1) {
