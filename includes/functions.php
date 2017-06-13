@@ -31,6 +31,7 @@ function dateStringToArray( $dateString = null ) {
 }
 
 /**
+ * if wordress in debuh mode write to log file log data
  * @param $notice GB_Notice
  * @param $action string
  */
