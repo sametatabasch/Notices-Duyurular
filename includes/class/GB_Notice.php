@@ -168,9 +168,9 @@ class GB_Notice extends GB_Notices {
 		$this->setTitle();
 		$this->setContent();
 
-
+		//todo data-size="medium"
 		$this->html = '
-		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '">
+		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" data-size="medium">
     		<div class="window-content">
     			' . $this->title . '
 				<div>
@@ -203,6 +203,7 @@ class GB_Notice extends GB_Notices {
 
 	/**
 	 * Check is notice expired
+	 * todo 2iki saat zaman farkı oluyor ???
 	 * @return bool
 	 */
 	public function isExpired() {
@@ -219,9 +220,9 @@ class GB_Notice extends GB_Notices {
 	 * Send notice to trash
 	 */
 	private function sendToTrash() {
-		if ( $this->postMeta['post_type'] === 'notice' ) {
+		if ( get_post_type( $this->id ) === 'notice' ) {
 			wp_trash_post( $this->id );
 		}
-		setLog( $this );
+		setLog( $this, 'sendToTrash' );
 	}
 }

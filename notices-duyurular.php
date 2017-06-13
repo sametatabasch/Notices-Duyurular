@@ -151,7 +151,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			 */
 			if ( empty( $notice->expireDate ) ) {
 				$date          = dateStringToArray();
-				$selectedMonth = $date['month'] ++; // ön tanımlı tarih o anın bir ay sonrası
+				$selectedMonth = zeroise(intval($date['month'])+1,2); // ön tanımlı tarih o anın bir ay sonrası
 			} else {
 				$date          = dateStringToArray( $notice->expireDate );
 				$selectedMonth = $date['month'];
