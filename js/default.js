@@ -1,236 +1,14 @@
-(function ($) {
-
-    /**
-     * jQuery extention for show window type notice like a modal
-     * @param parameters
-     * @constructor
-     */
-    $.fn.GBWindow = function (parameters) {
-        var param = $.extend({
-            'noticesClass': 'window'
-        }, parameters);
-
-        var notices = $('.' + param.noticesClass, this).hide();
-        /**
-         *
-         * @type {Array}
-         */
-        var widths = [];
-        /*
-         * set notices widths
-         */
-        notices.each(function () {
-            widths.push($(this).width());
-        });
-        var activeIndex = 0;
-        /**
-         * Duyuru kapatılmadan önce tekrar gösterilip gösterilmeyeceğinin belirelemek için gösterilecek mesaj
-         *
-         * @type {*|jQuery|HTMLElement}
-         */
-        var isShowAgain = $(
-            '<div id="closeDialog" class="window" data-size="small">'+
-            '<div class="window-content">'+
-            '<div>'+
-            '<p>' + closeMessage.content + '</p>' +
-            '<div class="center" style="width: 75%"> '+
-            '<button id="dontShow">' + closeMessage.dontShow + '</button>  <button id="closeNotice">' + closeMessage.close + '</button>' +
-            '<div style="clear: both"></div> '+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>');
-        var isBackgrounClicked = false;
-        var isClickBackground = $(
-            '<div class="alert window alert-error" style="width: 100%">' +
-            '<p>' + backgroundClickMessage.content + '</p>' +
-            '</div>');
-        /**
-         * Duyuru içeriğindeki resim yüklenirken gösterilecek animasyon
-         *
-         * @type {*|jQuery|HTMLElement}
-         */
-        var loadingAnimation =
-            '<div id="noticeLoading" class="spinner">' +
-            '		<div class="bounce1"></div>' +
-            '		<div class="bounce2"></div>' +
-            '		<div class="bounce3"></div>' +
-            '</div>';
-        /**
-         * ileri  ve geri  butonları
-         * @type {*|jQuery|HTMLElement}
-         */
-        var previousButton = $('<a title="Previous" class="window-nav window-nav-previous" href="javascript:;"><span></span></a>');
-        var nextButton = $('<a title="Next" class="window-nav window-nav-next" href="javascript:;"><span></span></a>');
-
-        /**
-         * bir mili saniye erteleme sonrası sayfa boyutlarına göre maksimum ve minimum boyutları belirler ve uygular
-         */
-        function reLocate() {
-            $('#windowBox').imagesLoaded().done(function (instance) {
-                var maxHeight = window.innerHeight - 80; //
-                //$('#windowBox .window *').css({'max-height': maxHeight});//todo window un altındaki tüm nesnelere yapmak mantıklı değil.
-                var top = (window.innerHeight - notices.eq(activeIndex).height()) / 2;
-                var maxWidth = window.innerWidth - 115;
-                $('#windowBox').css({'top': top, 'max-width': maxWidth});
-                //$('#windowBox .window').css({'max-width': maxWidth});// todo yeni planımda window sınıfının boyutu değiştirilmeyecek
-            });
-        }
-
-        /**
-         * body etiketi içine duyuruların gözükmesini sağlayan arka plan ekleniyor.
-         */
-        $('body').append(
-            '<div id="GBWindow">' +
-            '<div class="windowBackground"></div>' +
-            '<div id="windowBox">' +
-            '</div>' +
-            '</div>'
-        );
-
-        /**
-         * windowBox id sine sahip nesnenin genişliğini duyurunun genişliğine ayarlayıp duyuruyu windowBox nesnesine ekler
-         * konumlandırır ve fade in animasyonu ile gösterir
-         */
-        function showNotice() {
-            $('#windowBox').imagesLoaded()
-                .progress(function (instance, image) {
-                    if (!$('div').is('#noticeLoading')) {
-                        $('#windowBox').append(loadingAnimation);
-                    }
-                })
-                .done(function (instance) {
-                    $('#noticeLoading', '#windowBox').remove();
-                    $('#windowBox').append(notices.eq(activeIndex));
-                    reLocate();
-                    notices.eq(activeIndex).fadeIn();
-                })
-        }
-
-
-        /**
-         * eğer birden fazla duyuru varsa ileri ve geri butonları ekleniyor
-         */
-        if (notices.length > 1) {
-
-            $('#windowBox').append(nextButton);
-            $('#windowBox').append(previousButton);
-            /**
-             * İleri butonuna tıklandığında aktif index numarasını bir artırarak sonraki duyuruyu gösterir
-             */
-            nextButton.click(function () {
-                notices.eq(activeIndex).fadeOut(function () {
-                    activeIndex++;
-                    if (activeIndex > notices.length - 1) activeIndex = 0;
-                    showNotice()
-                });
-            });
-            /**
-             * Geri butonuna basıldığında aktif index numarasını bir azaltıp önceki duyuruyu gösterir
-             */
-            previousButton.click(function () {
-                notices.eq(activeIndex).fadeOut(function () {
-                    activeIndex--;
-                    if (activeIndex < 0) activeIndex = notices.length - 1;
-                    showNotice()
-                });
-            });
-
-        }
-        /**
-         *  kapat butonuna basıldığında bir daha gösterilsin mi uyarısı gösterir ve sonrasında gelen yanıta göre
-         *  duyuruyu kapatır ve varsa sonraki duyuruyu gösterir
-         */
-        $('.close').click(function () {
-            notices.eq(activeIndex).replaceWith(isShowAgain);
-            $('#windowBox').width(500);
-            isShowAgain.show();
-            reLocate();
-            if (notices.length > 1) {
-                nextButton.hide();
-                previousButton.hide();
-            }
-            $('#closeButtons #dontShow').click(function () {
-                var currentId = notices.eq(activeIndex).attr('id');
-                var reg = /\d/g;
-                currentId = currentId.match(reg).join(''); // sadece sayı kısmı alınıyor
-                /*
-                 * Send mark as read request
-                 */
-                $.post(ajaxData.ajaxurl, {
-                    noticeId: currentId,
-                    action: 'markAsReadNotice',
-                    security: ajaxData.securityFor_markAsReadNotice
-                }, function (response) {
-                    console.log(response);
-                });
-                close();
-            });
-            $('#closeButtons #closeNotice').click(function () {
-                close();
-            });
-            /**
-             * duyuruyu kapatıp varsa sonraki duyuruyu gösterir
-             */
-            function close() {
-                notices.eq(activeIndex).remove();
-                notices.splice(activeIndex, 1);// duyurulardan kapatılan duyuru kaldırılıyor
-                if (notices.length > 0) {
-                    if (notices.length == 1) {// eğer tek bir duyuru kaldıysa ileri ve geri butonları kaldırılıyor.
-                        nextButton.remove();
-                        previousButton.remove();
-                    } else {
-                        nextButton.show();
-                        previousButton.show();
-                    }
-
-                    activeIndex++;
-                    if (activeIndex > notices.length - 1) activeIndex = 0;
-                    isShowAgain.remove();
-                    showNotice()
-
-                } else {//eğer duyuru kalmadıysa duyuru penceresi kapatılıyor.
-                    $('#GBWindow').remove();
-                }
-            }
-        });
-
-        $('.windowBackground').click(function () {
-            if (!isBackgrounClicked) {
-                isBackgrounClicked = true;
-                notices.eq(activeIndex).replaceWith(isClickBackground);
-                $('#windowBox').width(350);
-                isClickBackground.show();
-                nextButton.hide();
-                previousButton.hide();
-                reLocate();
-                setTimeout(function () {
-                    $('#GBWindow').fadeOut();
-                }, 5500);
-            }
-        });
-
-        /**
-         * ekran yeniden boyutlandırıldığında duyuruyu sayfada yeniden konumlandırır
-         */
-        $(window).resize(function () {
-            reLocate();
-        });
-
-        showNotice();
-    };
-
-})(jQuery);
-
 jQuery(document).ready(function ($) {
     /**
      * if page contain admin bar, set noticeContainer top property with admin bar height
      */
     function adjustNoticeContainerCSSTop() {
+        console.log('default adjustNoticeContainerCSSTop');
         $('.noticeContainer').css({'top': $('#wpadminbar').height()});
     }
 
     function handleCloseButtonOfBarNotice() {
+        console.log('default handleCloseButtonOfBarNotice');
         $('.bar .close').click(function () {
             console.log('bar Close tıklandı');
             //Aktif duyurunun id bilgisi  alınıyor
@@ -239,12 +17,12 @@ jQuery(document).ready(function ($) {
             var reg = /\d/g;
             currentId = currentId.match(reg).join(''); //id  değerinin sadece sayı olduğu doğrulanıyor.
 
-            // çoklu  dil desteği için closeMessage nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle
+            // çoklu  dil desteği için noticeLocalizeMessage nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle
             var icerik =
                 '<div class="bar alert alert-info">' +
                 '<h4></h4>' +
-                '<p>' + closeMessage.content + '</p>' +
-                '<button id="yes" class="btn">' + closeMessage.dontShow + '</button> - <button id="no" class="btn">' + closeMessage.close + '</button>' +
+                '<p>' + noticeLocalizeMessage.closeMessage + '</p>' +
+                '<button id="yes" class="btn">' + noticeLocalizeMessage.dontShow + '</button> - <button id="no" class="btn">' + noticeLocalizeMessage.close + '</button>' +
                 '</div>';
 
             $('.noticeContainer').find('#bar-' + currentId).replaceWith(icerik);
@@ -265,14 +43,13 @@ jQuery(document).ready(function ($) {
      */
     $.ajax({
         type: "post",
-        url: ajaxData.ajaxurl,
-        data: {action: "getNoticesContainer", security: ajaxData.securityFor_getNoticesContainer},
+        url: ajaxData_default.ajaxurl,
+        data: {action: "getNoticesContainer", security: ajaxData_default.securityFor_getNoticesContainer},
         beforeSend: function () {
         },
         complete: function () {
         },
         success: function (response) {
-            console.log("ajax başarılı cevap:" + response);
             $("body").append(response.noticesContainer);
             if (response.isThereWindowModeNotice) {
                 $(".noticeContainer").GBWindow();

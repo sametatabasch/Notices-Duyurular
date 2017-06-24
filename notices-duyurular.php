@@ -197,9 +197,18 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 				array( 'jquery' )
 			);
 			wp_register_script(
-				'notice_script',
+				'notice_script_window.class',
+				plugins_url( 'js/window.class.js', __FILE__ ),
+				array( 'jquery' )
+			);
+			wp_register_script(
+				'notice_script_GBWindow',
+				plugins_url( 'js/GBWindow.js', __FILE__ ),
+				array( 'jquery', 'imagesloaded_script','notice_script_window.class' ));
+			wp_register_script(
+				'notice_script_default',
 				plugins_url( 'js/default.js', __FILE__ ),
-				array( 'jquery', 'imagesloaded_script' )
+				array( 'jquery', 'imagesloaded_script','notice_script_GBWindow','notice_script_window.class' )
 			);
 			/* Register Styles */
 			wp_register_style(
@@ -230,21 +239,35 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 
 			/* Add registered script to wordpress script queue  */
 			wp_enqueue_script( 'jquery' );
-			wp_enqueue_script( 'notice_script' );
 			wp_enqueue_script( 'imagesloaded_script' );
-			$this->addLanguageSupportToScript();
+			wp_enqueue_script( 'notice_script_window.class' );
+			wp_enqueue_script( 'notice_script_GBWindow' );
+			wp_enqueue_script( 'notice_script_default' );
 
+			$this->addLanguageSupportToScript();
+			$ajaxurl= admin_url( 'admin-ajax.php' );
 			wp_localize_script(
-				'notice_script',
-				'ajaxData',
+				'notice_script_default',
+				'ajaxData_default',
 				array(
 					// URL to wp-admin/admin-ajax.php to process the request
-					'ajaxurl'  => admin_url( 'admin-ajax.php' ),
+					'ajaxurl'  => $ajaxurl,
 					// generate a nonce with a unique ID "myajax-post-comment-nonce"
 					// so that you can check it later when an AJAX request is sent
 					'securityFor_getNoticesContainer' => wp_create_nonce( 'getNoticesContainer' ),
+				)
+			);
+			wp_localize_script(
+				'notice_script_GBWindow',
+				'ajaxData_GBWindow',
+				array(
+					// URL to wp-admin/admin-ajax.php to process the request
+					'ajaxurl'  => $ajaxurl,
+					// generate a nonce with a unique ID "myajax-post-comment-nonce"
+					// so that you can check it later when an AJAX request is sent
 					'securityFor_markAsReadNotice' => wp_create_nonce( 'markAsReadNotice' )
-				) );
+				)
+			);
 		}
 
 		/**
@@ -258,16 +281,14 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			 * $name   -> Dizeleri  taşıyan java nesnesinin  adı
 			 * $data   -> Dil desteği  sağlanan dizeler
 			 */
-			$closeMessage_translation_array           = array(
-				'content'  => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', GB_D_textDomainString ),
+			$noticeLocalizeMessage_translation_array           = array(
+				'closeMessage'  => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', GB_D_textDomainString ),
 				'dontShow' => __( 'Do not show again', GB_D_textDomainString ),
-				'close'    => __( 'Close', GB_D_textDomainString )
+				'close'    => __( 'Close', GB_D_textDomainString ),
+				'backgroundClickMessage' => __( 'if you close notices with click background, you see notices again and again. İf you dont want see notices again, close notices with close button.', GB_D_textDomainString )
 			);
-			$backgroundClickMessage_translation_array = array(
-				'content' => __( 'if you close notices with click background, you see notices again and again. İf you dont want see notices again, close notices with close button.', GB_D_textDomainString )
-			);
-			wp_localize_script( 'notice_script', 'closeMessage', $closeMessage_translation_array );
-			wp_localize_script( 'notice_script', 'backgroundClickMessage', $backgroundClickMessage_translation_array );
+			wp_localize_script( 'notice_script_GBWindow', 'noticeLocalizeMessage', $noticeLocalizeMessage_translation_array );
+
 		}
 
 	}

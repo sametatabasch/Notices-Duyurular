@@ -99,8 +99,19 @@
     margin: 0 auto;
     padding: 0;
     max-height: 95%;
-    position: relative;
-    width: 45%;
+    position: fixed;
+}
+
+#windowBox.large {
+    width: 900px;
+}
+
+#windowBox.medium {
+    width: 600px;
+}
+
+#windowBox.small {
+    width: 350px;
 }
 
 .window {
@@ -222,9 +233,7 @@
     text-align: center;
 }
 
-#closeDialog .window-content button {
-    position: static;
-    float: left;
+#closeDialog .window-footer button {
     border: none;
     padding: 0.6em 1.2em;
     font-family: 'Lato', Calibri, Arial, sans-serif;
@@ -232,18 +241,27 @@
     text-transform: uppercase;
     cursor: pointer;
     border-radius: 2px;
-    display: block;
+    display: inline-block;
     margin: 20px 5px;
     font-size: 0.8em;
     /* renk */
     background: #ebebeb;
     color: #333;
+    /*----------*/
+    transition: background-color 0.3s linear 0s;
+}
+
+#closeDialog .window-footer button:hover {
+    background: #a4a4a4;
+    color: #555;
 }
 
 .window-content button:hover {
     background: #a4a4a4;
     color: #555;
 }
+
+
 
 .noborder, .noborder * {
     margin: 0 !important;
