@@ -358,11 +358,13 @@
          *
          */
         function locateNotice() {
-            var maxHeight = window.innerHeight - 80;
+            var maxHeight = window.innerHeight - 20;
             var top = (window.innerHeight - _activeWindowNoticeJqueryObject.height()) / 2;
+            top = top < 15 ? 15 : top;
             var left = (window.innerWidth - _activeWindowNoticeJqueryObject.width()) / 2; //todo width() ve height() fonksiyonları burada çalışıyorda window.class da neden çalışmıyor tekrar denenecek.
             var maxWidth = window.innerWidth - 115;
             _windowBox.css({'top': top, 'left': left, 'max-width': maxWidth, 'max-height': maxHeight});
+            _activeWindowNoticeJqueryObject.css({'max-height': maxHeight});
         }
 
         /**

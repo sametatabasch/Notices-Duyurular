@@ -86,7 +86,8 @@ class GB_Notices {
 		$arg = array(
 			'numberposts' => - 1,
 			'post_type'   => 'notice',
-			'post_status' => 'publish'
+			'post_status' => 'publish',
+			'order'       => 'ASC'
 
 		);
 
@@ -117,10 +118,10 @@ class GB_Notices {
 		if ( $noticePostType != 'notice' ) {
 			return;
 		}
-		if(isset($_POST['noticeMetaData'])){
-			$this->noticeMeta                    = $_POST['noticeMetaData'];
+		if ( isset( $_POST['noticeMetaData'] ) ) {
+			$this->noticeMeta = $_POST['noticeMetaData'];
 		}
-		if(isset($_POST['noticeExpireDate'])){
+		if ( isset( $_POST['noticeExpireDate'] ) ) {
 			$noticeExpireDate                    = $_POST['noticeExpireDate'];
 			$this->noticeMeta['lastDisplayDate'] = $noticeExpireDate['year'] . '-' . $noticeExpireDate['month'] . '-' . $noticeExpireDate['day'] . ' ' . $noticeExpireDate['hour'] . ':' . $noticeExpireDate['minute'] . ':00';
 		}
@@ -139,10 +140,10 @@ class GB_Notices {
 		if ( $noticePostType != 'notice' ) {
 			return;
 		}
-		if(isset($_POST['noticeMetaData'])){
-			$this->noticeMeta                    = $_POST['noticeMetaData'];
+		if ( isset( $_POST['noticeMetaData'] ) ) {
+			$this->noticeMeta = $_POST['noticeMetaData'];
 		}
-		if(isset($_POST['noticeExpireDate'])){
+		if ( isset( $_POST['noticeExpireDate'] ) ) {
 			$noticeExpireDate                    = $_POST['noticeExpireDate'];
 			$this->noticeMeta['lastDisplayDate'] = $noticeExpireDate['year'] . '-' . $noticeExpireDate['month'] . '-' . $noticeExpireDate['day'] . ' ' . $noticeExpireDate['hour'] . ':' . $noticeExpireDate['minute'] . ':00';
 		}
@@ -216,7 +217,7 @@ class GB_Notices {
 			setcookie( $name, true, $expire, '/', $_SERVER['HTTP_HOST'], is_ssl(), true );
 		}
 		echo __( 'Notice mark as read successfully', GB_D_textDomainString );
-		setLog($notice,'markAsRead');
+		setLog( $notice, 'markAsRead' );
 		wp_die();
 	}
 
@@ -244,12 +245,15 @@ class GB_Notices {
 			}
 		}
 
-		setLog(new GB_Notice($noticeId),'unmarkAsRead');
+		setLog( new GB_Notice( $noticeId ), 'unmarkAsRead' );
 	}
 
 	/**
-	 * Create notice container with availeble Notices
+	 * Create notice container with available Notices
 	 * this function created for ajax response
+	 * todo window type duyuruların her biri tek tek ajax ile çağırılacak.Bu fonksiyon isThereWindowModeNotice değişkenine ek olarak window type duyuruların html çıktılarını dizi olarak verecek
+	 * todo bu dizi kullanılarak javascript tarafında _windowObjects oluşturulacak.
+	 * todo _windowBox içerisine duyuru eklendiğinde _windowbox.imagesloaded eklentisi çalıştırılacak. bu şekilde imagesloaded uygulaması amacına uygun kullanılabilecek düşüncesindeyim.
 	 */
 	public function createNoticesContainerHtml() {
 		if ( $this->isThereAnyNotice() ) {
@@ -269,7 +273,9 @@ class GB_Notices {
 			}
 
 			$noticesHtmlContainer .= '</div>';
-			wp_send_json(array('noticesContainer'=>$noticesHtmlContainer,'isThereWindowModeNotice'=>$isThereWindowModeNotice));
+			wp_send_json( array( 'noticesContainer'        => $noticesHtmlContainer,
+			                     'isThereWindowModeNotice' => $isThereWindowModeNotice
+			) );
 		}
 	}
 }

@@ -52,6 +52,13 @@ class GB_Notice extends GB_Notices {
 	 * @var string $type
 	 */
 	public $type;
+
+	/**
+	 * Size of Notice which detected max and min width of notice
+	 * @var string $size
+	 */
+	public $size;
+
 	/**
 	 * display mode of Notice window or bar
 	 * @var string $displayMode
@@ -128,6 +135,13 @@ class GB_Notice extends GB_Notices {
 	}
 
 	/**
+	 * Set size of Notice to Notice->size
+	 */
+	public function setSize() {
+		$this->size = $this->postMeta['size'];
+	}
+
+	/**
 	 * Set content of Notice to Notice->content
 	 */
 	private function setContent() {
@@ -152,7 +166,7 @@ class GB_Notice extends GB_Notices {
 	 * Set html class of Totice to Notice->htmlClass
 	 */
 	private function setHtmlClass() {
-		$border          = isset( $this->postMeta['noBorder'] ) ? 'noborder' : '';
+		$border = isset( $this->postMeta['noBorder'] ) ? 'noborder' : '';
 		//todo tüm duyurulara alert ekleme olayını kaldırdım ?
 		$this->htmlClass = '' . $this->displayMode . ' ' . $this->type . ' ' . $border;
 	}
@@ -163,14 +177,14 @@ class GB_Notice extends GB_Notices {
 	private function setHtml() {
 		$this->setDisplayMode();
 		$this->setType();
+		$this->setSize();
 		$this->setHtmlId();//must after setDisplayMode();
 		$this->setHtmlClass();//must after setDisplayMode();
 		$this->setTitle();
 		$this->setContent();
 
-		//todo data-size="medium"
 		$this->html = '
-		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" data-size="medium">
+		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" data-size="'.$this->size.'">
     		<div class="window-content">
     			' . $this->title . '
 				<div>

@@ -98,20 +98,34 @@
     z-index: 2147483647;
     margin: 0 auto;
     padding: 0;
-    max-height: 95%;
     position: fixed;
+
+}
+
+#windowBox.xLarge {
+    width: 90%;
 }
 
 #windowBox.large {
-    width: 900px;
+    width: 75%;
 }
 
 #windowBox.medium {
-    width: 600px;
+    width: 50%;
 }
 
 #windowBox.small {
-    width: 350px;
+    width: 35%;
+}
+
+@media screen and (max-width: 360px) {
+    #windowBox.small {
+        width: 60%;
+    }
+
+    #windowBox.medium {
+        width: 60%;
+    }
 }
 
 .window {
@@ -263,23 +277,23 @@
 
 
 
-.noborder, .noborder * {
+.noborder {
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
 }
-
-.noborder .close {
-    position: absolute;
-    right: -20px;
-    opacity: 1;
-    color: #fff;
+.noborder .window-content > div {
+    padding: 0;
+    margin: 0;
+}
+.noborder .window-content > div p {
+    padding: 0;
+    margin: 0;
 }
 
-/*todo silinecek */
-#GBWindow {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 2147483645;
+.noborder .close {
+    opacity: 1;
+    color: #fff;
+    font-weight: bold;
+    font-size: 110%;
 }
