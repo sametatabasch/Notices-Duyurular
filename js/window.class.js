@@ -26,7 +26,7 @@
          * window mode notice size cilass data
          * @type {string}
          */
-        this._sizeClass = 'medium';
+        this._size = 'medium';
 
         /**
          * close button of window mode notice
@@ -43,13 +43,22 @@
         this._postId = 0;
 
         /**
+         * Color of notice
+         * notice-white | notice-red | notice-green | notice-blue
+         * @type {string}
+         * @private
+         */
+        this._color = 'notice-white';
+
+        /**
          *
          * @private
          */
         this._construct = function () {
             _this._jObject = windowObject;
-            _this._sizeClass = _this._jObject.attr('data-size');
+            setSize();
             setPostId();
+            setColor();
         };
 
         function setPostId() {
@@ -61,8 +70,15 @@
                     console.log(_this._postId);
                 }
             }
+        }
 
+        function setSize() {
+            _this._size = _this._jObject.attr('data-size');
+        }
 
+        function setColor() {
+            var color = _this._jObject.attr('data-color');
+            _this._color = typeof color === 'undefined' ? 'notice-white' : color;
         }
 
         _this._construct();

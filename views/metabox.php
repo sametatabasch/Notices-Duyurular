@@ -32,27 +32,24 @@
             type="text" maxlength="2" size="2" value="<?= $date["hour"] ?>" name="noticeExpireDate[hour]" id="hh">:<input
             type="text" maxlength="2" size="2" value="<?= $date["minute"] ?>" name="noticeExpireDate[minute]" id="mn">
     </div>
+
     <div class="misc-pub-section">
         <span><b><?= __('Type :', GB_D_textDomainString) ?></b></span>
-        <div class="alert-default">
-            <input type="radio" <?= checked($notice->type, "", false) ?> name="noticeMetaData[type]"
-                   value=""><?= __('Default', GB_D_textDomainString) ?>
+        <div class="notice-white">
+            <input type="radio" <?= checked($notice->color, "notice-white", false) ?> name="noticeMetaData[color]"
+                   value="notice-white"><?= __('White', GB_D_textDomainString) ?>
         </div>
-        <div class="alert-white">
-            <input type="radio" <?= checked($notice->type, "alert-white", false) ?> name="noticeMetaData[type]"
-                   value="alert-white"><?= __('White', GB_D_textDomainString) ?>
+        <div class="notice-red">
+            <input type="radio" <?= checked($notice->color, "notice-red", false) ?> name="noticeMetaData[color]"
+                   value="notice-red"><?= __('Red', GB_D_textDomainString) ?>
         </div>
-        <div class="alert-error">
-            <input type="radio" <?= checked($notice->type, "alert-error", false) ?> name="noticeMetaData[type]"
-                   value="alert-error"><?= __('Error', GB_D_textDomainString) ?>
+        <div class="notice-blue">
+            <input type="radio" <?= checked($notice->color, "notice-blue", false) ?> name="noticeMetaData[color]"
+                   value="notice-blue"><?= __('Blue', GB_D_textDomainString) ?>
         </div>
-        <div class="alert-info">
-            <input type="radio" <?= checked($notice->type, "alert-info", false) ?> name="noticeMetaData[type]"
-                   value="alert-info"><?= __('Info', GB_D_textDomainString) ?>
-        </div>
-        <div class="alert-success">
-            <input type="radio" <?= checked($notice->type, "alert-success", false) ?> name="noticeMetaData[type]"
-                   value="alert-success"><?= __('Success', GB_D_textDomainString) ?>
+        <div class="notice-green">
+            <input type="radio" <?= checked($notice->color, "notice-green", false) ?> name="noticeMetaData[color]"
+                   value="notice-green"><?= __('Green', GB_D_textDomainString) ?>
         </div>
         <div class="clear"></div>
     </div>

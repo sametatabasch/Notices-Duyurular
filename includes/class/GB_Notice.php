@@ -48,10 +48,11 @@ class GB_Notice extends GB_Notices {
 	public $htmlId;
 
 	/**
-	 * Type of Duyuru '', alert-white, alert-error, alert-info, alert-success
-	 * @var string $type
+	 * Type of Duyuru
+	 * notice-white | notice-red | notice-green | notice-blue
+	 * @var string $color
 	 */
-	public $type;
+	public $color;
 
 	/**
 	 * Size of Notice which detected max and min width of notice
@@ -121,10 +122,11 @@ class GB_Notice extends GB_Notices {
 	}
 
 	/**
-	 * Set Notice type to Notice->type
+	 * Set Notice type to Notice->color
+	 * notice-white | notice-red | notice-green | notice-blue
 	 */
-	private function setType() {
-		$this->type = $this->postMeta['type'];
+	private function setColor() {
+		$this->color = $this->postMeta['color'];
 	}
 
 	/**
@@ -167,8 +169,7 @@ class GB_Notice extends GB_Notices {
 	 */
 	private function setHtmlClass() {
 		$border = isset( $this->postMeta['noBorder'] ) ? 'noborder' : '';
-		//todo tüm duyurulara alert ekleme olayını kaldırdım ?
-		$this->htmlClass = '' . $this->displayMode . ' ' . $this->type . ' ' . $border;
+		$this->htmlClass = '' . $this->displayMode . ' .md-effect-2 ' . $border;
 	}
 
 	/**
@@ -176,7 +177,7 @@ class GB_Notice extends GB_Notices {
 	 */
 	private function setHtml() {
 		$this->setDisplayMode();
-		$this->setType();
+		$this->setColor();
 		$this->setSize();
 		$this->setHtmlId();//must after setDisplayMode();
 		$this->setHtmlClass();//must after setDisplayMode();
@@ -184,7 +185,7 @@ class GB_Notice extends GB_Notices {
 		$this->setContent();
 
 		$this->html = '
-		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" data-size="'.$this->size.'">
+		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" data-size="'.$this->size.'" data-color="' . $this->color . '">
     		<div class="window-content">
     			' . $this->title . '
 				<div>

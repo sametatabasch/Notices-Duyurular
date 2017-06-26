@@ -87,7 +87,6 @@
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
-    background-color: rgba(0, 0, 0, 0.85);
 }
 
 #windowBox {
@@ -135,11 +134,8 @@
     z-index: 2147483646;
     display: none;
     width: 100%;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     height: auto;
     text-align: left;
-    background-color: #fff;
-    color: #000;
     font-family: 'Lato', Calibri, Arial, sans-serif;
     font-size: 100%;
     padding: 0;
@@ -168,9 +164,6 @@
     margin: 0;
     font-weight: 300;
     font-size: 1.15em;
-
-    color: #000;
-    background: #fff;
 }
 
 .window-content > div p {
@@ -201,14 +194,6 @@
     display: block;
     margin: 0;
     font-size: 0.9em;
-    /*renk*/
-    background: transparent;
-    color: #000;
-}
-
-.window-content button:hover {
-    background: #a4a4a4;
-    color: #fff;
 }
 
 .window-nav {
@@ -258,24 +243,127 @@
     display: inline-block;
     margin: 20px 5px;
     font-size: 0.8em;
-    /* renk */
-    background: #ebebeb;
-    color: #333;
     /*----------*/
     transition: background-color 0.3s linear 0s;
 }
 
-#closeDialog .window-footer button:hover {
+/* Colors*/
+/* White */
+.notice-white .windowBackground {
+    background-color: rgba(0, 0, 0, 0.85);
+}
+.notice-white .window-content {
+    color: #000;
+    background: #fff;
+}
+.notice-white .window-content h4 {
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background:rgba(0,0,0,0.1);
+    color: #333;
+}
+.notice-white .window-content button {
+    background: transparent;
+    color: #000;
+}
+.notice-white .window-content button:hover {
+    background: #a4a4a4;
+    color: #fff;
+}
+.notice-white .window-footer{
+    color: #000;
+    background: #fff;
+}
+.notice-white #closeDialog .window-footer button {
+    background: #ebebeb;
+    color: #333;
+}
+.notice-white #closeDialog .window-footer button:hover {
     background: #a4a4a4;
     color: #555;
 }
-
-.window-content button:hover {
-    background: #a4a4a4;
-    color: #555;
+.notice-white .noborder .close {
+    opacity: 1;
+    color: #fff;
 }
 
+/* End of White*/
+/* Red */
+.notice-red .windowBackground {
+    background: rgba(143,27,15,0.8);
+}
+.notice-red .window-content {
+    color: #fff;
+    background: #e74c3c;
+}
+.notice-red .window-content h4 {
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background:rgba(0,0,0,0.1);
+    color: #FFF;
+}
+.notice-red .window-content button {
+    background: #c0392b;
+    color: #fff;
+}
+.notice-red .window-content button:hover {
+    background: #A5281B;
+}
+.notice-red .noborder .close {
+    opacity: 1;
+    color: #fff;
+}
+/* End of Red */
+/* Green */
+.notice-green .windowBackground {
+    background: rgba(7, 120, 16, 0.5);
+}
+.notice-green .window-content {
+    color: #fff;
+    background: #0dad50;
+}
+.notice-green .window-content h4 {
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background:rgba(0,0,0,0.1);
+    color: #FFF;
+}
+.notice-green .window-content button {
+    background: #0dad50;
+    color: #fff;
+}
+.notice-green .window-content button:hover {
+    background: #0a9042;
+}
+.notice-green .noborder .close {
+    opacity: 1;
+    color: #fff;
+}
+/* End of Green */
+/* Blue */
+.notice-blue .windowBackground {
+    background: rgba(0, 120, 183, 0.6);
+}
+.notice-blue .window-content {
+    color: #fff;
+    background: #2865fd;
+}
+.notice-blue .window-content h4 {
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background:rgba(0,0,0,0.1);
+    color: #FFF;
+}
+.notice-blue .window-content button {
+    background: #2865fd;
+    color: #fff;
+}
+.notice-blue .window-content button:hover {
+    background: #164dd6;
+}
+.notice-blue .noborder .close {
+    opacity: 1;
+    color: #fff;
+}
+/* End of Blue */
 
+/* End of Colors */
 
 .noborder {
     margin: 0 !important;
@@ -292,8 +380,6 @@
 }
 
 .noborder .close {
-    opacity: 1;
-    color: #fff;
     font-weight: bold;
     font-size: 110%;
 }

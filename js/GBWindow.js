@@ -200,8 +200,11 @@
             if (setActiveNotice()) {
                 console.log('ShowActiveNotice. Active index=' + _activeIndex + '. Temp İndex=' + _tempIndex);
                 console.log(_activeWindowNoticeJqueryObject);
+                _htmlBody.removeClass('notice-white notice-red notice-green notice-blue'); // remove old color class
+                _htmlBody.addClass(_activeWindowNoticeObject._color);
                 _windowBox.removeClass();
-                _windowBox.addClass(_activeWindowNoticeObject._sizeClass);
+                _windowBox.addClass(_activeWindowNoticeObject._size);
+                $('#wpadminbar').hide();
                 _windowBox.append(_activeWindowNoticeJqueryObject).imagesLoaded()
                     .progress(function () {
                         $('#windowBox').append(_loadingAnimation);
@@ -352,6 +355,7 @@
         function closeAllWindows() {
             _background.remove();
             _windowBox.remove();
+            $('#wpadminbar').show();
         }
 
         /**
