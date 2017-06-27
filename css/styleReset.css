@@ -10,7 +10,7 @@ table, .notice-class caption, .notice-class tbody, .notice-class tfoot, .notice-
 article, .notice-class aside, .notice-class canvas, .notice-class details, .notice-class embed, .notice-class
 figure, .notice-class figcaption, .notice-class footer, .notice-class header, .notice-class hgroup, .notice-class
 menu, .notice-class nav, .notice-class output, .notice-class ruby, .notice-class section, .notice-class summary, .notice-class
-time, .notice-class mark, .notice-class audio, .notice-class video ,.notice-class button{
+time, .notice-class mark, .notice-class audio, .notice-class video, .notice-class button {
     margin: 0;
     padding: 0;
     border: 0;
@@ -42,4 +42,36 @@ q:before, .notice-class q:after {
 .notice-class table {
     border-collapse: collapse;
     border-spacing: 0;
+}
+
+/*Reset progress bar*/
+.notice-class progress, /* All HTML5 progress enabled browsers */
+.notice-class progress[role] /* polyfill */
+{
+
+    /* Turns off styling - not usually needed, but good to know. */
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+
+    /* gets rid of default border in Firefox and Opera. */
+    border: none;
+
+    /* Needs to be in here for Safari polyfill so background images work as expected. */
+    background-size: auto;
+
+    /* Dimensions */
+    width: 400px;
+    height: 60px;
+
+}
+
+/* Polyfill */
+.notice-class progress[role]:after {
+    background-image: none; /* removes default background from polyfill */
+}
+
+/* Ensure fallback text doesn't appear in polyfill */
+.notice-class progress[role] strong {
+    display: none;
 }

@@ -22,6 +22,11 @@ class GB_Notices {
 	 * @var array
 	 */
 	public $noticeMeta;
+	/**
+	 * Default display time of Notice in second
+	 * @var int $defaultDisplayTime in second
+	 */
+	public static $defaultDisplayTime = 5;
 
 	/**
 	 * Wp_postmeta key constant
@@ -273,8 +278,9 @@ class GB_Notices {
 			}
 
 			$noticesHtmlContainer .= '</div>';
-			wp_send_json( array( 'noticesContainer'        => $noticesHtmlContainer,
-			                     'isThereWindowModeNotice' => $isThereWindowModeNotice
+			wp_send_json( array(
+				'noticesContainer'        => $noticesHtmlContainer,
+				'isThereWindowModeNotice' => $isThereWindowModeNotice
 			) );
 		}
 	}

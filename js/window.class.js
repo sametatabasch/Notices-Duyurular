@@ -11,12 +11,6 @@
         var _this = this;
 
         /**
-         * show time of Notice window default 10 second
-         * @var integer second
-         */
-        this._showTime = 10;
-
-        /**
          * HTML output of Notice window created by Notice->setHtml() php class
          * @var string
          */
@@ -51,6 +45,20 @@
         this._color = 'notice-white';
 
         /**
+         * Display time in second
+         * @type {number| boolean}
+         * @private
+         */
+        this._displayTime = false;
+
+        /**
+         * progress object of notice
+         * @type {string}
+         * @private
+         */
+        this._progress = '';
+
+        /**
          *
          * @private
          */
@@ -59,6 +67,8 @@
             setSize();
             setPostId();
             setColor();
+            setDisplayTime();
+            setProgress();
         };
 
         function setPostId() {
@@ -67,7 +77,6 @@
             if (!(typeof currentId === 'undefined')) {
                 if (!(null === currentId.match(reg))) {
                     _this._postId = currentId.match(reg)[0]; // get only number
-                    console.log(_this._postId);
                 }
             }
         }
@@ -79,6 +88,20 @@
         function setColor() {
             var color = _this._jObject.attr('data-color');
             _this._color = typeof color === 'undefined' ? 'notice-white' : color;
+        }
+
+        function setDisplayTime() {
+            var displayTime = _this._jObject.attr('data-displayTime');
+            if (typeof displayTime === 'undefined' || parseInt(displayTime) === 0) {
+                _this._displayTime = false;
+            } else {
+                _this._displayTime = parseInt(displayTime);
+            }
+
+        }
+
+        function setProgress() {
+            _this._progress = _this._jObject.find('progress');
         }
 
         _this._construct();

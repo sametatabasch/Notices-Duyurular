@@ -67,6 +67,12 @@ class GB_Notice extends GB_Notices {
 	public $displayMode;
 
 	/**
+	 * Display time in second of notice
+	 * @var string $displayTime second
+	 */
+	public $displayTime = 5;
+
+	/**
 	 * Duyurunun yayınlanacağı son tarih
 	 * Expire date of Notice
 	 * @var string $expireDate 'Y-m-d H:i:s'
@@ -137,9 +143,20 @@ class GB_Notice extends GB_Notices {
 	}
 
 	/**
+	 * Set display time in second. Default 5 second
+	 */
+	private function setDisplayTime() {
+		if ( intval( $this->postMeta['displayTime'] ) !== 0 ) {
+			$this->displayTime = $this->postMeta['displayTime'];
+		} else {
+			$this->displayTime = parent::$defaultDisplayTime;
+		}
+	}
+
+	/**
 	 * Set size of Notice to Notice->size
 	 */
-	public function setSize() {
+	private function setSize() {
 		$this->size = $this->postMeta['size'];
 	}
 
@@ -168,7 +185,7 @@ class GB_Notice extends GB_Notices {
 	 * Set html class of Totice to Notice->htmlClass
 	 */
 	private function setHtmlClass() {
-		$border = isset( $this->postMeta['noBorder'] ) ? 'noborder' : '';
+		$border          = isset( $this->postMeta['noBorder'] ) ? 'noborder' : '';
 		$this->htmlClass = '' . $this->displayMode . ' .md-effect-2 ' . $border;
 	}
 
@@ -183,9 +200,10 @@ class GB_Notice extends GB_Notices {
 		$this->setHtmlClass();//must after setDisplayMode();
 		$this->setTitle();
 		$this->setContent();
+		$this->setDisplayTime();
 
 		$this->html = '
-		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" data-size="'.$this->size.'" data-color="' . $this->color . '">
+		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" data-size="' . $this->size . '" data-color="' . $this->color . '" data-displayTime="' . $this->displayTime . '">
     		<div class="window-content">
     			' . $this->title . '
 				<div>
@@ -193,6 +211,9 @@ class GB_Notice extends GB_Notices {
     				<button type="button" class="close">&times;</button>
     			</div>
 			</div>
+			<div class="window-footer">
+              <progress value="100" max="100"></progress>
+  			</div>
 		</div>';
 
 	}

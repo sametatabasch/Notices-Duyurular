@@ -3,12 +3,10 @@ jQuery(document).ready(function ($) {
      * if page contain admin bar, set noticeContainer top property with admin bar height
      */
     function adjustNoticeContainerCSSTop() {
-        console.log('default adjustNoticeContainerCSSTop');
         $('.noticeContainer').css({'top': $('#wpadminbar').height()});
     }
 
     function handleCloseButtonOfBarNotice() {
-        console.log('default handleCloseButtonOfBarNotice');
         $('.bar .close').click(function () {
             console.log('bar Close tıklandı');
             //Aktif duyurunun id bilgisi  alınıyor

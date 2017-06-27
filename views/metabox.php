@@ -57,7 +57,7 @@
         <span><b><?= __('No Border :', GB_D_textDomainString) ?></b></span>
         <input type="checkbox" name="noticeMetaData[noBorder]" <?= checked(@$notice->postMeta['noBorder'], 'on', false) ?> />
     </div>
-    <div class="misc-pub-section misc-pub-section-last">
+    <div class="misc-pub-section">
         <span><b><?= __('Size :', GB_D_textDomainString) ?></b></span>
         <select name="noticeMetaData[size]">
 		    <option <?= selected('xLarge',$notice->size)?> value="xLarge"><?= __('xLarge', GB_D_textDomainString) ?></option>
@@ -66,9 +66,9 @@
 		    <option <?= selected('small',$notice->size)?> value="small"><?= __('Small', GB_D_textDomainString) ?></option>
         </select>
     </div>
-    <!--<div class="misc-pub-section misc-pub-section-last">
+    <div class="misc-pub-section misc-pub-section-last">
         <span><b><?= __('Display Time :', GB_D_textDomainString) ?></b></span>
-        <input type="text" name="noticeMetaData[displayTime]" value="<?= $this->meta['displayTime'] ?>" />
+        <input style="width: 45px" type="text" name="noticeMetaData[displayTime]" value="<?= $notice->displayTime ?>" /> sn
     </div>
-    -->
+
 </form>
