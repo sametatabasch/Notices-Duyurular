@@ -380,6 +380,10 @@
          */
         function closeAllWindows() {
             _background.remove();
+            // delete all window mode notice from notice container
+            _windowObjects.forEach(function (active, index, allObject) {
+                active._jObject.remove();
+            });
             _windowBox.remove();
             $('#wpadminbar').show();
         }
