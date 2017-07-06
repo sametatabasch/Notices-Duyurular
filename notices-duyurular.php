@@ -212,6 +212,10 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			);
 			/* Register Styles */
 			wp_register_style(
+				'notice_styleReset',
+				plugins_url( 'css/styleReset.css', __FILE__ )
+			);
+			wp_register_style(
 				'notice_style',
 				plugins_url( 'css/style.css', __FILE__ ),
 				array( 'notice_styleReset' )
@@ -226,10 +230,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 				plugins_url( 'css/loadingAnimation.css', __FILE__ ),
 				array( 'notice_styleReset' )
 			);
-			wp_register_style(
-				'notice_styleReset',
-				plugins_url( 'css/styleReset.css', __FILE__ )
-			);
+
 
 			/* Add registered styles to wordpress style queue  */
 			wp_enqueue_style( 'notice_style' );

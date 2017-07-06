@@ -15,8 +15,8 @@
     font-style: normal;
 }
 
-.notice-class *, #GBWindow * {
-    /*font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;*/
+.notice-class *{
+    font-family: "codropsicons", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .noticeContainer {
@@ -136,7 +136,7 @@
     width: auto;
     height: auto;
     text-align: left;
-    font-family: 'Lato', Calibri, Arial, sans-serif;
+    /*font-family: 'Lato', Calibri, Arial, sans-serif;*/
     font-size: 100%;
     padding: 0;
     margin: 0;
@@ -153,7 +153,7 @@
     margin: 0;
     padding: 0.4em;
     text-align: center;
-    font-size: 2em;
+    font-size: 30px;
     font-weight: 300;
     line-height: 1;
     opacity: 0.8;
@@ -165,7 +165,7 @@
     padding: 15px 40px;
     margin: 0;
     font-weight: 300;
-    font-size: 1em;
+    font-size: 16px;
     height: auto;
 }
 
@@ -213,7 +213,7 @@
 .window-footer button {
     border: none;
     padding: 0.6em 1.2em;
-    font-family: 'Lato', Calibri, Arial, sans-serif;
+    /*font-family: 'Lato', Calibri, Arial, sans-serif;*/
     letter-spacing: 1px;
     text-transform: uppercase;
     cursor: pointer;
@@ -292,14 +292,16 @@
     color: #000;
     background: #fff;
 }
+
 /* Progess bar background color*/
 .notice-white .window-footer progress, /* Firefox  */
-.notice-white .window-footer progress[role][aria-valuenow],/* Polyfill */
-.notice-white .window-footer progress::-webkit-progress-bar{/* Chrome */
+.notice-white .window-footer progress[role][aria-valuenow], /* Polyfill */
+.notice-white .window-footer progress::-webkit-progress-bar { /* Chrome */
     background-color: whiteSmoke !important; /* !important is needed by the polyfill */
     border-radius: 3px;
-    box-shadow: 0 2px 3px rgba(0,0,0,.5) inset;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, .5) inset;
 }
+
 /* progress bar value color*/
 /* IE10 */
 .notice-white .window-footer progress {
@@ -317,9 +319,10 @@
 }
 
 /* Polyfill */
-.notice-white .window-footer progress[aria-valuenow]:before  {
+.notice-white .window-footer progress[aria-valuenow]:before {
     background: #333;
 }
+
 /* End of progress bar value color*/
 .notice-white .window-footer button {
     background: #ebebeb;
@@ -369,11 +372,12 @@
 
 /* Progess bar background color*/
 .notice-red .window-footer progress, /* Firefox  */
-.notice-red .window-footer progress[role][aria-valuenow],/* Polyfill */
-.notice-red .window-footer progress::-webkit-progress-bar{/* Chrome */
+.notice-red .window-footer progress[role][aria-valuenow], /* Polyfill */
+.notice-red .window-footer progress::-webkit-progress-bar { /* Chrome */
     background-color: whiteSmoke !important; /* !important is needed by the polyfill */
     border-radius: 3px;
 }
+
 /* progress bar value color*/
 /* IE10 */
 .notice-red .window-footer progress {
@@ -391,9 +395,10 @@
 }
 
 /* Polyfill */
-.notice-red .window-footer progress[aria-valuenow]:before  {
+.notice-red .window-footer progress[aria-valuenow]:before {
     background: #A5281B;
 }
+
 /* End of progress bar value color*/
 
 .notice-red .noborder .close {
@@ -434,11 +439,12 @@
 
 /* Progess bar background color*/
 .notice-green .window-footer progress, /* Firefox  */
-.notice-green .window-footer progress[role][aria-valuenow],/* Polyfill */
-.notice-green .window-footer progress::-webkit-progress-bar{/* Chrome */
+.notice-green .window-footer progress[role][aria-valuenow], /* Polyfill */
+.notice-green .window-footer progress::-webkit-progress-bar { /* Chrome */
     background-color: whiteSmoke !important; /* !important is needed by the polyfill */
     border-radius: 3px;
 }
+
 /* progress bar value color*/
 /* IE10 */
 .notice-green .window-footer progress {
@@ -456,9 +462,10 @@
 }
 
 /* Polyfill */
-.notice-green .window-footer progress[aria-valuenow]:before  {
+.notice-green .window-footer progress[aria-valuenow]:before {
     background: #0a9042;
 }
+
 /* End of progress bar value color*/
 
 .notice-green .noborder .close {
@@ -499,11 +506,12 @@
 
 /* Progess bar background color*/
 .notice-blue .window-footer progress, /* Firefox  */
-.notice-blue .window-footer progress[role][aria-valuenow],/* Polyfill */
-.notice-blue .window-footer progress::-webkit-progress-bar{/* Chrome */
+.notice-blue .window-footer progress[role][aria-valuenow], /* Polyfill */
+.notice-blue .window-footer progress::-webkit-progress-bar { /* Chrome */
     background-color: whiteSmoke !important; /* !important is needed by the polyfill */
     border-radius: 3px;
 }
+
 /* progress bar value color*/
 /* IE10 */
 .notice-blue .window-footer progress {
@@ -521,9 +529,10 @@
 }
 
 /* Polyfill */
-.notice-blue .window-footer progress[aria-valuenow]:before  {
+.notice-blue .window-footer progress[aria-valuenow]:before {
     background: #164dd6;
 }
+
 /* End of progress bar value color*/
 
 .notice-blue .noborder .close {
@@ -551,7 +560,7 @@
     margin: 0;
 }
 
-.noborder .window-footer{
+.noborder .window-footer {
     margin: 0;
     padding: 0;
     line-height: 0;
