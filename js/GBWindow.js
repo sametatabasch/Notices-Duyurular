@@ -63,7 +63,7 @@
          * @type {*}
          */
         var closeDialog = $(
-            '<div id="closeDialog" class="window" data-size="medium">' +
+            '<div id="closeDialog" class="window notice-white" data-size="medium">' +
             '<div class="window-content">' +
             '<div>' +
             '<p>' + noticeLocalizeMessage.closeMessage + '</p>' +
@@ -90,7 +90,7 @@
          * @type {*}
          */
         var backgroundClickMessage = $(
-            '<div id="backgroundClickMessage" class="window" data-size="small" data-displayTime="5">' +
+            '<div id="backgroundClickMessage" class="window notice-white" data-size="small" data-displayTime="5">' +
             '<div class="window-content">' +
             '<div>' +
             '<p>' + noticeLocalizeMessage.backgroundClickMessage + '</p>' +
@@ -199,10 +199,10 @@
          */
         function showActiveNotice() {
             if (setActiveNotice()) {
-                _htmlBody.removeClass('notice-white notice-red notice-green notice-blue'); // remove old color class
-                _htmlBody.addClass(_activeWindowNoticeObject._color);
+                _background.removeClass('notice-white notice-red notice-green notice-blue'); // remove old color class
+                _background.addClass(_activeWindowNoticeObject._color);
                 _windowBox.removeClass('xLarge large medium small');
-                _windowBox.addClass(_activeWindowNoticeObject._size);
+                _windowBox.addClass(_activeWindowNoticeObject._size );
                 $('#wpadminbar').hide();
                 _windowBox.append(_activeWindowNoticeJqueryObject).imagesLoaded()
                     .progress(function () {

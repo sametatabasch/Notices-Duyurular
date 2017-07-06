@@ -225,17 +225,10 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 				plugins_url( 'css/alert.css', __FILE__ ),
 				array( 'notice_styleReset' )
 			);
-			wp_register_style(
-				'notice_loadingAnimation_style',
-				plugins_url( 'css/loadingAnimation.css', __FILE__ ),
-				array( 'notice_styleReset' )
-			);
-
 
 			/* Add registered styles to wordpress style queue  */
 			wp_enqueue_style( 'notice_style' );
 			wp_enqueue_style( 'notice_alert_style' );
-			wp_enqueue_style( 'notice_loadingAnimation_style' );
 			wp_enqueue_style( 'notice_styleReset' );
 
 			/* Add registered script to wordpress script queue  */

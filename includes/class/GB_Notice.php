@@ -45,7 +45,13 @@ class GB_Notice extends GB_Notices {
 	 * HTML DOM id string of Notice
 	 * @var string $htmlId
 	 */
-	public $htmlId;
+	public $htmlId = '';
+
+	/**
+	 * store data-* value like data-size
+	 * @var string $htmlData
+	 */
+	public $htmlData = '';
 
 	/**
 	 * Type of Duyuru
@@ -132,7 +138,8 @@ class GB_Notice extends GB_Notices {
 	 * notice-white | notice-red | notice-green | notice-blue
 	 */
 	private function setColor() {
-		$this->color = $this->postMeta['color'];
+		$this->color = $this->postMeta['color'] == '' ? 'notice-white' : $this->postMeta['color'];
+
 	}
 
 	/**
@@ -186,7 +193,19 @@ class GB_Notice extends GB_Notices {
 	 */
 	private function setHtmlClass() {
 		$border          = isset( $this->postMeta['noBorder'] ) ? 'noborder' : '';
-		$this->htmlClass = '' . $this->displayMode . ' .md-effect-2 ' . $border;
+		$this->htmlClass = '' . $this->displayMode . ' ' . $border . ' ' . $this->color;
+		if ( $this->displayMode == 'bar' ) {
+			$this->htmlClass .= ' ' . $this->size;
+		}
+	}
+
+	/**
+	 * Set html data-* value like data-size
+	 */
+	private function setHtmlDataAttribute() {
+		if ( $this->displayMode == 'window' ) {
+			$this->htmlData = 'data-size="' . $this->size . '" data-color="' . $this->color . '"';
+		}
 	}
 
 	/**
@@ -197,24 +216,28 @@ class GB_Notice extends GB_Notices {
 		$this->setColor();
 		$this->setSize();
 		$this->setHtmlId();//must after setDisplayMode();
-		$this->setHtmlClass();//must after setDisplayMode();
+		$this->setHtmlClass();//must after setDisplayMode() and setSize()
+		$this->setHtmlDataAttribute();
 		$this->setTitle();
 		$this->setContent();
 		$this->setDisplayTime();
 
 		$this->html = '
-		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" data-size="' . $this->size . '" data-color="' . $this->color . '" data-displayTime="' . $this->displayTime . '">
-    		<div class="window-content">
+		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" ' . $this->htmlData . ' >
+    		<div class="' . $this->displayMode . '-content">
     			' . $this->title . '
 				<div>
     				' . $this->content . '
     				<button type="button" class="close">&times;</button>
     			</div>
-			</div>
-			<div class="window-footer">
-              <progress value="100" max="100"></progress>
-  			</div>
-		</div>';
+			</div>';
+		if ( $this->displayMode !== 'bar' ) {
+			$this->html .=
+				'<div class="' . $this->displayMode . '-footer">
+              		<progress value="100" max="100"></progress>
+  				</div>';
+		}
+		$this->html .= '</div>';
 
 	}
 
