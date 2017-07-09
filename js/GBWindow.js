@@ -333,8 +333,8 @@
          *
          */
         function handleClick_backgroundClick() {
-            _activeWindowNoticeObject._progress.stop(true, false);// fail display time Animation
             if (!isBackgroundClicked) {
+                _activeWindowNoticeObject._progress.stop(true, false);// fail display time Animation
                 isBackgroundClicked = true;
                 _activeWindowNoticeJqueryObject.fadeOut(function () {
                     _activeWindowNoticeJqueryObject.remove();
