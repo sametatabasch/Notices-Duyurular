@@ -90,6 +90,10 @@
             _this._color = typeof color === 'undefined' ? 'notice-white' : color;
         }
 
+        /**
+         * set this display time, if it defined and different 0
+         * @return boolean or integer
+         */
         function setDisplayTime() {
             var displayTime = _this._jObject.attr('data-displayTime');
             if (typeof displayTime === 'undefined' || parseInt(displayTime) === 0) {

@@ -153,10 +153,10 @@ class GB_Notice extends GB_Notices {
 	 * Set display time in second. Default 5 second
 	 */
 	private function setDisplayTime() {
-		if ( intval( $this->postMeta['displayTime'] ) !== 0 ) {
+		if ( isset( $this->postMeta['displayTime'] ) ) {
 			$this->displayTime = $this->postMeta['displayTime'];
 		} else {
-			$this->displayTime = parent::$defaultDisplayTime;
+			$this->displayTime = null;
 		}
 	}
 
@@ -204,7 +204,10 @@ class GB_Notice extends GB_Notices {
 	 */
 	private function setHtmlDataAttribute() {
 		if ( $this->displayMode == 'window' ) {
-			$this->htmlData = 'data-size="' . $this->size . '" data-color="' . $this->color . '" data-displayTime="'.$this->displayTime.'"';
+			$this->htmlData .= 'data-size="' . $this->size . '" data-color="' . $this->color . '"';
+		}
+		if ( ! is_null( $this->displayTime ) ) {
+			$this->htmlData .= 'data-displayTime="' . $this->displayTime . '"';
 		}
 	}
 
@@ -232,7 +235,7 @@ class GB_Notice extends GB_Notices {
     				<button type="button" class="close">&times;</button>
     			</div>
 			</div>';
-		if ( $this->displayMode !== 'bar' ) {
+		if ( ! is_null( $this->displayTime ) && $this->displayMode !== 'bar' ) {
 			$this->html .=
 				'<div class="' . $this->displayMode . '-footer">
               		<progress value="100" max="100"></progress>

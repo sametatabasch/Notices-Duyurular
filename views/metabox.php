@@ -67,8 +67,32 @@
         </select>
     </div>
     <div class="misc-pub-section misc-pub-section-last">
-        <span><b><?= __('Display Time :', GB_D_textDomainString) ?></b></span>
-        <input style="width: 45px" type="text" name="noticeMetaData[displayTime]" value="<?= $notice->displayTime ?>" /> sn
+        <span><b><?= __( 'Add time limit', GB_D_textDomainString ) ?></b></span>
+        <input type="checkbox" id="checkTimeLimit" <?= checked( ! is_null( $notice->displayTime ), true, false ) ?> >
+        <script>
+            var checkTimeLimit = jQuery('#checkTimeLimit');
+            if (checkTimeLimit.is(':checked')) {
+                checkTimeLimit.after('<div id="displayTimeForm">' +
+                    '<span><b><?= __( "Display Time :", GB_D_textDomainString ) ?></b></span>' +
+                    '<input style="width: 45px" type="text" name="noticeMetaData[displayTime]"' +
+                    'value="<?= is_null( $notice->displayTime ) ? $notice::$defaultDisplayTime : $notice->displayTime ?>"/>' +
+                    '</div>');
+            }
+            checkTimeLimit.change(function () {
+                if (jQuery(this).is(':checked')) {
+                    jQuery(this).after('<div id="displayTimeForm">' +
+                        '<span><b><?= __( "Display Time :", GB_D_textDomainString ) ?></b></span>' +
+                        '<input style="width: 45px" type="text" name="noticeMetaData[displayTime]"' +
+                        'value="<?= is_null( $notice->displayTime ) ? $notice::$defaultDisplayTime : $notice->displayTime ?>"/>' +
+                        '</div>')
+                } else {
+                    jQuery('#displayTimeForm').remove();
+                }
+
+            })
+        </script>
+
+
     </div>
 
 </form>
