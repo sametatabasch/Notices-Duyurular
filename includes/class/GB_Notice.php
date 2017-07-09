@@ -204,7 +204,7 @@ class GB_Notice extends GB_Notices {
 	 */
 	private function setHtmlDataAttribute() {
 		if ( $this->displayMode == 'window' ) {
-			$this->htmlData = 'data-size="' . $this->size . '" data-color="' . $this->color . '"';
+			$this->htmlData = 'data-size="' . $this->size . '" data-color="' . $this->color . '" data-displayTime="'.$this->displayTime.'"';
 		}
 	}
 
@@ -217,10 +217,11 @@ class GB_Notice extends GB_Notices {
 		$this->setSize();
 		$this->setHtmlId();//must after setDisplayMode();
 		$this->setHtmlClass();//must after setDisplayMode() and setSize()
-		$this->setHtmlDataAttribute();
+		$this->setDisplayTime();
+		$this->setHtmlDataAttribute();//must after setDisplayTime(), setColor() and setSize()
 		$this->setTitle();
 		$this->setContent();
-		$this->setDisplayTime();
+
 
 		$this->html = '
 		<div id="' . $this->htmlId . '" class="' . $this->htmlClass . '" ' . $this->htmlData . ' >
