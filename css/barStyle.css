@@ -344,3 +344,11 @@
 
 /* End of Blue */
 /* End of Colors */
+
+#closeDialog.bar > div{
+    text-align: center;
+}
+#closeDialog.bar .bar-footer button{
+    margin: 5px;
+    padding: 3px;
+}

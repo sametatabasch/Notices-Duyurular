@@ -249,6 +249,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 					// generate a nonce with a unique ID "myajax-post-comment-nonce"
 					// so that you can check it later when an AJAX request is sent
 					'securityFor_getNoticesContainer' => wp_create_nonce( 'getNoticesContainer' ),
+					'securityFor_markAsReadNotice' => wp_create_nonce( 'markAsReadNotice' )
 				)
 			);
 			wp_localize_script(

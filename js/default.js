@@ -10,28 +10,45 @@ jQuery(document).ready(function ($) {
         $('.bar .close').click(function () {
             console.log('bar Close tıklandı');
             //Aktif duyurunun id bilgisi  alınıyor
-            var currentId = $(this).parent()[0].id;
+            var currentId = $(this).parents('.bar')[0].id;
 
             var reg = /\d/g;
             currentId = currentId.match(reg).join(''); //id  değerinin sadece sayı olduğu doğrulanıyor.
 
-            // çoklu  dil desteği için noticeLocalizeMessage nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle
+            // çoklu  dil desteği için noticeLocalizeMessage nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle todo tasarım güncellenecek
             var icerik =
-                '<div class="bar alert alert-info">' +
-                '<h4></h4>' +
+                '<div id="closeDialog" class="bar notice-blue">' +
+                '<div class="bar-content">' +
+                '<div>' +
                 '<p>' + noticeLocalizeMessage.closeMessage + '</p>' +
-                '<button id="yes" class="btn">' + noticeLocalizeMessage.dontShow + '</button> - <button id="no" class="btn">' + noticeLocalizeMessage.close + '</button>' +
+                '</div>' +
+                '</div>' +
+                '<div class="bar-footer">' +
+                '<div class="center">' +
+                '<button id="dontShowAgainNotice">' + noticeLocalizeMessage.dontShow + '</button>' +
+                '<button id="closeNotice">' + noticeLocalizeMessage.close + '</button>' +
+                '<div style="clear: both"></div>' +
+                '</div>' +
+                '</div>' +
                 '</div>';
 
             $('.noticeContainer').find('#bar-' + currentId).replaceWith(icerik);
 
-            $('#yes').click(function () {
-                $.post('', {GB_D_noticeId: +currentId}, 'json'); //okundu olarak işaretleme yapılıyor
-                $(this).parent().remove();
+            $('#dontShowAgainNotice').click(function () {//todo post işlemi yapılacak
+                /*
+                 * Send mark as read request
+                 */
+                $.post(ajaxData_default.ajaxurl, {
+                    noticeId: currentId,
+                    action: 'markAsReadNotice',
+                    security: ajaxData_default.securityFor_markAsReadNotice
+                }, function (response) {
+                });
+                $(this).parents('.bar').remove();
             });
 
-            $('#no').click(function () {
-                $(this).parent().remove();
+            $('#closeNotice').click(function () {
+                $(this).parents('.bar').remove();
             });
         });
     }
