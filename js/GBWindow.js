@@ -398,7 +398,7 @@
             var left = (window.innerWidth - _activeWindowNoticeJqueryObject.width()) / 2; //todo width() ve height() fonksiyonları burada çalışıyorda window.class da neden çalışmıyor tekrar denenecek.
             var maxWidth = window.innerWidth - 115;
             _windowBox.css({'top': top, 'left': left, 'max-width': maxWidth, 'max-height': maxHeight});
-            _activeWindowNoticeJqueryObject.css({'max-height': maxHeight - _activeWindowNoticeJqueryObject.find('.window-footer').height()});
+            _activeWindowNoticeJqueryObject.find('.window-content').css({'max-height': maxHeight - _activeWindowNoticeJqueryObject.find('.window-footer').height()});
             if (_activeWindowNoticeJqueryObject.hasClass('noborder')) {
                 _activeWindowNoticeJqueryObject.find('img').css({'max-height': maxHeight - _activeWindowNoticeJqueryObject.find('.window-footer').height()});
             }
