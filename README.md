@@ -2,8 +2,8 @@
 Contributors: sametatabasch
 Tags: notice, duyuru, cookie, announcement
 Requires at least: 3.0.1
-Tested up to: 4.7.3
-Stable tag: 1.6.4
+Tested up to: 4.8.2
+Stable tag: 1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,6 +17,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Duyuruyu sitenize gelen herkes mi yoksa sadece Giriş  yapmış  kullanıcılar mı  görecek ?
 * Duyuru sayfanın üstünde şerit halinde mi  gözükecek yoksa Sayfanın ortasında pencere şeklinde mi ?
 * Duyuru ne zamana kadar gösterilecek?
+* Duyuru ekranda nekadar süre kalacak ?
 * Duyurunun tasarımı  nasıl olacak (4 farklı seçenek )
     
 Bunlara ek olarak  ziyaretci duyuruyu bir daha görmek istemediğinde gözükmesini engellemek için gösterme linkini  tıklaması yeterli.
@@ -26,6 +27,7 @@ Bunlara ek olarak  ziyaretci duyuruyu bir daha görmek istemediğinde gözükmes
 * You can set visibility of notifications. Displaying for everyone or only logged in users.
 * You can set easily position of notices.
 * You can set easily displaying date of notices. Notifications will auto expire.
+* You can set easily display time in second for each notice.
 * 4 different type of notifications.
   
 "If users click to "Don't show" they won't disturb with same notice again."
@@ -45,6 +47,12 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 3. Example for add new notice page.
 
 ## Changelog ##
+
+### 1.7 ###
+
+- Added Display time in second
+- Upgrade notice design
+- Fix bug and performance improvement
 
 ### 1.6.4 ###
 
