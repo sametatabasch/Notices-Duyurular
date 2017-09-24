@@ -15,7 +15,7 @@ jQuery(document).ready(function ($) {
             var reg = /\d/g;
             currentId = currentId.match(reg).join(''); //id  değerinin sadece sayı olduğu doğrulanıyor.
 
-            // çoklu  dil desteği için noticeLocalizeMessage nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle todo tasarım güncellenecek
+            // çoklu  dil desteği için noticeLocalizeMessage nesnesi kullanılıyor ilgili fonksiyon: GB_D_addScriptAndStyle
             var icerik =
                 '<div id="closeDialog" class="bar notice-blue">' +
                 '<div class="bar-content">' +
@@ -34,7 +34,7 @@ jQuery(document).ready(function ($) {
 
             $('.noticeContainer').find('#bar-' + currentId).replaceWith(icerik);
 
-            $('#dontShowAgainNotice').click(function () {//todo post işlemi yapılacak
+            $('#dontShowAgainNotice').click(function () {
                 /*
                  * Send mark as read request
                  */
