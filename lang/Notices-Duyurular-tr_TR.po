@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notices-Duyurular 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-21 14:31+0200\n"
-"PO-Revision-Date: 2017-09-24 21:13+0300\n"
+"POT-Creation-Date: 2017-09-24 23:04+0300\n"
+"PO-Revision-Date: 2017-09-24 23:06+0300\n"
 "Last-Translator: Samet ATABAŞ <sametatabasch@gmail.com>\n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -16,107 +16,55 @@ msgstr ""
 "X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../Notices-Duyurular.php:96 ../Notices-Duyurular.php:97
+#: ../includes/class/GB_Notices.php:224
+msgid "Notice mark as read successfully"
+msgstr "Duyuru başarıyla okundu olarak işaretlendi"
+
+#: ../notices-duyurular.php:101 ../notices-duyurular.php:102
 msgid "Notice"
 msgstr "Duyuru"
 
-#: ../Notices-Duyurular.php:98 ../Notices-Duyurular.php:101
+#: ../notices-duyurular.php:103 ../notices-duyurular.php:106
 msgid "New Notice"
 msgstr "Yeni Duyuru"
 
-#: ../Notices-Duyurular.php:99
+#: ../notices-duyurular.php:104
 msgid "Add New Notice"
 msgstr "Yeni Duyuru Ekle"
 
-#: ../Notices-Duyurular.php:100
+#: ../notices-duyurular.php:105
 msgid "Edit Notice"
 msgstr "Duyuruyu Düzenle"
 
-#: ../Notices-Duyurular.php:102
+#: ../notices-duyurular.php:107
 msgid "All Notice"
 msgstr "Tüm Duyurular"
 
-#: ../Notices-Duyurular.php:103
+#: ../notices-duyurular.php:108
 msgid "View Notice"
 msgstr "Duyuruyu Göster"
 
-#: ../Notices-Duyurular.php:104
+#: ../notices-duyurular.php:109
 msgid "Search Notice"
 msgstr "Duyuru Ara"
 
-#: ../Notices-Duyurular.php:105
+#: ../notices-duyurular.php:110
 msgid "Notice Not Found"
 msgstr "Duyuru bulunamadı"
 
-#: ../Notices-Duyurular.php:106
+#: ../notices-duyurular.php:111
 msgid "Notice Not Found In Trash"
 msgstr "Çöpte Duyuru bulunamadı"
 
-#: ../Notices-Duyurular.php:108
+#: ../notices-duyurular.php:113
 msgid "Notices"
 msgstr "Duyurular"
 
-#: ../Notices-Duyurular.php:124
+#: ../notices-duyurular.php:131
 msgid "Notice Settings"
 msgstr "Duyuru Ayarları"
 
-#: ../Notices-Duyurular.php:149
-msgid "Who can see :"
-msgstr "Kimler Görebilir:"
-
-#: ../Notices-Duyurular.php:151
-msgid "Everyone"
-msgstr "Herkes"
-
-#: ../Notices-Duyurular.php:152
-msgid "Only User"
-msgstr "Sadece Üyeler"
-
-#: ../Notices-Duyurular.php:156
-msgid "Display Mode :"
-msgstr "Gösterim Modu:"
-
-#: ../Notices-Duyurular.php:158
-msgid "Window"
-msgstr "Pencere"
-
-#: ../Notices-Duyurular.php:159
-msgid "Bar"
-msgstr "Şerit"
-
-#: ../Notices-Duyurular.php:164
-msgid "Last display date :"
-msgstr "Son Gösterim Tarihi"
-
-#: ../Notices-Duyurular.php:179
-msgid "Type :"
-msgstr "Tipi:"
-
-#: ../Notices-Duyurular.php:181
-msgid "Default"
-msgstr "Öntanımlı"
-
-#: ../Notices-Duyurular.php:184
-msgid "White"
-msgstr "Beyaz"
-
-#: ../Notices-Duyurular.php:187
-msgid "Error"
-msgstr "Hata"
-
-#: ../Notices-Duyurular.php:190
-msgid "Info"
-msgstr "Bilgi"
-
-#: ../Notices-Duyurular.php:193
-msgid "Success"
-msgstr "Başarı"
-
-#: ../Notices-Duyurular.php:198
-msgid "No Border :"
-msgstr "Kenarlıksız"
-
-#: ../Notices-Duyurular.php:383
+#: ../notices-duyurular.php:280
 msgid ""
 "If you do not want to see again this notice,click &#34;do not show "
 "again&#34;."
@@ -124,15 +72,15 @@ msgstr ""
 "Bu  duyuruyu bir daha görmek istemiyorsanız, \"Bir daha gösterme\" butonuna "
 "basın."
 
-#: ../Notices-Duyurular.php:384
+#: ../notices-duyurular.php:281
 msgid "Do not show again"
 msgstr "Bir daha gösterme"
 
-#: ../Notices-Duyurular.php:385
+#: ../notices-duyurular.php:282
 msgid "Close"
 msgstr "Kapat"
 
-#: ../Notices-Duyurular.php:388
+#: ../notices-duyurular.php:283
 msgid ""
 "if you close notices with click background, you see notices again and again. "
 "İf you dont want see notices again, close notices with close button."
@@ -140,6 +88,98 @@ msgstr ""
 "Eğer duyuruyu arkaplana tıklayarak kapatırsanız duyuru her ziyaretinizde "
 "tekrar gösterilir. Tekrar gözükmesini istemiyorsanız kapatma butunu ile "
 "kapatınız."
+
+#: ../views/metabox.php:6
+msgid "Who can see :"
+msgstr "Kimler Görebilir:"
+
+#: ../views/metabox.php:9
+msgid "Everyone"
+msgstr "Herkes"
+
+#: ../views/metabox.php:11
+msgid "Only User"
+msgstr "Sadece Üyeler"
+
+#: ../views/metabox.php:15
+msgid "Display Mode :"
+msgstr "Gösterim Modu:"
+
+#: ../views/metabox.php:18
+msgid "Window"
+msgstr "Pencere"
+
+#: ../views/metabox.php:20
+msgid "Bar"
+msgstr "Şerit"
+
+#: ../views/metabox.php:25
+msgid "Last display date :"
+msgstr "Son Gösterim Tarihi"
+
+#: ../views/metabox.php:37
+msgid "Type :"
+msgstr "Tipi:"
+
+#: ../views/metabox.php:40
+msgid "White"
+msgstr "Beyaz"
+
+#: ../views/metabox.php:44
+msgid "Red"
+msgstr "Kırmızı"
+
+#: ../views/metabox.php:48
+msgid "Blue"
+msgstr "MAvi"
+
+#: ../views/metabox.php:52
+msgid "Green"
+msgstr "Yeşil"
+
+#: ../views/metabox.php:57
+msgid "No Border :"
+msgstr "Kenarlıksız"
+
+#: ../views/metabox.php:61
+msgid "Size :"
+msgstr "Boyut :"
+
+#: ../views/metabox.php:63
+msgid "xLarge"
+msgstr "Çok Geniş"
+
+#: ../views/metabox.php:64
+msgid "Large"
+msgstr "Geniş"
+
+#: ../views/metabox.php:65
+msgid "Medium"
+msgstr "Orta"
+
+#: ../views/metabox.php:66
+msgid "Small"
+msgstr "Küçük"
+
+#: ../views/metabox.php:70
+msgid "Add time limit"
+msgstr "Süre sınırı ekle"
+
+#: ../views/metabox.php:76 ../views/metabox.php:84
+msgid "Display Time :"
+msgstr "Görünme Süresi :"
+
+#~ msgid "Default"
+#~ msgstr "Öntanımlı"
+
+#~ msgid "Error"
+#~ msgstr "Hata"
+
+#~ msgid "Info"
+#~ msgstr "Bilgi"
+
+#~ msgid "Success"
+#~ msgstr "Başarı"
 
 #~ msgid "Don't Show"
 #~ msgstr "Gösterme"

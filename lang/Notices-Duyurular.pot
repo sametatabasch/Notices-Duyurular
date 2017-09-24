@@ -1,8 +1,9 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Notices-Duyurular 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-21 14:31+0200\n"
+"POT-Creation-Date: 2017-09-24 23:04+0300\n"
 "PO-Revision-Date: 2015-04-21 14:31+0200\n"
 "Last-Translator: Samet ATABAŞ <sametatabasch@gmail.com>\n"
 "Language-Team: \n"
@@ -12,125 +13,153 @@ msgstr ""
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;_x;__\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../Notices-Duyurular.php:96 ../Notices-Duyurular.php:97
+#: ../includes/class/GB_Notices.php:224
+msgid "Notice mark as read successfully"
+msgstr ""
+
+#: ../notices-duyurular.php:101 ../notices-duyurular.php:102
 msgid "Notice"
 msgstr ""
 
-#: ../Notices-Duyurular.php:98 ../Notices-Duyurular.php:101
+#: ../notices-duyurular.php:103 ../notices-duyurular.php:106
 msgid "New Notice"
 msgstr ""
 
-#: ../Notices-Duyurular.php:99
+#: ../notices-duyurular.php:104
 msgid "Add New Notice"
 msgstr ""
 
-#: ../Notices-Duyurular.php:100
+#: ../notices-duyurular.php:105
 msgid "Edit Notice"
 msgstr ""
 
-#: ../Notices-Duyurular.php:102
+#: ../notices-duyurular.php:107
 msgid "All Notice"
 msgstr ""
 
-#: ../Notices-Duyurular.php:103
+#: ../notices-duyurular.php:108
 msgid "View Notice"
 msgstr ""
 
-#: ../Notices-Duyurular.php:104
+#: ../notices-duyurular.php:109
 msgid "Search Notice"
 msgstr ""
 
-#: ../Notices-Duyurular.php:105
+#: ../notices-duyurular.php:110
 msgid "Notice Not Found"
 msgstr ""
 
-#: ../Notices-Duyurular.php:106
+#: ../notices-duyurular.php:111
 msgid "Notice Not Found In Trash"
 msgstr ""
 
-#: ../Notices-Duyurular.php:108
+#: ../notices-duyurular.php:113
 msgid "Notices"
 msgstr ""
 
-#: ../Notices-Duyurular.php:124
+#: ../notices-duyurular.php:131
 msgid "Notice Settings"
 msgstr ""
 
-#: ../Notices-Duyurular.php:149
-msgid "Who can see :"
-msgstr ""
-
-#: ../Notices-Duyurular.php:151
-msgid "Everyone"
-msgstr ""
-
-#: ../Notices-Duyurular.php:152
-msgid "Only User"
-msgstr ""
-
-#: ../Notices-Duyurular.php:156
-msgid "Display Mode :"
-msgstr ""
-
-#: ../Notices-Duyurular.php:158
-msgid "Window"
-msgstr ""
-
-#: ../Notices-Duyurular.php:159
-msgid "Bar"
-msgstr ""
-
-#: ../Notices-Duyurular.php:164
-msgid "Last display date :"
-msgstr ""
-
-#: ../Notices-Duyurular.php:179
-msgid "Type :"
-msgstr ""
-
-#: ../Notices-Duyurular.php:181
-msgid "Default"
-msgstr ""
-
-#: ../Notices-Duyurular.php:184
-msgid "White"
-msgstr ""
-
-#: ../Notices-Duyurular.php:187
-msgid "Error"
-msgstr ""
-
-#: ../Notices-Duyurular.php:190
-msgid "Info"
-msgstr ""
-
-#: ../Notices-Duyurular.php:193
-msgid "Success"
-msgstr ""
-
-#: ../Notices-Duyurular.php:198
-msgid "No Border :"
-msgstr ""
-
-#: ../Notices-Duyurular.php:383
+#: ../notices-duyurular.php:280
 msgid ""
 "If you do not want to see again this notice,click &#34;do not show "
 "again&#34;."
 msgstr ""
 
-#: ../Notices-Duyurular.php:384
+#: ../notices-duyurular.php:281
 msgid "Do not show again"
 msgstr ""
 
-#: ../Notices-Duyurular.php:385
+#: ../notices-duyurular.php:282
 msgid "Close"
 msgstr ""
 
-#: ../Notices-Duyurular.php:388
+#: ../notices-duyurular.php:283
 msgid ""
 "if you close notices with click background, you see notices again and again. "
 "İf you dont want see notices again, close notices with close button."
+msgstr ""
+
+#: ../views/metabox.php:6
+msgid "Who can see :"
+msgstr ""
+
+#: ../views/metabox.php:9
+msgid "Everyone"
+msgstr ""
+
+#: ../views/metabox.php:11
+msgid "Only User"
+msgstr ""
+
+#: ../views/metabox.php:15
+msgid "Display Mode :"
+msgstr ""
+
+#: ../views/metabox.php:18
+msgid "Window"
+msgstr ""
+
+#: ../views/metabox.php:20
+msgid "Bar"
+msgstr ""
+
+#: ../views/metabox.php:25
+msgid "Last display date :"
+msgstr ""
+
+#: ../views/metabox.php:37
+msgid "Type :"
+msgstr ""
+
+#: ../views/metabox.php:40
+msgid "White"
+msgstr ""
+
+#: ../views/metabox.php:44
+msgid "Red"
+msgstr ""
+
+#: ../views/metabox.php:48
+msgid "Blue"
+msgstr ""
+
+#: ../views/metabox.php:52
+msgid "Green"
+msgstr ""
+
+#: ../views/metabox.php:57
+msgid "No Border :"
+msgstr ""
+
+#: ../views/metabox.php:61
+msgid "Size :"
+msgstr ""
+
+#: ../views/metabox.php:63
+msgid "xLarge"
+msgstr ""
+
+#: ../views/metabox.php:64
+msgid "Large"
+msgstr ""
+
+#: ../views/metabox.php:65
+msgid "Medium"
+msgstr ""
+
+#: ../views/metabox.php:66
+msgid "Small"
+msgstr ""
+
+#: ../views/metabox.php:70
+msgid "Add time limit"
+msgstr ""
+
+#: ../views/metabox.php:76 ../views/metabox.php:84
+msgid "Display Time :"
 msgstr ""
