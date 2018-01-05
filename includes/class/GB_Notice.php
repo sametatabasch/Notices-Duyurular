@@ -138,15 +138,11 @@ class GB_Notice extends GB_Notices {
 				'displayMode'     => 'window',
 				'size'            => 'xLarge',
 				'displayTime'     => '5',
-				'lastDisplayDate' => date('Y-m-d H:i:s'),
+				'lastDisplayDate' => date( 'Y-m-d H:i:s', strtotime( "+1 months" ) ),
 				'noBorder'        => null,
 				'color'           => 'notice-white',
 			];
-
 		}
-		echo '<pre>';
-		var_dump( $this->postMeta );
-		echo '</pre>';
 	}
 
 	/**
