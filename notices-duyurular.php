@@ -145,16 +145,9 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			 */
 			$notice = new GB_Notice( get_the_ID() );
 
-			/*
-			 * Eğer yeni bir duyuru oluşturuluyorsa ön tanımlı son gösterim tarihi bu günden bir ay sonra olacak şekilde ayarlanıyor.
-			 */
-			if ( empty( $notice->expireDate ) ) {
-				$date          = dateStringToArray();
-				$selectedMonth = zeroise(intval($date['month'])+1,2); // ön tanımlı tarih o anın bir ay sonrası
-			} else {
-				$date          = dateStringToArray( $notice->expireDate );
-				$selectedMonth = $date['month'];
-			}
+			$date          = dateStringToArray( $notice->expireDate );
+			$selectedMonth = zeroise(intval($date['month']),2);
+
 
 			include_once dirname( __FILE__ ) . "/views/metabox.php";
 		}
