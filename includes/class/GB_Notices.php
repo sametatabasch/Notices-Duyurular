@@ -127,8 +127,14 @@ class GB_Notices {
 			$this->noticeMeta = $_POST['noticeMetaData'];
 		}
 		if ( isset( $_POST['noticeExpireDate'] ) ) {
-			$noticeExpireDate                    = $_POST['noticeExpireDate'];
-			$this->noticeMeta['lastDisplayDate'] = $noticeExpireDate['year'] . '-' . $noticeExpireDate['month'] . '-' . $noticeExpireDate['day'] . ' ' . $noticeExpireDate['hour'] . ':' . $noticeExpireDate['minute'] . ':00';
+
+			$noticeExpireDate = $_POST['noticeExpireDate'];
+			$this->noticeMeta['lastDisplayDate'] = sprintf( "%04d", $noticeExpireDate['year'] ) . '-' . sprintf( "%02d", $noticeExpireDate['month'] ) . '-' . sprintf( "%02d", $noticeExpireDate['day'] ) . ' ' . sprintf( "%02d", $noticeExpireDate['hour'] ) . ':' . sprintf( "%02d", $noticeExpireDate['minute'] ) . ':00';
+			$expireDate                          = new DateTime( $this->noticeMeta['lastDisplayDate'] );
+			$now                                 = new DateTime( 'now' );
+			if ( $expireDate < $now ) {
+				$this->noticeMeta['lastDisplayDate'] = date( 'Y-m-d H:i:s', strtotime( "+1 months" ) );
+			}
 		}
 		add_post_meta( $noticeId, self::NOTICE_POST_META_KEY, $this->noticeMeta, true );
 
@@ -149,10 +155,15 @@ class GB_Notices {
 			$this->noticeMeta = $_POST['noticeMetaData'];
 		}
 		if ( isset( $_POST['noticeExpireDate'] ) ) {
-			$noticeExpireDate                    = $_POST['noticeExpireDate'];
-			$this->noticeMeta['lastDisplayDate'] = $noticeExpireDate['year'] . '-' . $noticeExpireDate['month'] . '-' . $noticeExpireDate['day'] . ' ' . $noticeExpireDate['hour'] . ':' . $noticeExpireDate['minute'] . ':00';
+			$noticeExpireDate = $_POST['noticeExpireDate'];
+			$this->noticeMeta['lastDisplayDate'] = sprintf( "%04d", $noticeExpireDate['year'] ) . '-' . sprintf( "%02d", $noticeExpireDate['month'] ) . '-' . sprintf( "%02d", $noticeExpireDate['day'] ) . ' ' . sprintf( "%02d", $noticeExpireDate['hour'] ) . ':' . sprintf( "%02d", $noticeExpireDate['minute'] ) . ':00';
+			$expireDate                          = new DateTime( $this->noticeMeta['lastDisplayDate'] );
+			$now                                 = new DateTime( 'now' );
+			if ( $expireDate < $now ) {
+				$this->noticeMeta['lastDisplayDate'] = date( 'Y-m-d H:i:s', strtotime( "+1 months" ) );
+			}
 		}
-		update_post_meta( $noticePostId, "GB_D_meta", $this->noticeMeta );
+		update_post_meta( $noticePostId, self::NOTICE_POST_META_KEY, $this->noticeMeta );
 	}
 
 	/**
