@@ -98,6 +98,9 @@ class GB_Notice extends GB_Notices {
 	 */
 	function __construct( $id ) {
 		parent::__construct();
+		if ( is_null( $id ) ) {
+			return false;
+		}
 		$this->id = $id;
 		$this->getPostMeta();
 		$this->setExpireDate();
@@ -120,10 +123,30 @@ class GB_Notice extends GB_Notices {
 	 * 'displayMode' =>  (window,bar)
 	 * 'type' => ('',alert-white,alert-error,alert-info,alert-success)
 	 * 'lastDisplayDate' => 'Y-m-d H:i:s',
-	 * 'noBorder' => (on,null)
+	 * 'noBorder' => (on,null),
+	 * 'color' => notice-white | notice-red | notice-green | notice-blue
 	 */
 	private function getPostMeta() {
 		$this->postMeta = get_post_meta( $this->id, self::NOTICE_POST_META_KEY, true );
+		/*
+		 * if this notice is new then set default meta values
+		 */
+		if ( $this->postMeta === "" ) {
+
+			$this->postMeta = [
+				'whoCanSee'       => 'everyone',
+				'displayMode'     => 'window',
+				'size'            => 'xLarge',
+				'displayTime'     => '5',
+				'lastDisplayDate' => date('Y-m-d H:i:s'),
+				'noBorder'        => null,
+				'color'           => 'notice-white',
+			];
+
+		}
+		echo '<pre>';
+		var_dump( $this->postMeta );
+		echo '</pre>';
 	}
 
 	/**
