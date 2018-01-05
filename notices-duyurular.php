@@ -140,11 +140,10 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 		 * Duuru ayarları için  metabox içeriğini  oluşturur
 		 */
 		public function noticeMetaBox() {
-			global $post_id;
 			/**
 			 * Güncellenen duyuru için Duyuru sınıfı oluşturuyoruz
 			 */
-			$notice = new GB_Notice( $post_id );
+			$notice = new GB_Notice( get_the_ID() );
 
 			/*
 			 * Eğer yeni bir duyuru oluşturuluyorsa ön tanımlı son gösterim tarihi bu günden bir ay sonra olacak şekilde ayarlanıyor.
