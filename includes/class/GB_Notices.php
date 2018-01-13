@@ -128,8 +128,8 @@ class GB_Notices {
 		}
 		if ( isset( $_POST['noticeExpireDate'] ) ) {
 
-			$noticeExpireDate = $_POST['noticeExpireDate'];
-			$this->noticeMeta['lastDisplayDate'] = sprintf( "%04d", $noticeExpireDate['year'] ) . '-' . sprintf( "%02d", $noticeExpireDate['month'] ) . '-' . sprintf( "%02d", $noticeExpireDate['day'] ) . ' ' . sprintf( "%02d", $noticeExpireDate['hour'] ) . ':' . sprintf( "%02d", $noticeExpireDate['minute'] ) . ':00';
+			$noticeExpireDate                    = $_POST['noticeExpireDate'];
+			$this->noticeMeta['lastDisplayDate'] = $noticeExpireDate['date']. ' ' . sprintf( "%02d", $noticeExpireDate['hour'] ) . ':' . sprintf( "%02d", $noticeExpireDate['minute'] ) . ':00';
 			$expireDate                          = new DateTime( $this->noticeMeta['lastDisplayDate'] );
 			$now                                 = new DateTime( 'now' );
 			if ( $expireDate < $now ) {
@@ -155,8 +155,8 @@ class GB_Notices {
 			$this->noticeMeta = $_POST['noticeMetaData'];
 		}
 		if ( isset( $_POST['noticeExpireDate'] ) ) {
-			$noticeExpireDate = $_POST['noticeExpireDate'];
-			$this->noticeMeta['lastDisplayDate'] = sprintf( "%04d", $noticeExpireDate['year'] ) . '-' . sprintf( "%02d", $noticeExpireDate['month'] ) . '-' . sprintf( "%02d", $noticeExpireDate['day'] ) . ' ' . sprintf( "%02d", $noticeExpireDate['hour'] ) . ':' . sprintf( "%02d", $noticeExpireDate['minute'] ) . ':00';
+			$noticeExpireDate                    = $_POST['noticeExpireDate'];
+			$this->noticeMeta['lastDisplayDate'] = $noticeExpireDate['date']. ' ' . sprintf( "%02d", $noticeExpireDate['hour'] ) . ':' . sprintf( "%02d", $noticeExpireDate['minute'] ) . ':00';
 			$expireDate                          = new DateTime( $this->noticeMeta['lastDisplayDate'] );
 			$now                                 = new DateTime( 'now' );
 			if ( $expireDate < $now ) {
@@ -185,15 +185,15 @@ class GB_Notices {
 	 */
 	public function trashToPublishNotice() {
 		$noticePostId = get_the_ID();
-		$expireDate   = dateStringToArray();
-		$expireDate['month'] ++;
-		$lastDisplayDate  = $expireDate['year'] . '-' . $expireDate['month'] . '-' . $expireDate['day'] . ' ' . $expireDate['hour'] . ':' . $expireDate['minute'] . ':00';
-		$this->noticeMeta = array(
+		$this->noticeMeta = [
 			'whoCanSee'       => 'everyone',
 			'displayMode'     => 'window',
-			'lastDisplayDate' => $lastDisplayDate,
-			'type'            => ''
-		);
+			'size'            => 'xLarge',
+			'displayTime'     => '5',
+			'lastDisplayDate' => date( 'Y-m-d H:i:s', strtotime( "+1 months" ) ),
+			'noBorder'        => null,
+			'color'           => 'notice-white',
+		];
 		update_post_meta( $noticePostId, self::NOTICE_POST_META_KEY, $this->noticeMeta );
 	}
 

@@ -69,12 +69,12 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 
 			self::$path    = plugin_dir_path( __FILE__ );
 			$this->pathUrl = plugin_dir_url( __FILE__ );
-			load_plugin_textDomain( GB_D_textDomainString, false, basename( dirname( __FILE__ ) ) . '/lang' );
+			load_plugin_textdomain( GB_D_textDomainString, false, basename( dirname( __FILE__ ) ) . '/lang' );
 			add_action( 'init', array( &$this, 'addPostType' ) );
 			add_action( 'add_meta_boxes', array( &$this, 'addMetaBox' ) );
 			add_action( 'after_setup_theme', array( &$this, 'addScriptAndStyle' ) );
 			if ( is_admin() ) {
-				add_action( 'admin_enqueue_scripts', array( &$this, 'addStyleToAdminPage' ) );
+				add_action( 'admin_enqueue_scripts', array( &$this, 'addStyleAndScriptToAdminPage' ) );
 			}
 
 			$this->includes();
@@ -146,8 +146,8 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			$notice = new GB_Notice( get_the_ID() );
 
 			$date          = dateStringToArray( $notice->expireDate );
-			$selectedMonth = zeroise(intval($date['month']),2);
 
+			global $wp_locale;
 
 			include_once dirname( __FILE__ ) . "/views/metabox.php";
 		}
@@ -156,7 +156,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 		 * Admin paneline style dosyasını ekler
 		 * add_action('admin_enqueue_scripts', array(&$this, 'addStyleToAdminPage'));
 		 */
-		public function addStyleToAdminPage() {
+		public function addStyleAndScriptToAdminPage() {
 			/**
 			 * Admin paneline eklenecek style dosyasını wordpress e kaydediyorum
 			 */
@@ -165,6 +165,18 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			 * Admin paneline eklenecek style dosyasını wordpress e ekliyorum
 			 */
 			wp_enqueue_style( 'notice_admin_style' );
+			/**
+			 *
+			 */
+			wp_register_style( 'jquery-ui-datepicker-style', plugins_url( 'css/jquery-ui.datepicker.min.css', __FILE__ ) );
+			/**
+			 *
+			 */
+			wp_enqueue_style( 'jquery-ui-datepicker-style' );
+			/**
+			 * Admin paneline jQueryUI datepicker js dosyası kuyruğa ekleniyor.
+			 */
+			wp_enqueue_script( 'jquery-ui-datepicker' );
 		}
 
 		/**
@@ -178,7 +190,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 		}
 
 		/**
-		 * style ve script dosyalarını  yükler
+		 * style ve script dosyalarını kuyruğa ekler
 		 * add_action('wp_enqueue_scripts', array(&$this, 'enqueueScriptAndStyle'));
 		 */
 		public function enqueueScriptAndStyle() {
@@ -196,11 +208,11 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			wp_register_script(
 				'notice_script_GBWindow',
 				plugins_url( 'js/GBWindow.js', __FILE__ ),
-				array( 'jquery', 'imagesloaded_script','notice_script_window.class' ));
+				array( 'jquery', 'imagesloaded_script', 'notice_script_window.class' ) );
 			wp_register_script(
 				'notice_script_default',
 				plugins_url( 'js/default.js', __FILE__ ),
-				array( 'jquery', 'imagesloaded_script','notice_script_GBWindow','notice_script_window.class' )
+				array( 'jquery', 'imagesloaded_script', 'notice_script_GBWindow', 'notice_script_window.class' )
 			);
 			/* Register Styles */
 			wp_register_style(
@@ -231,17 +243,17 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			wp_enqueue_script( 'notice_script_default' );
 
 			$this->addLanguageSupportToScript();
-			$ajaxurl= admin_url( 'admin-ajax.php' );
+			$ajaxurl = admin_url( 'admin-ajax.php' );
 			wp_localize_script(
 				'notice_script_default',
 				'ajaxData_default',
 				array(
 					// URL to wp-admin/admin-ajax.php to process the request
-					'ajaxurl'  => $ajaxurl,
+					'ajaxurl'                         => $ajaxurl,
 					// generate a nonce with a unique ID "myajax-post-comment-nonce"
 					// so that you can check it later when an AJAX request is sent
 					'securityFor_getNoticesContainer' => wp_create_nonce( 'getNoticesContainer' ),
-					'securityFor_markAsReadNotice' => wp_create_nonce( 'markAsReadNotice' )
+					'securityFor_markAsReadNotice'    => wp_create_nonce( 'markAsReadNotice' )
 				)
 			);
 			wp_localize_script(
@@ -249,7 +261,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 				'ajaxData_GBWindow',
 				array(
 					// URL to wp-admin/admin-ajax.php to process the request
-					'ajaxurl'  => $ajaxurl,
+					'ajaxurl'                      => $ajaxurl,
 					// generate a nonce with a unique ID "myajax-post-comment-nonce"
 					// so that you can check it later when an AJAX request is sent
 					'securityFor_markAsReadNotice' => wp_create_nonce( 'markAsReadNotice' )
@@ -268,10 +280,10 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			 * $name   -> Dizeleri  taşıyan java nesnesinin  adı
 			 * $data   -> Dil desteği  sağlanan dizeler
 			 */
-			$noticeLocalizeMessage_translation_array           = array(
-				'closeMessage'  => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', GB_D_textDomainString ),
-				'dontShow' => __( 'Do not show again', GB_D_textDomainString ),
-				'close'    => __( 'Close', GB_D_textDomainString ),
+			$noticeLocalizeMessage_translation_array = array(
+				'closeMessage'           => __( 'If you do not want to see again this notice,click &#34;do not show again&#34;.', GB_D_textDomainString ),
+				'dontShow'               => __( 'Do not show again', GB_D_textDomainString ),
+				'close'                  => __( 'Close', GB_D_textDomainString ),
 				'backgroundClickMessage' => __( 'if you close notices with click background, you see notices again and again. İf you dont want see notices again, close notices with close button.', GB_D_textDomainString )
 			);
 			wp_localize_script( 'notice_script_GBWindow', 'noticeLocalizeMessage', $noticeLocalizeMessage_translation_array );

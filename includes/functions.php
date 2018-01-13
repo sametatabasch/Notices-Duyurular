@@ -18,20 +18,23 @@ function dateStringToArray( $dateString = null ) {
 	if ( is_null( $dateString ) ) {
 		$dateString = date_i18n( 'Y-m-d H:i:s' );
 	}
-	$datearr = array(
-		'year'   => substr( $dateString, 0, 4 ),
-		'month'  => substr( $dateString, 5, 2 ),
-		'day'    => substr( $dateString, 8, 2 ),
-		'hour'   => substr( $dateString, 11, 2 ),
-		'minute' => substr( $dateString, 14, 2 ),
-		'second' => substr( $dateString, 17, 2 )
+	$datearr         = array(
+		'altDate' => substr( $dateString, 0, 10 ),
+		'year'    => substr( $dateString, 0, 4 ),
+		'month'   => substr( $dateString, 5, 2 ),
+		'day'     => substr( $dateString, 8, 2 ),
+		'hour'    => substr( $dateString, 11, 2 ),
+		'minute'  => substr( $dateString, 14, 2 ),
+		'second'  => substr( $dateString, 17, 2 )
 	);
+	$datearr['date'] = $datearr['day'] . '.' . $datearr['month'] . '.' . $datearr['year'];
 
 	return $datearr;
 }
 
 /**
  * if wordress in debuh mode write to log file log data
+ *
  * @param $notice GB_Notice
  * @param $action string
  */
