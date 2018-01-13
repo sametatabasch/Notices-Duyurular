@@ -7,21 +7,10 @@ Stable tag: 1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-[TR] Wordpress sitenizde Duyurular yayınlamanızı sağlar.
 [EN] Easy way to adding notifications in your Wordpress site
 
 == Description ==
-[TR]Bu  eklenti  wordpress blogunuzda duyurular yayınlamanızı  sağlıyor.Duyuruyu  yayınlarken şu ayarlamaları yapabiliyorsunuz:
-
-* Duyuruyu sitenize gelen herkes mi yoksa sadece Giriş  yapmış  kullanıcılar mı  görecek ?
-* Duyuru sayfanın üstünde şerit halinde mi  gözükecek yoksa Sayfanın ortasında pencere şeklinde mi ?
-* Duyuru ne zamana kadar gösterilecek?
-* Duyuru ekranda nekadar süre kalacak ?
-* Duyurunun tasarımı  nasıl olacak (4 farklı seçenek )
-    
-Bunlara ek olarak  ziyaretci duyuruyu bir daha görmek istemediğinde gözükmesini engellemek için gösterme linkini  tıklaması yeterli.
-
-[EN]You can add notifications and displaying them with fancybox effect. Also this plugin has this features;
+You can add notifications and displaying them with fancybox effect. Also this plugin has this features;
 
 * You can set visibility of notifications. Displaying for everyone or only logged in users.
 * You can set easily position of notices.
