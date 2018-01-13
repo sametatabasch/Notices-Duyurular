@@ -138,7 +138,7 @@ class GB_Notice extends GB_Notices {
 				'displayMode'     => 'window',
 				'size'            => 'xLarge',
 				'displayTime'     => '5',
-				'lastDisplayDate' => date( 'Y-m-d H:i:s', strtotime( "+1 months" ) ),
+				'lastDisplayDate' => ( new DateTime( '+1 months', new DateTimeZone( get_option( 'timezone_string' ) ) ) )->format( 'Y-m-d H:i:s' ),
 				'noBorder'        => null,
 				'color'           => 'notice-white',
 			];
@@ -285,12 +285,12 @@ class GB_Notice extends GB_Notices {
 
 	/**
 	 * Check is notice expired
-	 * todo 2iki saat zaman farkı oluyor ???
+	 *
 	 * @return bool
 	 */
 	public function isExpired() {
-		$expireDate = new DateTime( $this->expireDate );
-		$now        = new DateTime( 'now' );
+		$expireDate = new DateTime( $this->expireDate, new DateTimeZone( get_option( 'timezone_string' ) ) );
+		$now        = new DateTime( 'now', new DateTimeZone( get_option( 'timezone_string' ) ) );
 		if ( $expireDate < $now ) {
 			return true;
 		} else {

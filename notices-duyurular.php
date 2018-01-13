@@ -125,7 +125,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 		 *
 		 * add_action('add_meta_boxes', array(&$this, 'addMetaBox'));
 		 */
-		public function addMetaBox() { //todo #5
+		public function addMetaBox() {
 			add_meta_box(
 				'GB_noticeMetaBox',
 				__( 'Notice Settings', GB_D_textDomainString ),
