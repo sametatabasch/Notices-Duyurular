@@ -47,7 +47,15 @@
             });
         });
     </script>
-
+    <div class="misc-pub-section">
+        <label for="noticeMetaData[titleAlign]"><span><b><?= __( 'Title Align :', GB_D_textDomainString ) ?></b></span></label>
+        <select name="noticeMetaData[titleAlign]">
+            <option <?= selected( $notice->titleAlign, 'left', false ) ?> value="left"><?= __( 'Left', GB_D_textDomainString ) ?></option>
+            <option <?= selected( $notice->titleAlign, 'center', false ) ?> value="center"><?= __( 'Center', GB_D_textDomainString ) ?></option>
+            <option <?= selected( $notice->titleAlign, 'right', false ) ?> value="right"><?= __( 'Right', GB_D_textDomainString ) ?></option>
+        </select>
+        <div class="clear"></div>
+    </div>
     <div class="misc-pub-section">
         <span><b><?= __( 'Type :', GB_D_textDomainString ) ?></b></span>
         <div class="notice-white">

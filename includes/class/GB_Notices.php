@@ -24,9 +24,16 @@ class GB_Notices {
 	public $noticeMeta;
 	/**
 	 * Default display time of Notice in second
+	 *
+	 * uses in metabox.php:109
 	 * @var int $defaultDisplayTime in second
 	 */
 	public static $defaultDisplayTime = 5;
+	/**
+	 * Default post meta
+	 * @var array
+	 */
+	public $defaultPostMeta;
 
 	/**
 	 * Wp_postmeta key constant
@@ -51,6 +58,17 @@ class GB_Notices {
 	}
 
 	public function __construct() {
+		$this->defaultPostMeta = [
+			'whoCanSee'       => 'everyone',
+			'displayMode'     => 'window',
+			'size'            => 'xLarge',
+			'displayTime'     => '5',
+			'lastDisplayDate' => ( new DateTime( '+1 months', new DateTimeZone( get_option( 'timezone_string' ) ) ) )->format( 'Y-m-d H:i:s' ),
+			'noBorder'        => null,
+			'color'           => 'notice-white',
+			'titleAlign'      => 'left',
+		];
+
 		/*
 		 * Add saveNotice to save_post action
 		 */
@@ -185,15 +203,7 @@ class GB_Notices {
 	 */
 	public function trashToPublishNotice() {
 		$noticePostId     = get_the_ID();
-		$this->noticeMeta = [
-			'whoCanSee'       => 'everyone',
-			'displayMode'     => 'window',
-			'size'            => 'xLarge',
-			'displayTime'     => '5',
-			'lastDisplayDate' => ( new DateTime( '+1 months', new DateTimeZone( get_option( 'timezone_string' ) ) ) )->format( 'Y-m-d H:i:s' ),
-			'noBorder'        => null,
-			'color'           => 'notice-white',
-		];
+		$this->noticeMeta = $this->defaultPostMeta;
 		update_post_meta( $noticePostId, self::NOTICE_POST_META_KEY, $this->noticeMeta );
 	}
 

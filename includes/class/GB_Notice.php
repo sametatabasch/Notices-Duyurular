@@ -21,6 +21,13 @@ class GB_Notice extends GB_Notices {
 	public $title;
 
 	/**
+	 * Duyuru başlık hizalaması
+	 * Align of Notice title
+	 * @var
+	 */
+	public $titleAlign;
+
+	/**
 	 * Duyuru metni
 	 * Content of Notice
 	 * @var string $content
@@ -133,23 +140,19 @@ class GB_Notice extends GB_Notices {
 		 */
 		if ( $this->postMeta === "" ) {
 
-			$this->postMeta = [
-				'whoCanSee'       => 'everyone',
-				'displayMode'     => 'window',
-				'size'            => 'xLarge',
-				'displayTime'     => '5',
-				'lastDisplayDate' => ( new DateTime( '+1 months', new DateTimeZone( get_option( 'timezone_string' ) ) ) )->format( 'Y-m-d H:i:s' ),
-				'noBorder'        => null,
-				'color'           => 'notice-white',
-			];
+			$this->postMeta = $this->defaultPostMeta;
 		}
+	}
+
+	private function setTitleAlign() {
+		$this->titleAlign = $this->postMeta['titleAlign'];
 	}
 
 	/**
 	 * Set Notice title to Notice->title
 	 */
 	private function setTitle() {
-		$this->title = get_the_title( $this->id ) != '' ? '<h4>' . ucfirst( get_the_title( $this->id ) ) . '</h4>' : null;
+		$this->title = get_the_title( $this->id ) != '' ? '<h4 align="'.$this->titleAlign.'">' . ucfirst( get_the_title( $this->id ) ) . '</h4>' : null;
 	}
 
 	/**
@@ -241,7 +244,8 @@ class GB_Notice extends GB_Notices {
 		$this->setHtmlClass();//must after setDisplayMode() and setSize()
 		$this->setDisplayTime();
 		$this->setHtmlDataAttribute();//must after setDisplayTime(), setColor() and setSize()
-		$this->setTitle();
+		$this->setTitleAlign();
+		$this->setTitle(); // must after setTitleAlign()
 		$this->setContent();
 
 
