@@ -108,6 +108,10 @@ class GB_Notice extends GB_Notices {
 		if ( is_null( $id ) ) {
 			return false;
 		}
+		if ( get_post_field('post_type',$id) !== 'notice' ) {
+			return false;
+		}
+
 		$this->id = $id;
 		$this->getPostMeta();
 		$this->setExpireDate();
@@ -152,7 +156,7 @@ class GB_Notice extends GB_Notices {
 	 * Set Notice title to Notice->title
 	 */
 	private function setTitle() {
-		$this->title = get_the_title( $this->id ) != '' ? '<h4 align="'.$this->titleAlign.'">' . ucfirst( get_the_title( $this->id ) ) . '</h4>' : null;
+		$this->title = get_the_title( $this->id ) != '' ? '<h4 align="' . $this->titleAlign . '">' . ucfirst( get_the_title( $this->id ) ) . '</h4>' : null;
 	}
 
 	/**
