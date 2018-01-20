@@ -145,7 +145,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			 */
 			$notice = new GB_Notice( get_the_ID() );
 
-			$date          = dateStringToArray( $notice->expireDate );
+			$date = dateStringToArray( $notice->expireDate );
 
 			global $wp_locale;
 
@@ -196,11 +196,6 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 		public function enqueueScriptAndStyle() {
 			/* Register Scripts */
 			wp_register_script(
-				'imagesloaded_script',
-				plugins_url( 'js/imagesloaded.pkgd.min.js', __FILE__ ),
-				array( 'jquery' )
-			);
-			wp_register_script(
 				'notice_script_window.class',
 				plugins_url( 'js/window.class.js', __FILE__ ),
 				array( 'jquery' )
@@ -208,11 +203,11 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			wp_register_script(
 				'notice_script_GBWindow',
 				plugins_url( 'js/GBWindow.js', __FILE__ ),
-				array( 'jquery', 'imagesloaded_script', 'notice_script_window.class' ) );
+				array( 'jquery', 'imagesloaded', 'notice_script_window.class' ) );
 			wp_register_script(
 				'notice_script_default',
 				plugins_url( 'js/default.js', __FILE__ ),
-				array( 'jquery', 'imagesloaded_script', 'notice_script_GBWindow', 'notice_script_window.class' )
+				array( 'jquery', 'imagesloaded', 'notice_script_GBWindow', 'notice_script_window.class' )
 			);
 			/* Register Styles */
 			wp_register_style(
@@ -237,7 +232,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 
 			/* Add registered script to wordpress script queue  */
 			wp_enqueue_script( 'jquery' );
-			wp_enqueue_script( 'imagesloaded_script' );
+			wp_enqueue_script( 'imagesloaded' );
 			wp_enqueue_script( 'notice_script_window.class' );
 			wp_enqueue_script( 'notice_script_GBWindow' );
 			wp_enqueue_script( 'notice_script_default' );
