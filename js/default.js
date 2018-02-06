@@ -67,7 +67,10 @@ jQuery(document).ready(function ($) {
         success: function (response) {
             $("body").append(response.noticesContainer);
             if (response.isThereWindowModeNotice) {
-                $(".noticeContainer").GBWindow();
+                /**
+                 * GBWindow sınıfına gösterilecek duyuruların id numaraları parametre olarak aktarılarak duyurular gösteriliyor
+                 */
+                $('window').GBWindow({'windowModeNoticeIds': response.windowModeNoticeIds});
             }
             adjustNoticeContainerCSSTop();
             handleCloseButtonOfBarNotice();

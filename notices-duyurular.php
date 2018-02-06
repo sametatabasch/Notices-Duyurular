@@ -248,7 +248,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 					// generate a nonce with a unique ID "myajax-post-comment-nonce"
 					// so that you can check it later when an AJAX request is sent
 					'securityFor_getNoticesContainer' => wp_create_nonce( 'getNoticesContainer' ),
-					'securityFor_markAsReadNotice'    => wp_create_nonce( 'markAsReadNotice' )
+					'securityFor_markAsReadNotice'    => wp_create_nonce( 'markAsReadNotice' ),
 				)
 			);
 			wp_localize_script(
@@ -256,10 +256,11 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 				'ajaxData_GBWindow',
 				array(
 					// URL to wp-admin/admin-ajax.php to process the request
-					'ajaxurl'                      => $ajaxurl,
+					'ajaxurl'                               => $ajaxurl,
 					// generate a nonce with a unique ID "myajax-post-comment-nonce"
 					// so that you can check it later when an AJAX request is sent
-					'securityFor_markAsReadNotice' => wp_create_nonce( 'markAsReadNotice' )
+					'securityFor_markAsReadNotice'          => wp_create_nonce( 'markAsReadNotice' ),
+					'securityFor_getSingleWindowModeNotice' => wp_create_nonce( 'getSingleWindowModeNotice' )
 				)
 			);
 		}

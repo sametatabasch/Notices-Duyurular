@@ -2,6 +2,11 @@
  * Created by sametatabasch on 12.06.2017.
  */
 (function ($) {
+    /**
+     *
+     * @param {jQuery} windowObject
+     * @constructor
+     */
     window.GB_D_noticeWindow = function (windowObject) {
         /**
          * instance

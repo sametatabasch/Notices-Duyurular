@@ -14,16 +14,16 @@
 
         /**
          * index number of windowObjects which current showing
-         * @type {number}
+         * @type {number} -1 => backgroundClickMessage, -2 => closeDialog
          */
-        var _activeIndex = 2;
+        var _activeIndex = 0;
 
         /**
          * Store previous notice index number. Because closeDialog and readConfirm message show with _activeIndex
          * @type {number}
          * @private
          */
-        var _tempIndex = 0;
+        var _tempIndex = -1;
 
         /**
          *
@@ -115,80 +115,69 @@
         var _windowBoxNextWindowButton = $('<a title="Next" class="window-nav window-nav-next" href="javascript:;"><span></span></a>');
 
         /**
-         * Store all window mode Notice
+         * Store all window mode Notice id numbers
          */
-        var _notices = $('.' + _param.noticesClass, this);
-
-        /**
-         * store all window object
-         *
-         * @type {Array}
-         */
-        var _windowObjects = [];
-
-        /**
-         * currently showing notice jQuery Object
-         * @type {*}
-         * @private
-         */
-        var _activeWindowNoticeJqueryObject;
+        var _noticeIds;
 
         /**
          * currently showing notice Object
+         * Oluşturduğum window sınıfının özelliklerine ulaşabilmek için kullanılıyor. _progress, _size,_displayTime gibi
          * @type {*}
          * @private
          */
         var _activeWindowNoticeObject;
 
         /**
-         *
+         * Duyurunun eklenmesi için gerekli html elementlerini sayfaya ekliyor. Arkaplan ve duyuru kutusu gibi
          */
         function prepareForShow() {
             _htmlBody.append(_background);
             _htmlBody.append(_windowBox);
-            setWindowObjects();
+            _noticeIds = _param.windowModeNoticeIds;
             showNextAndPrevButtonIfNecessary();
 
             _background.click(handleClick_backgroundClick);
         }
 
         /**
-         * push window mode notices to windowObjects
-         */
-        function setWindowObjects() {
-            /**
-             * @type {Window.GB_D_noticeWindow}
-             */
-            var noticeWindow;
-            /*
-             * Add Background click message to _windowObjects[0]
-             */
-            noticeWindow = new GB_D_noticeWindow(backgroundClickMessage);
-            _windowObjects.push(noticeWindow);
-            /*
-             * Add close dialog to _windowObjects[1]
-             */
-            noticeWindow = new GB_D_noticeWindow(closeDialog);
-            _windowObjects.push(noticeWindow);
-            /*
-             * Add Notices to _windowObjects
-             */
-            _notices.each(function (index, value) {
-                noticeWindow = new GB_D_noticeWindow($(this));
-                _windowObjects.push(noticeWindow);
-            });
-        }
-
-        /**
-         *
-         * @returns {boolean}
+         * Gösterilecek duyurunun notiveWindow sınıfını hazırlar
+         * @return {boolean}
          */
         function setActiveNotice() {
-            if (_windowObjects.length > 2) {
-                _activeWindowNoticeObject = _windowObjects[_activeIndex];
-                _activeWindowNoticeJqueryObject = _windowObjects[_activeIndex]._jObject;
+            if (_noticeIds.length > 0) {//gösterilecek duyuru var ise
+                if (_activeIndex >= 0) {// eğer 0 ve üstü bir sayı ise duyuru
+                    /*
+                     * get single notice
+                     */
+                    $.ajax({
+                        type: "POST",
+                        url: ajaxData_GBWindow.ajaxurl,
+                        data: {
+                            noticeId: _noticeIds[_activeIndex],
+                            security: ajaxData_GBWindow.securityFor_getSingleWindowModeNotice,
+                            action: 'getSingleWindowModeNotice'
+                        },
+                        success: function (response) {
+                            _activeWindowNoticeObject = new GB_D_noticeWindow($(response.html));
+                            _activeWindowNoticeObject._jObject = _activeWindowNoticeObject._jObject;
+
+                        },
+                        async:false
+                    });
+                } else { // değilse ön tanımlı mesajlardan biri gösterilecek
+                    switch (_activeIndex) {
+                        case -1:
+                            _activeWindowNoticeObject = new GB_D_noticeWindow(backgroundClickMessage);
+                            _activeWindowNoticeObject._jObject = _activeWindowNoticeObject._jObject;
+                            break;
+                        case -2:
+                            _activeWindowNoticeObject = new GB_D_noticeWindow(closeDialog);
+                            _activeWindowNoticeObject._jObject = _activeWindowNoticeObject._jObject;
+                            break;
+                    }
+                }
                 return true;
-            } else {
+            } else {// gösterğilecek duyuru yok ise
                 closeAllWindows();
                 return false;
             }
@@ -198,27 +187,25 @@
          *
          */
         function showActiveNotice() {
-            if (setActiveNotice()) {
+            if(setActiveNotice()){
                 _background.removeClass('notice-white notice-red notice-green notice-blue'); // remove old color class
                 _background.addClass(_activeWindowNoticeObject._color);
                 _windowBox.removeClass('xLarge large medium small');
-                _windowBox.addClass(_activeWindowNoticeObject._size );
+                _windowBox.addClass(_activeWindowNoticeObject._size);
                 $('#wpadminbar').hide();
-                _windowBox.append(_activeWindowNoticeJqueryObject).imagesLoaded()
-                    .progress(function () {
-                        $('#windowBox').append(_loadingAnimation);
-                    })
-                    .done(function () {
-                        _loadingAnimation.remove();
-                        _activeWindowNoticeJqueryObject.fadeIn();
-                        locateNotice();
-                        /**
-                         * add click event listenner to window close button
-                         */
-                        _activeWindowNoticeJqueryObject.find('.close').click(showReadConfirmMessage);
-                        handleDisplayTime();
-                    });
-            } else console.log('there is no notice');
+                _windowBox.append(_activeWindowNoticeObject._jObject);
+                _windowBox.append(_loadingAnimation);
+                _windowBox.imagesLoaded().done(function () {
+                    _loadingAnimation.remove();
+                    _activeWindowNoticeObject._jObject.fadeIn();
+                    locateNotice();
+                    /**
+                     * add click event listenner to window close button
+                     */
+                    _activeWindowNoticeObject._jObject.find('.close').click(showReadConfirmMessage);
+                    handleDisplayTime();
+                });
+            }
         }
 
         function handleDisplayTime() {
@@ -228,7 +215,7 @@
                     {
                         duration: _activeWindowNoticeObject._displayTime * 1000,
                         done: function () {
-                            if (_activeWindowNoticeJqueryObject.attr('id') === 'backgroundClickMessage') {
+                            if (_activeWindowNoticeObject._jObject.attr('id') === 'backgroundClickMessage') {
                                 closeAllWindows();
                             } else {
                                 closeActiveWindow();
@@ -248,10 +235,10 @@
          */
         function showNextNotice() {
             _activeWindowNoticeObject._progress.stop(true, false);// fail display time Animation
-            _activeWindowNoticeJqueryObject.fadeOut(function () {
-                _activeWindowNoticeJqueryObject.remove();
+            _activeWindowNoticeObject._jObject.fadeOut(function () {
+                _activeWindowNoticeObject._jObject.remove();
                 _activeIndex++;
-                if (_activeIndex > _windowObjects.length - 1) _activeIndex = 2;// set firs notice
+                if (_activeIndex > _noticeIds.length - 1) _activeIndex = 0;// set firs notice
                 showActiveNotice();
                 showNextAndPrevButtonIfNecessary();
             });
@@ -262,10 +249,10 @@
          */
         function showPreviousNotice() {
             _activeWindowNoticeObject._progress.stop(true, false);// fail display time Animation
-            _activeWindowNoticeJqueryObject.fadeOut(function () {
-                _activeWindowNoticeJqueryObject.remove();
+            _activeWindowNoticeObject._jObject.fadeOut(function () {
+                _activeWindowNoticeObject._jObject.remove();
                 _activeIndex--;
-                if (_activeIndex < 2) _activeIndex = _windowObjects.length - 1;
+                if (_activeIndex < 0) _activeIndex = _noticeIds.length - 1;
                 showActiveNotice();
                 showNextAndPrevButtonIfNecessary();
             });
@@ -275,7 +262,7 @@
          * Add next and previous button if exist more than one window mode notice
          */
         function showNextAndPrevButtonIfNecessary() {
-            if (_windowObjects.length > 3) {
+            if (_noticeIds.length > 1) {
                 _windowBox.append(_windowBoxNextWindowButton);
                 _windowBox.append(_windowBoxPreviousWindowButton);
                 _windowBoxNextWindowButton.click(showNextNotice);
@@ -287,7 +274,7 @@
          *
          */
         function hideNextAndPrevButton() {
-            if (_windowObjects.length > 3) {
+            if (_noticeIds.length > 1) {
                 _windowBoxNextWindowButton.remove();
                 _windowBoxPreviousWindowButton.remove();
             }
@@ -299,10 +286,10 @@
          */
         function showReadConfirmMessage() {
             _activeWindowNoticeObject._progress.stop(true, false);// fail display time Animation
-            _activeWindowNoticeJqueryObject.fadeOut(function () {
-                _activeWindowNoticeJqueryObject.remove();
+            _activeWindowNoticeObject._jObject.fadeOut(function () {
+                _activeWindowNoticeObject._jObject.remove();
                 _tempIndex = _activeIndex; // set actve index to temp index
-                _activeIndex = 1;//set Close Dialog
+                _activeIndex = -2;//set Close Dialog
                 showActiveNotice();
                 hideNextAndPrevButton();
                 $('#dontShowAgainNotice', closeDialog).click(handleClick_dontShowAgainNotice);
@@ -336,9 +323,9 @@
             if (!isBackgroundClicked) {
                 _activeWindowNoticeObject._progress.stop(true, false);// fail display time Animation
                 isBackgroundClicked = true;
-                _activeWindowNoticeJqueryObject.fadeOut(function () {
-                    _activeWindowNoticeJqueryObject.remove();
-                    _activeIndex = 0;//set background Click message
+                _activeWindowNoticeObject._jObject.fadeOut(function () {
+                    _activeWindowNoticeObject._jObject.remove();
+                    _activeIndex = -1;//set background Click message
                     showActiveNotice();
                     hideNextAndPrevButton();
                 });
@@ -349,12 +336,12 @@
          * Close and delete notice in current session. And after show next Notice
          */
         function closeActiveWindow() {
-            _activeWindowNoticeJqueryObject.fadeOut(function () {
-                _activeWindowNoticeJqueryObject.remove();
+            _activeWindowNoticeObject._jObject.fadeOut(function () {
+                _activeWindowNoticeObject._jObject.remove();
                 toggleActiveIndexWithTempIndex();
-                _windowObjects.splice(_activeIndex, 1);
-                if (_activeIndex > _windowObjects.length - 1) {
-                    _activeIndex = 2;//set first Notice
+                _noticeIds.splice(_activeIndex, 1);
+                if (_activeIndex > _noticeIds.length - 1) {
+                    _activeIndex = 0;//set first Notice
                 }
                 showActiveNotice();
                 showNextAndPrevButtonIfNecessary();
@@ -366,7 +353,7 @@
          *
          */
         function toggleActiveIndexWithTempIndex() {
-            if (_tempIndex !== 0) {
+            if (_tempIndex !== -1) {
                 var temp = _activeIndex;
                 _activeIndex = _tempIndex;
                 _tempIndex = temp;
@@ -380,10 +367,6 @@
          */
         function closeAllWindows() {
             _background.remove();
-            // delete all window mode notice from notice container
-            _windowObjects.forEach(function (active, index, allObject) {
-                active._jObject.remove();
-            });
             _windowBox.remove();
             $('#wpadminbar').show();
         }
@@ -393,14 +376,14 @@
          */
         function locateNotice() {
             var maxHeight = window.innerHeight - 20;
-            var top = (window.innerHeight - _activeWindowNoticeJqueryObject.height()) / 2;
+            var top = (window.innerHeight - _activeWindowNoticeObject._jObject.height()) / 2;
             top = top < 15 ? 15 : top;
-            var left = (window.innerWidth - _activeWindowNoticeJqueryObject.width()) / 2; //todo width() ve height() fonksiyonları burada çalışıyorda window.class da neden çalışmıyor tekrar denenecek.
+            var left = (window.innerWidth - _activeWindowNoticeObject._jObject.width()) / 2; //todo width() ve height() fonksiyonları burada çalışıyorda window.class da neden çalışmıyor tekrar denenecek.
             var maxWidth = window.innerWidth - 115;
             _windowBox.css({'top': top, 'left': left, 'max-width': maxWidth, 'max-height': maxHeight});
-            _activeWindowNoticeJqueryObject.find('.window-content').css({'max-height': maxHeight - _activeWindowNoticeJqueryObject.find('.window-footer').height()});
-            if (_activeWindowNoticeJqueryObject.hasClass('noborder')) {
-                _activeWindowNoticeJqueryObject.find('img').css({'max-height': maxHeight - _activeWindowNoticeJqueryObject.find('.window-footer').height()});
+            _activeWindowNoticeObject._jObject.find('.window-content').css({'max-height': maxHeight - _activeWindowNoticeObject._jObject.find('.window-footer').height()});
+            if (_activeWindowNoticeObject._jObject.hasClass('noborder')) {
+                _activeWindowNoticeObject._jObject.find('img').css({'max-height': maxHeight - _activeWindowNoticeObject._jObject.find('.window-footer').height()});
             }
 
         }

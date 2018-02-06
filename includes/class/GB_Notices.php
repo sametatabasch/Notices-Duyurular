@@ -9,7 +9,7 @@
 class GB_Notices {
 	/**
 	 * Store all available Notice
-	 * @var array
+	 * @var array[WP_Post]
 	 */
 	public $notices;
 	/**
@@ -96,7 +96,11 @@ class GB_Notices {
 			 */
 			add_action( 'wp_ajax_markAsReadNotice', array( &$this, 'markAsRead' ) );
 			add_action( 'wp_ajax_nopriv_markAsReadNotice', array( &$this, 'markAsRead' ) );
-
+			/*
+			 * Her bir duyuru ayrı ayrı ajax isteği ile alındığı için bu işlemi yapacak olan action tanımlamaları
+			 */
+			add_action('wp_ajax_getSingleWindowModeNotice',array(&$this,'getSingleWindowModeNotice'));
+			add_action('wp_ajax_nopriv_getSingleWindowModeNotice',array(&$this,'getSingleWindowModeNotice'));
 		}
 
 		$this->getAllNotice();
@@ -110,7 +114,7 @@ class GB_Notices {
 			'numberposts' => - 1,
 			'post_type'   => 'notice',
 			'post_status' => 'publish',
-			'order'       => 'ASC'
+			'order'       => 'DESC'
 
 		);
 
@@ -277,9 +281,6 @@ class GB_Notices {
 	/**
 	 * Create notice container with available Notices
 	 * this function created for ajax response
-	 * todo window type duyuruların her biri tek tek ajax ile çağırılacak.Bu fonksiyon isThereWindowModeNotice değişkenine ek olarak window type duyuruların html çıktılarını dizi olarak verecek
-	 * todo bu dizi kullanılarak javascript tarafında _windowObjects oluşturulacak.
-	 * todo _windowBox içerisine duyuru eklendiğinde _windowbox.imagesloaded eklentisi çalıştırılacak. bu şekilde imagesloaded uygulaması amacına uygun kullanılabilecek düşüncesindeyim.
 	 */
 	public function createNoticesContainerHtml() {
 		if ( $this->isThereAnyNotice() ) {
@@ -290,19 +291,36 @@ class GB_Notices {
 			 */
 			$noticesHtmlContainer    = '<div class="noticeContainer notice-class">';
 			$isThereWindowModeNotice = false;
+			$windowModeNoticeIds     = array();
 			foreach ( $this->notices as $noticePost ) {
-				$notice               = new GB_Notice( $noticePost->ID );
-				$noticesHtmlContainer .= $notice->html;
+				$notice = new GB_Notice( $noticePost->ID );
 				if ( $notice->displayMode === 'window' ) {
 					$isThereWindowModeNotice = true;
+					$windowModeNoticeIds[]   = $notice->id;
+				} else {
+					$noticesHtmlContainer .= $notice->html;
 				}
 			}
 
 			$noticesHtmlContainer .= '</div>';
 			wp_send_json( array(
 				'noticesContainer'        => $noticesHtmlContainer,
-				'isThereWindowModeNotice' => $isThereWindowModeNotice
+				'isThereWindowModeNotice' => $isThereWindowModeNotice,
+				'windowModeNoticeIds'     => $windowModeNoticeIds,
 			) );
 		}
+	}
+
+	public function getSingleWindowModeNotice() {
+		check_ajax_referer( "getSingleWindowModeNotice", 'security' );
+		if ( is_null( $_POST['noticeId'] ) && ! is_int( $_POST['noticeId'] ) ) {
+			return;
+		} else {
+			$windowModeNotice = new GB_Notice( $_POST['noticeId'] );
+		}
+
+		wp_send_json( array(
+			'html' => $windowModeNotice->html,
+		) );
 	}
 }
