@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notices-Duyurular 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-24 23:04+0300\n"
+"POT-Creation-Date: 2018-02-06 21:10+0300\n"
 "PO-Revision-Date: 2015-04-21 14:31+0200\n"
 "Last-Translator: Samet ATABAŞ <sametatabasch@gmail.com>\n"
 "Language-Team: \n"
@@ -13,10 +13,10 @@ msgstr ""
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;_x;__\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.4\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../includes/class/GB_Notices.php:224
+#: ../includes/class/GB_Notices.php:249
 msgid "Notice mark as read successfully"
 msgstr ""
 
@@ -112,54 +112,74 @@ msgstr ""
 msgid "Last display date :"
 msgstr ""
 
-#: ../views/metabox.php:37
+#: ../views/metabox.php:29
+msgid "Click for select date"
+msgstr ""
+
+#: ../views/metabox.php:51
+msgid "Title Align :"
+msgstr ""
+
+#: ../views/metabox.php:53
+msgid "Left"
+msgstr ""
+
+#: ../views/metabox.php:54
+msgid "Center"
+msgstr ""
+
+#: ../views/metabox.php:55
+msgid "Right"
+msgstr ""
+
+#: ../views/metabox.php:60
 msgid "Type :"
 msgstr ""
 
-#: ../views/metabox.php:40
+#: ../views/metabox.php:63
 msgid "White"
 msgstr ""
 
-#: ../views/metabox.php:44
+#: ../views/metabox.php:67
 msgid "Red"
 msgstr ""
 
-#: ../views/metabox.php:48
+#: ../views/metabox.php:71
 msgid "Blue"
 msgstr ""
 
-#: ../views/metabox.php:52
+#: ../views/metabox.php:75
 msgid "Green"
 msgstr ""
 
-#: ../views/metabox.php:57
+#: ../views/metabox.php:80
 msgid "No Border :"
 msgstr ""
 
-#: ../views/metabox.php:61
+#: ../views/metabox.php:84
 msgid "Size :"
 msgstr ""
 
-#: ../views/metabox.php:63
+#: ../views/metabox.php:86
 msgid "xLarge"
 msgstr ""
 
-#: ../views/metabox.php:64
+#: ../views/metabox.php:87
 msgid "Large"
 msgstr ""
 
-#: ../views/metabox.php:65
+#: ../views/metabox.php:88
 msgid "Medium"
 msgstr ""
 
-#: ../views/metabox.php:66
+#: ../views/metabox.php:89
 msgid "Small"
 msgstr ""
 
-#: ../views/metabox.php:70
+#: ../views/metabox.php:93
 msgid "Add time limit"
 msgstr ""
 
-#: ../views/metabox.php:76 ../views/metabox.php:84
+#: ../views/metabox.php:99 ../views/metabox.php:107
 msgid "Display Time :"
 msgstr ""

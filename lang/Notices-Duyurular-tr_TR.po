@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notices-Duyurular 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-24 23:04+0300\n"
-"PO-Revision-Date: 2017-09-24 23:06+0300\n"
+"POT-Creation-Date: 2018-02-06 21:11+0300\n"
+"PO-Revision-Date: 2018-02-06 21:11+0300\n"
 "Last-Translator: Samet ATABAŞ <sametatabasch@gmail.com>\n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -13,10 +13,10 @@ msgstr ""
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;_x;__\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.4\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../includes/class/GB_Notices.php:224
+#: ../includes/class/GB_Notices.php:249
 msgid "Notice mark as read successfully"
 msgstr "Duyuru başarıyla okundu olarak işaretlendi"
 
@@ -117,55 +117,75 @@ msgstr "Şerit"
 msgid "Last display date :"
 msgstr "Son Gösterim Tarihi"
 
-#: ../views/metabox.php:37
+#: ../views/metabox.php:29
+msgid "Click for select date"
+msgstr "Tarih seçmek için tıklayın"
+
+#: ../views/metabox.php:51
+msgid "Title Align :"
+msgstr "Başlık Hizalaması :"
+
+#: ../views/metabox.php:53
+msgid "Left"
+msgstr "Sol"
+
+#: ../views/metabox.php:54
+msgid "Center"
+msgstr "Orta"
+
+#: ../views/metabox.php:55
+msgid "Right"
+msgstr "Sağ"
+
+#: ../views/metabox.php:60
 msgid "Type :"
 msgstr "Tipi:"
 
-#: ../views/metabox.php:40
+#: ../views/metabox.php:63
 msgid "White"
 msgstr "Beyaz"
 
-#: ../views/metabox.php:44
+#: ../views/metabox.php:67
 msgid "Red"
 msgstr "Kırmızı"
 
-#: ../views/metabox.php:48
+#: ../views/metabox.php:71
 msgid "Blue"
 msgstr "MAvi"
 
-#: ../views/metabox.php:52
+#: ../views/metabox.php:75
 msgid "Green"
 msgstr "Yeşil"
 
-#: ../views/metabox.php:57
+#: ../views/metabox.php:80
 msgid "No Border :"
 msgstr "Kenarlıksız"
 
-#: ../views/metabox.php:61
+#: ../views/metabox.php:84
 msgid "Size :"
 msgstr "Boyut :"
 
-#: ../views/metabox.php:63
+#: ../views/metabox.php:86
 msgid "xLarge"
 msgstr "Çok Geniş"
 
-#: ../views/metabox.php:64
+#: ../views/metabox.php:87
 msgid "Large"
 msgstr "Geniş"
 
-#: ../views/metabox.php:65
+#: ../views/metabox.php:88
 msgid "Medium"
 msgstr "Orta"
 
-#: ../views/metabox.php:66
+#: ../views/metabox.php:89
 msgid "Small"
 msgstr "Küçük"
 
-#: ../views/metabox.php:70
+#: ../views/metabox.php:93
 msgid "Add time limit"
 msgstr "Süre sınırı ekle"
 
-#: ../views/metabox.php:76 ../views/metabox.php:84
+#: ../views/metabox.php:99 ../views/metabox.php:107
 msgid "Display Time :"
 msgstr "Görünme Süresi :"
 
