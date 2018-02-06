@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Notices-Duyurular 1.x\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-06 21:11+0300\n"
-"PO-Revision-Date: 2018-02-06 21:11+0300\n"
+"PO-Revision-Date: 2018-02-06 22:30+0300\n"
 "Last-Translator: Samet ATABAŞ <sametatabasch@gmail.com>\n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -151,7 +151,7 @@ msgstr "Kırmızı"
 
 #: ../views/metabox.php:71
 msgid "Blue"
-msgstr "MAvi"
+msgstr "Mavi"
 
 #: ../views/metabox.php:75
 msgid "Green"
