@@ -1,47 +1,36 @@
-#Notices-Duyurular#
+# Announcements-Duyurular #
 Contributors: sametatabasch
 Tags: notice, duyuru, cookie, announcement
 Requires at least: 3.0.1
-Tested up to: 4.8.2
-Stable tag: 1.7
+Tested up to: 4.9.4
+Stable tag: 1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-[TR] Wordpress sitenizde Duyurular yayınlamanızı sağlar.<a href="http://gencbilisim.net/notices-duyurular-eklentisi/">Detaylar</a>
-
-[EN] Easy way to adding notifications in your Wordpress site
+Easy way to adding announcements in your Wordpress site
 
 ## Description ##
-[TR]Bu  eklenti  wordpress blogunuzda duyurular yayınlamanızı  sağlıyor.Duyuruyu  yayınlarken şu ayarlamaları yapabiliyorsunuz:
+With this plugin you can easily make announcements to your visitors. If visitor click "Don't show again" after click close button then the announcement don't show again this visitor. Thus, the same announcement not show repeatedly.
 
-* Duyuruyu sitenize gelen herkes mi yoksa sadece Giriş  yapmış  kullanıcılar mı  görecek ?
-* Duyuru sayfanın üstünde şerit halinde mi  gözükecek yoksa Sayfanın ortasında pencere şeklinde mi ?
-* Duyuru ne zamana kadar gösterilecek?
-* Duyuru ekranda nekadar süre kalacak ?
-* Duyurunun tasarımı  nasıl olacak (4 farklı seçenek )
-    
-Bunlara ek olarak  ziyaretci duyuruyu bir daha görmek istemediğinde gözükmesini engellemek için gösterme linkini  tıklaması yeterli.
+### Features ###
 
-[EN]You can add notifications and displaying them with fancybox effect. Also this plugin has this features;
-
-* You can set visibility of notifications. Displaying for everyone or only logged in users.
-* You can set easily position of notices.
-* You can set easily displaying date of notices. Notifications will auto expire.
+* You can choose four announcements type which is White, Blue, Green and Red.
+* You can choose two announcements mode which is Bar and Window
+* You can choose who can see your announcements, everyone, or just the logged-in user.
+* You can set expire date for announcement.The announcement is automatically move to trash
 * You can set easily display time in second for each notice.
-* 4 different type of notifications.
-  
-"If users click to "Don't show" they won't disturb with same notice again."
+* You can choose size of announcement which Small, Medium, Large and X-Large
+* You can set title align for each announcement.  
 
-## Translations ##
+## Açıklama ##
+Bu eklenti ile ziyaretçilerinize kolaylıkla duyuru yayınlayabilirsiniz. Ziyaretçi kapat butonuna tıkladıktan sonra "Bir Daha Gösterme" 'ye tıklarsa, o duyuru bir daha o ziyaretçiye gösterilmez. Böylece aynı duyuru ile tekrar tekrar karşılaşmanın önüne geçilmiş olunur.
 
-* English (en\_US)
-* Turkish (tr\_TR), native support
+### Özellikler ###
 
-## Installation ##
-
-Extract the zip file and just drop the contents in the wp-content/plugins/ directory of your WordPress installation and then activate the Plugin from admin's Plugins page.
-
-## Screenshots ##
-1. Example for Bar display mode. 
-2. Example for Window display mode.
-3. Example for add new notice page.
+* Beyaz, Mavi, Yeşil ve Kırmızı olmak üzere dört farklı duyuru tipi seçebilirsiniz
+* Şerit ve Pencere olmak üzere iki farklı duyuru modu seçebilirsiniz.
+* Herkes ya da sadece giriş yapmış kullanıcılar şeklinde duyuruyu kimlerin görebileceğini seçebilirsiniz
+* Duyurulara son gösterim tarihi belirleyebilirsiniz. Süresi dolan duyuru otomatik olarak çöpe taşınacaktır.
+* Her bir duyuruya ayrı ayrı saniye olarak görüntülenme süresi belirleyebilirsiniz.
+* Küçük, Orta, Geniş ve Çok geniş olmak üzere dört farklı duyuru boyutu seçebilirsiniz.
+* Her bir duyuru için başlık hizalamasını seçebilirsiniz.  

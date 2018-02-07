@@ -1,24 +1,26 @@
-===Notices-Duyurular===
+===Announcements-Duyurular===
 Contributors: sametatabasch
 Tags: notice, duyuru, cookie, announcement
 Requires at least: 3.0.1
-Tested up to: 4.8.2
-Stable tag: 1.7
+Tested up to: 4.9.4
+Stable tag: 1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-[EN] Easy way to adding notifications in your Wordpress site
+Easy way to adding announcements in your Wordpress site
 
 == Description ==
-You can add notifications and displaying them with fancybox effect. Also this plugin has this features;
+With this plugin you can easily make announcements to your visitors. If visitor click "Don't show again" after click close button then the announcement don't show again this visitor. Thus, the same announcement not show repeatedly.
 
-* You can set visibility of notifications. Displaying for everyone or only logged in users.
-* You can set easily position of notices.
-* You can set easily displaying date of notices. Notifications will auto expire.
+=Features=
+
+* You can choose four announcements type which is White, Blue, Green and Red.
+* You can choose two announcements mode which is Bar and Window
+* You can choose who can see your announcements, everyone, or just the logged-in user.
+* You can set expire date for announcement.The announcement is automatically move to trash
 * You can set easily display time in second for each notice.
-* 4 different type of notifications.
-  
-"If users click to "Don't show" they won't disturb with same notice again."
+* You can choose size of announcement which Small, Medium, Large and X-Large
+* You can set title align for each announcement.
 
 = Translations =
 
@@ -35,6 +37,14 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 3. Example for add new notice page.
 
 == Changelog ==
+
+= 1.8 =
+
+- Add date-time picker for last display date
+- Time difference problem fixed in cookies
+- Add align setting for notice title
+- Add loading animation when notice loading
+- Bug fix
 
 = 1.7 =
 

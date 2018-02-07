@@ -1,10 +1,10 @@
 <?php
 /*
-* Plugin Name: Notices-Duyurular
+* Plugin Name: Announcements-Duyurular
 * Plugin URI: http://gencbilisim.net/notices-duyurular-eklentisi/
-* Description: Easy way to publish Notices in your Wordpress
+* Description: Easy way to publish announcements in Wordpress
 * Author: Samet ATABAŞ
-* Version: 1.7
+* Version: 1.8
 * Author URI: http://www.gencbilisim.net
 * Text Domain: Notices-Duyurular
 * Domain Path: /lang

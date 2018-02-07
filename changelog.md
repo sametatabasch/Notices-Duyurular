@@ -1,5 +1,13 @@
 ## Changelog ##
 
+### 1.8 ###
+
+- Add date-time picker for last display date
+- Time difference problem fixed in cookies
+- Add align setting for notice title
+- Add loading animation when notice loading 
+- Bug fix
+
 ### 1.7 ###
 
 - Added Display time in second
