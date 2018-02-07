@@ -1,10 +1,8 @@
 # Announcements-Duyurular #
-Contributors: sametatabasch
-Tags: notice, duyuru, cookie, announcement
-Requires at least: 3.0.1
-Tested up to: 4.9.4
-Stable tag: 1.8
+Tags: notice, duyuru, cookie, announcement, worpress
+
 License: GPLv2 or later
+
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Easy way to adding announcements in your Wordpress site
