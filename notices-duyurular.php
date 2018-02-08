@@ -7,11 +7,8 @@
 * Version: 1.8
 * Author URI: http://www.gencbilisim.net
 * Text Domain: Notices-Duyurular
-* Domain Path: /lang
+* Domain Path: /lang/
 */
-//todo Multi  site için uyumlu  hale gelecek #14
-//todo Admin panel duyuruları ekleme işlemi yapılacak check box ile denetlenebilir.#48
-//todo * Çöpe taşınıca metaların boşalması #11
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
