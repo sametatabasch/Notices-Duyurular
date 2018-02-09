@@ -1,0 +1,16 @@
+.notice-class div,.notice-class span,.notice-class applet,.notice-class object,.notice-class iframe,.notice-class
+h1,.notice-class h2,.notice-class h3,.notice-class h4,.notice-class h5,.notice-class h6,.notice-class p,.notice-class blockquote,.notice-class pre,.notice-class
+a,.notice-class abbr,.notice-class acronym,.notice-class address,.notice-class big,.notice-class cite,.notice-class code,.notice-class
+del,.notice-class dfn,.notice-class em,.notice-class img,.notice-class ins,.notice-class kbd,.notice-class q,.notice-class s,.notice-class samp,.notice-class
+small,.notice-class strike,.notice-class strong,.notice-class sub,.notice-class sup,.notice-class tt,.notice-class var,.notice-class
+b,.notice-class u,.notice-class i,.notice-class center,.notice-class
+dl,.notice-class dt,.notice-class dd,.notice-class ol,.notice-class ul,.notice-class li,.notice-class
+fieldset,.notice-class form,.notice-class label,.notice-class legend,.notice-class
+table,.notice-class caption,.notice-class tbody,.notice-class tfoot,.notice-class thead,.notice-class tr,.notice-class th,.notice-class td,.notice-class
+article,.notice-class aside,.notice-class canvas,.notice-class details,.notice-class embed,.notice-class
+figure,.notice-class figcaption,.notice-class footer,.notice-class header,.notice-class hgroup,.notice-class
+menu,.notice-class nav,.notice-class output,.notice-class ruby,.notice-class section,.notice-class summary,.notice-class
+time,.notice-class mark,.notice-class audio,.notice-class video,.notice-class button{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}.notice-class article,.notice-class aside,.notice-class details,.notice-class figcaption,.notice-class figure,.notice-class
+footer,.notice-class header,.notice-class hgroup,.notice-class menu,.notice-class nav,.notice-class section{display:block}.notice-class ol,.notice-class ul{list-style:none}.notice-class blockquote,.notice-class q{quotes:none}.notice-class blockquote:before,.notice-class blockquote:after,.notice-class
+q:before,.notice-class q:after{content:'';content:none}.notice-class table{border-collapse:collapse;border-spacing:0}.notice-class progress,/* All HTML5 progress enabled browsers */
+                                                                                                                     .notice-class progress[role] /* polyfill */{appearance:none;-moz-appearance:none;-webkit-appearance:none;border:none;background-size:auto;width:400px;height:60px}.notice-class progress[role]:after{background-image:none}.notice-class progress[role] strong{display:none}
