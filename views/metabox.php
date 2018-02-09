@@ -35,7 +35,7 @@
             $('#date').datepicker({
                 changeMonth: true,
                 changeYear: true,
-                showButtonPanel: false,
+                showButtonPanel: true,
                 dateFormat: "dd.mm.yy",
                 altField: "input[name='noticeExpireDate[date]']",
                 altFormat: "yy-mm-dd",
