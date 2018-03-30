@@ -66,7 +66,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 
 			self::$path    = plugin_dir_path( __FILE__ );
 			$this->pathUrl = plugin_dir_url( __FILE__ );
-			load_plugin_textdomain( GB_D_textDomainString, false, basename( dirname( __FILE__ ) ) . '/lang/' );
+			load_plugin_textdomain( GB_D_textDomainString, false, basename( dirname( __FILE__ ) ) . '/lang' );
 			add_action( 'init', array( &$this, 'addPostType' ) );
 			add_action( 'add_meta_boxes', array( &$this, 'addMetaBox' ) );
 			add_action( 'after_setup_theme', array( &$this, 'addScriptAndStyle' ) );
@@ -157,7 +157,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			/**
 			 * Admin paneline eklenecek style dosyasını wordpress e kaydediyorum
 			 */
-			wp_register_style( 'notice_admin_style', plugins_url( 'css/admin.min.css', __FILE__ ) );
+			wp_register_style( 'notice_admin_style', plugins_url( 'css/admin.css', __FILE__ ) );
 			/**
 			 * Admin paneline eklenecek style dosyasını wordpress e ekliyorum
 			 */
@@ -194,31 +194,31 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 			/* Register Scripts */
 			wp_register_script(
 				'notice_script_window.class',
-				plugins_url( 'js/window.class.min.js', __FILE__ ),
+				plugins_url( 'js/window.class.js', __FILE__ ),
 				array( 'jquery' )
 			);
 			wp_register_script(
 				'notice_script_GBWindow',
-				plugins_url( 'js/GBWindow.min.js', __FILE__ ),
+				plugins_url( 'js/GBWindow.js', __FILE__ ),
 				array( 'jquery', 'imagesloaded', 'notice_script_window.class' ) );
 			wp_register_script(
 				'notice_script_default',
-				plugins_url( 'js/default.min.js', __FILE__ ),
+				plugins_url( 'js/default.js', __FILE__ ),
 				array( 'jquery', 'imagesloaded', 'notice_script_GBWindow', 'notice_script_window.class' )
 			);
 			/* Register Styles */
 			wp_register_style(
 				'notice_styleReset',
-				plugins_url( 'css/styleReset.min.css', __FILE__ )
+				plugins_url( 'css/styleReset.css', __FILE__ )
 			);
 			wp_register_style(
 				'notice_style',
-				plugins_url( 'css/style.min.css', __FILE__ ),
+				plugins_url( 'css/style.css', __FILE__ ),
 				array( 'notice_styleReset' )
 			);
 			wp_register_style(
 				'notice_alert_style',
-				plugins_url( 'css/alert.min.css', __FILE__ ),
+				plugins_url( 'css/alert.css', __FILE__ ),
 				array( 'notice_styleReset' )
 			);
 
