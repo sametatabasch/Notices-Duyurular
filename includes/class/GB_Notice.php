@@ -297,8 +297,8 @@ class GB_Notice extends GB_Notices {
 	 * @return bool
 	 */
 	public function isExpired() {
-		$expireDate = new DateTime( $this->expireDate, new DateTimeZone( get_option( 'timezone_string' ) ) );
-		$now        = new DateTime( 'now', new DateTimeZone( get_option( 'timezone_string' ) ) );
+		$expireDate = new DateTime( $this->expireDate, new DateTimeZone( wp_timezone_string() ) );
+		$now        = new DateTime( 'now', new DateTimeZone( wp_timezone_string() ) );
 		if ( $expireDate < $now ) {
 			return true;
 		} else {

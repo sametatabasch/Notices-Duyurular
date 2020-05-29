@@ -63,7 +63,7 @@ class GB_Notices {
 			'displayMode'     => 'window',
 			'size'            => 'xLarge',
 			'displayTime'     => '5',
-			'lastDisplayDate' => ( new DateTime( '+1 months', new DateTimeZone( get_option( 'timezone_string' ) ) ) )->format( 'Y-m-d H:i:s' ),
+			'lastDisplayDate' => ( new DateTime( '+1 months', new DateTimeZone( wp_timezone_string() ) ) )->format( 'Y-m-d H:i:s' ),
 			'noBorder'        => null,
 			'color'           => 'notice-white',
 			'titleAlign'      => 'left',
@@ -152,10 +152,10 @@ class GB_Notices {
 
 			$noticeExpireDate                    = $_POST['noticeExpireDate'];
 			$this->noticeMeta['lastDisplayDate'] = $noticeExpireDate['date'] . ' ' . sprintf( "%02d", $noticeExpireDate['hour'] ) . ':' . sprintf( "%02d", $noticeExpireDate['minute'] ) . ':00';
-			$expireDate                          = new DateTime( $this->noticeMeta['lastDisplayDate'], new DateTimeZone( get_option( 'timezone_string' ) ) );
-			$now                                 = new DateTime( 'now', new DateTimeZone( get_option( 'timezone_string' ) ) );
+			$expireDate                          = new DateTime( $this->noticeMeta['lastDisplayDate'], new DateTimeZone( wp_timezone_string() ) );
+			$now                                 = new DateTime( 'now', new DateTimeZone( wp_timezone_string() ) );
 			if ( $expireDate < $now ) {
-				$this->noticeMeta['lastDisplayDate'] = ( new DateTime( '+1 months', new DateTimeZone( get_option( 'timezone_string' ) ) ) )->format( 'Y-m-d H:i:s' );
+				$this->noticeMeta['lastDisplayDate'] = ( new DateTime( '+1 months', new DateTimeZone( wp_timezone_string() ) ) )->format( 'Y-m-d H:i:s' );
 			}
 		}
 		add_post_meta( $noticeId, self::NOTICE_POST_META_KEY, $this->noticeMeta, true );
@@ -179,10 +179,10 @@ class GB_Notices {
 		if ( isset( $_POST['noticeExpireDate'] ) ) {
 			$noticeExpireDate                    = $_POST['noticeExpireDate'];
 			$this->noticeMeta['lastDisplayDate'] = $noticeExpireDate['date'] . ' ' . sprintf( "%02d", $noticeExpireDate['hour'] ) . ':' . sprintf( "%02d", $noticeExpireDate['minute'] ) . ':00';
-			$expireDate                          = new DateTime( $this->noticeMeta['lastDisplayDate'], new DateTimeZone( get_option( 'timezone_string' ) ) );
-			$now                                 = new DateTime( 'now', new DateTimeZone( get_option( 'timezone_string' ) ) );
+			$expireDate                          = new DateTime( $this->noticeMeta['lastDisplayDate'], new DateTimeZone( wp_timezone_string() ) );
+			$now                                 = new DateTime( 'now', new DateTimeZone( wp_timezone_string() ) );
 			if ( $expireDate < $now ) {
-				$this->noticeMeta['lastDisplayDate'] = ( new DateTime( '+1 months', new DateTimeZone( get_option( 'timezone_string' ) ) ) )->format( 'Y-m-d H:i:s' );
+				$this->noticeMeta['lastDisplayDate'] = ( new DateTime( '+1 months', new DateTimeZone( wp_timezone_string() ) ) )->format( 'Y-m-d H:i:s' );
 			}
 		}
 		update_post_meta( $noticePostId, self::NOTICE_POST_META_KEY, $this->noticeMeta );
@@ -241,7 +241,7 @@ class GB_Notices {
 			update_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", $readedNoticesByCurrentUser );
 
 		} else {
-			$expire = new DateTime( $notice->expireDate, new DateTimeZone( get_option( 'timezone_string' ) ) );
+			$expire = new DateTime( $notice->expireDate, new DateTimeZone( wp_timezone_string() ) );
 			$expire = $expire->getTimestamp();
 			$name   = 'GB_D_' . $blog_id . '_' . md5( get_site_url( $blog_id ) . '|' . $notice->id );
 			setcookie( $name, true, $expire, '/', $_SERVER['HTTP_HOST'], is_ssl(), true );
