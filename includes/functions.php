@@ -35,24 +35,25 @@ function dateStringToArray( $dateString = null ) {
 /**
  * if wordress in debuh mode write to log file log data
  *
- * @param $notice GB_Notice
- * @param $action string
+ * @param GB_Notice $notice
+ * @param string $action
+ * @param array $additionalData
  */
-function setLog( $notice, $action = '' ) {
+function setLog( $notice, $action = '' , $additionalData = array()) {
 	if ( true === WP_DEBUG ) {
-		$data = "
-        {
-            'ip': '" . $_SERVER['REMOTE_ADDR'] . "',
-            'user_agent': '" . $_SERVER['HTTP_USER_AGENT'] . "',
-            'date': '" . date_i18n( 'Y-m-d H:i:s' ) . "',
-            'noticeId': '" . $notice->id . "',
-            'noticeTitle':'" . $notice->title . "',
-            'noticeContent:'" . $notice->content . "',
-            'expireDate': '" . $notice->expireDate . "',
-            'logedinUser': '" . wp_get_current_user()->user_login . "',
-            'action':'" . $action . "'
-        }";
-		file_put_contents( GB_Notices_Plugin::$path . "/log.txt", $data, FILE_APPEND );
+		$logData = new stdClass();
+		$logData->ip =$_SERVER['REMOTE_ADDR'];
+		$logData->user_agent = $_SERVER['HTTP_USER_AGENT'];
+		$logData->date = date_i18n( 'Y-m-d H:i:s' );
+		$logData->noticeId = $notice->id;
+		$logData->noticeTitle = $notice->title;
+		$logData->noticeContent = $notice->content;
+		$logData->expireDate = $notice->expireDate;
+		$logData->logedinUser = wp_get_current_user()->user_login;
+		$logData->action = $action;
+		$logData = (object) array_merge( (array)$logData, $additionalData );
+
+		file_put_contents( GB_Notices_Plugin::$path . "/log.txt", json_encode($logData)."\n", FILE_APPEND );
 	}
 }
 
