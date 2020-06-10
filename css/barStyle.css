@@ -8,6 +8,10 @@
     display: inline-block;
 }
 
+.bar-content{
+    height: inherit;
+}
+
 .bar-content h4 {
     clear: left;
     float: left;
@@ -48,7 +52,7 @@
 /* Sizes */
 /* xLarge */
 .bar.xLarge {
-    height: 60px;
+    height: 60px; !important;
 }
 
 .bar.xLarge .bar-content > div {
