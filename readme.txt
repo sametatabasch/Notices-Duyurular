@@ -2,8 +2,8 @@
 Contributors: sametatabasch
 Tags: notice, duyuru, cookie, announcement
 Requires at least: 3.0.1
-Tested up to: 4.9.4
-Stable tag: 1.8
+Tested up to: 5.4.1
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,6 +37,10 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 3. Example for add new notice page.
 
 == Changelog ==
+
+= 1.8.1 =
+
+- Bug fix
 
 = 1.8 =
 

@@ -4,7 +4,7 @@
 * Plugin URI: http://gencbilisim.net/notices-duyurular-eklentisi/
 * Description: Easy way to publish announcements in Wordpress
 * Author: Samet ATABAŞ
-* Version: 1.8
+* Version: 1.8.1
 * Author URI: http://www.gencbilisim.net
 * Text Domain: Notices-Duyurular
 * Domain Path: /lang/
