@@ -237,7 +237,12 @@ class GB_Notices {
 			global $current_user;
 			wp_get_current_user();
 			$readedNoticesByCurrentUser   = get_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", true );
-			$readedNoticesByCurrentUser[] = $notice->id;
+			if(!is_array($readedNoticesByCurrentUser)){
+				$readedNoticesByCurrentUser = array($notice->id);
+			}else{
+				$readedNoticesByCurrentUser[] = $notice->id;
+
+			}
 			update_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", $readedNoticesByCurrentUser );
 
 		} else {
