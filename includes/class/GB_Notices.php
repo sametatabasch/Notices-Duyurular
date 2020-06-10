@@ -99,8 +99,8 @@ class GB_Notices {
 			/*
 			 * Her bir duyuru ayrı ayrı ajax isteği ile alındığı için bu işlemi yapacak olan action tanımlamaları
 			 */
-			add_action('wp_ajax_getSingleWindowModeNotice',array(&$this,'getSingleWindowModeNotice'));
-			add_action('wp_ajax_nopriv_getSingleWindowModeNotice',array(&$this,'getSingleWindowModeNotice'));
+			add_action( 'wp_ajax_getSingleWindowModeNotice', array( &$this, 'getSingleWindowModeNotice' ) );
+			add_action( 'wp_ajax_nopriv_getSingleWindowModeNotice', array( &$this, 'getSingleWindowModeNotice' ) );
 		}
 
 		$this->getAllNotice();
@@ -236,10 +236,10 @@ class GB_Notices {
 		if ( is_user_logged_in() ) {
 			global $current_user;
 			wp_get_current_user();
-			$readedNoticesByCurrentUser   = get_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", true );
-			if(!is_array($readedNoticesByCurrentUser)){
-				$readedNoticesByCurrentUser = array($notice->id);
-			}else{
+			$readedNoticesByCurrentUser = get_user_meta( $current_user->ID, "GB_D_{$blog_id}_okunanDuyurular", true );
+			if ( ! is_array( $readedNoticesByCurrentUser ) ) {
+				$readedNoticesByCurrentUser = array( $notice->id );
+			} else {
 				$readedNoticesByCurrentUser[] = $notice->id;
 
 			}
@@ -271,16 +271,24 @@ class GB_Notices {
 
 		foreach ( $user_ids as $user_id ) {
 			$readedNoticesByCurrentUser = get_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", true );
+			setLog( new GB_Notice( $noticeId ), 'unmarkAsRead', [ "userids"                   => $user_ids,
+			                                                      "inActionUserId"            => $user_id,
+			                                                      "inActionUserReadedNotices" => var_export( $readedNoticesByCurrentUser, true )
+			] );
 			if ( array_search( $noticeId, $readedNoticesByCurrentUser ) !== false ) {
 				unset( $readedNoticesByCurrentUser[ array_search( $noticeId, $readedNoticesByCurrentUser ) ] );
 				$readedNoticesByCurrentUser = array_merge( $readedNoticesByCurrentUser ); //for renumbered indexs
-				update_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", $readedNoticesByCurrentUser );
+				if ( count( $readedNoticesByCurrentUser ) == 0 ) {
+					delete_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular" );
+				} else {
+					update_user_meta( $user_id, "GB_D_{$blog_id}_okunanDuyurular", $readedNoticesByCurrentUser );
+				}
 			} else {
 				continue;
 			}
 		}
 
-		setLog( new GB_Notice( $noticeId ), 'unmarkAsRead' );
+
 	}
 
 	/**
