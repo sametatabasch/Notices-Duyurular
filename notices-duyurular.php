@@ -187,6 +187,7 @@ if ( ! class_exists( 'GB_Notices_Plugin' ) ):
 		}
 
 		/**
+		 TODO style ve sciprt fonksiyonlarını ayır
 		 * style ve script dosyalarını kuyruğa ekler
 		 * add_action('wp_enqueue_scripts', array(&$this, 'enqueueScriptAndStyle'));
 		 */
